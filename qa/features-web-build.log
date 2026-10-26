@@ -1,0 +1,49 @@
+
+> frontend_web@0.0.0 build
+> vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 2046 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                               0.55 kB │ gzip:   0.33 kB
+dist/assets/index-8O8NtJTb.css               20.49 kB │ gzip:   4.49 kB
+dist/assets/dollar-sign-Cd1o3ido.js           0.24 kB │ gzip:   0.20 kB
+dist/assets/activity-C0QW1io7.js              0.26 kB │ gzip:   0.21 kB
+dist/assets/calendar-CF5gSz7H.js              0.28 kB │ gzip:   0.21 kB
+dist/assets/useLiveRefresh-Zahl8NeW.js        0.39 kB │ gzip:   0.25 kB
+dist/assets/FormField-BGjxud86.js             0.51 kB │ gzip:   0.31 kB
+dist/assets/trash-Dl-u9Clo.js                 0.73 kB │ gzip:   0.39 kB
+dist/assets/ConfirmModal-CqB7aHYu.js          0.92 kB │ gzip:   0.46 kB
+dist/assets/SportIcon-DhV8KC3T.js             0.97 kB │ gzip:   0.57 kB
+dist/assets/BookingQrPage-BunqLPIM.js         1.00 kB │ gzip:   0.61 kB
+dist/assets/PaymentModal-3vwrrq94.js          1.15 kB │ gzip:   0.65 kB
+dist/assets/NotificationsPage-iCMT9Ai4.js     1.74 kB │ gzip:   0.78 kB
+dist/assets/LoginPage-CVBRn9Hp.js             1.89 kB │ gzip:   0.81 kB
+dist/assets/SignupPage-BvpAMSQB.js            2.46 kB │ gzip:   0.92 kB
+dist/assets/MembershipPage-CvTO7ihD.js        2.67 kB │ gzip:   1.15 kB
+dist/assets/FixturesPage-DJI5nNyo.js          3.08 kB │ gzip:   1.23 kB
+dist/assets/ReviewsPage-0mzQKkLu.js           3.74 kB │ gzip:   1.39 kB
+dist/assets/SportsPage-BqWAPwyv.js            4.50 kB │ gzip:   1.58 kB
+dist/assets/ReservePage-D2d-Zo3n.js           4.52 kB │ gzip:   1.72 kB
+dist/assets/UsersPage-DGk_9oMy.js             4.82 kB │ gzip:   1.81 kB
+dist/assets/PromoCodesPage-DePJqpXI.js        5.19 kB │ gzip:   1.66 kB
+dist/assets/ComplaintsPage-DtxaG-L8.js        5.54 kB │ gzip:   1.98 kB
+dist/assets/ReportsPage-C-cpXjPl.js           5.54 kB │ gzip:   1.77 kB
+dist/assets/PaymentHistoryPage-BvyoocfP.js    5.90 kB │ gzip:   1.85 kB
+dist/assets/BookingsPage-mlo6Uv2X.js          6.15 kB │ gzip:   1.81 kB
+dist/assets/MyBookingsPage-Cu_P4zxC.js        6.95 kB │ gzip:   2.60 kB
+dist/assets/MatchesPage-BZORZczX.js           7.55 kB │ gzip:   2.02 kB
+dist/assets/EquipmentPage-BwPWtaTQ.js         8.26 kB │ gzip:   2.32 kB
+dist/assets/SettingsPage-Dos_wpIa.js          8.79 kB │ gzip:   2.92 kB
+dist/assets/VenuesPage-DNNWyBY3.js            9.71 kB │ gzip:   2.88 kB
+dist/assets/EventsPage-CmwOthmq.js           11.61 kB │ gzip:   3.00 kB
+dist/assets/TournamentsPage-6nOTi39I.js      13.51 kB │ gzip:   3.39 kB
+dist/assets/socket-SjN9FdkJ.js               41.22 kB │ gzip:  12.89 kB
+dist/assets/jsx-runtime-DlU9MUzM.js          59.70 kB │ gzip:  22.12 kB
+dist/assets/DashboardPage-DjqhutD3.js        81.40 kB │ gzip:  26.95 kB
+dist/assets/index-Cwphhrta.js               282.59 kB │ gzip:  90.49 kB
+dist/assets/ScanBookingPage-BCfWvDkV.js     371.96 kB │ gzip: 109.39 kB
+
+✓ built in 984ms

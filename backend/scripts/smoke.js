@@ -1,0 +1,135 @@
+// Creates uniquely named QA records in the configured LOCAL database. Never run against production.
+require('dotenv').config({ quiet: true });
+const assert = require('node:assert/strict');
+const { randomUUID } = require('node:crypto');
+const prisma = require('../src/lib/prisma');
+const bcrypt = require('bcryptjs');
+const base = process.env.TEST_API_URL || 'http://localhost:5000/api';
+if (!['localhost', '127.0.0.1'].includes(new URL(base).hostname)) throw new Error('Smoke tests require localhost');
+let checks = 0;
+const scope = { userIds: [], sportId: null, promoId: null, suffix: null };
+async function call(method, path, token, body, expected = 200) {
+  const response = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const result = await response.json();
+  assert.equal(response.status, expected, `${method} ${path}: ${JSON.stringify(result)}`);
+  checks++;
+  console.log(`PASS ${method} ${path} (${expected})`);
+  return result.data;
+}
+async function main() {
+  const suffix = Date.now();
+  scope.suffix = suffix;
+  const password = randomUUID();
+  const adminEmail = `qa-admin-${suffix}@example.com`;
+  const qaAdmin = await prisma.user.create({ data: { name: 'QA Admin', email: adminEmail, password: await bcrypt.hash(password, 10), role: 'ADMIN' } });
+  scope.userIds.push(qaAdmin.id);
+  const admin = (await call('POST', '/auth/login', null, { email: adminEmail, password })).token;
+  const customerAccount = await call('POST', '/auth/register', null, { name: 'QA Customer', email: `qa-${suffix}@example.com`, password }, 201);
+  scope.userIds.push(customerAccount.user.id);
+  const customer = customerAccount.token;
+  await call('GET', '/auth/me', customer);
+  await call('PUT', '/auth/me', customer, { name: 'QA Updated' });
+  await call('GET', '/users', customer, null, 403);
+  const sport = await call('POST', '/sports', admin, { name: `QA Sport ${suffix}`, icon: 'Trophy' }, 201);
+  scope.sportId = sport.id;
+  await call('PUT', `/sports/${sport.id}`, admin, { description: 'QA updated description' });
+  const venue = await call('POST', '/venues', admin, { name: `QA Venue ${suffix}`, sportId: sport.id, pricePerSlot: 100, capacity: 10 }, 201);
+  await call('PUT', `/venues/${venue.id}`, admin, { pricePerSlot: 375.50, capacity: 22 });
+  const editedVenue = await call('GET', `/venues/${venue.id}`, admin);
+  if (editedVenue.pricePerSlot !== 375.50 || editedVenue.capacity !== 22) throw new Error('Venue price/capacity edits did not persist');
+  await call('PUT', `/venues/${venue.id}`, admin, { pricePerSlot: 100, capacity: 10 });
+  const date = new Date(Date.now() + 86400000 * 7).toISOString().slice(0, 10);
+  const slot = await call('POST', '/bookings/slots', admin, { venueId: venue.id, date, startTime: '10:00', endTime: '11:00' }, 201);
+  await call('POST', '/bookings/slots', admin, { venueId: venue.id, date, startTime: '10:30', endTime: '11:30' }, 409);
+  await call('GET', `/bookings/slots?venueId=${venue.id}&date=${date}`, customer);
+  const booking = await call('POST', '/bookings', customer, { slotId: slot.id }, 201);
+  assert.equal(booking.finalPrice, 100);
+  await call('POST', '/bookings', customer, { slotId: slot.id }, 409);
+  await call('POST', '/bookings/scan', admin, { qrToken: booking.qrToken }, 400);
+  await call('PUT', `/bookings/${booking.id}/cancel`, customer);
+  const rebooked = await call('POST', '/bookings', customer, { slotId: slot.id }, 201);
+  assert.notEqual(rebooked.id, booking.id);
+  await call('GET', `/bookings/${rebooked.id}/qr`, customer);
+  await call('GET', '/bookings/my', customer);
+  await call('GET', '/payments/my', customer);
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) await call('POST', '/payments/checkout', customer, { paymentId: rebooked.paymentId }, 503);
+  await call('POST', '/payments/confirm', customer, { paymentId: rebooked.paymentId }, 403);
+  const invoice = await call('GET', `/payments/${rebooked.paymentId}/invoice`, customer);
+  assert.equal(invoice.amount, 100);
+  assert.equal(invoice.status, 'PENDING');
+  const target = await call('POST', '/bookings/slots', admin, { venueId: venue.id, date, startTime: '12:00', endTime: '13:00' }, 201);
+  await call('PUT', `/bookings/${rebooked.id}/reschedule`, customer, { slotId: target.id });
+  const availability = await call('GET', `/bookings/slots?venueId=${venue.id}&date=${date}`, customer);
+  assert.equal(availability.find(s => s.id === slot.id).isBooked, false);
+  assert.equal(availability.find(s => s.id === target.id).isBooked, true);
+  const competitorAccount = await call('POST', '/auth/register', null, { name: 'QA Competitor', email: `qa-competitor-${suffix}@example.com`, password }, 201);
+  scope.userIds.push(competitorAccount.user.id);
+  const competitor = competitorAccount.token;
+  await call('GET', `/payments/${rebooked.paymentId}/invoice`, competitor, null, 403);
+  const simultaneous = await Promise.all([call('POST', '/bookings', customer, { slotId: slot.id }, 201), fetch(base + '/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${competitor}` }, body: JSON.stringify({ slotId: target.id }) })]);
+  assert.equal(simultaneous[1].status, 409);
+  const raceSlot = await call('POST', '/bookings/slots', admin, { venueId: venue.id, date, startTime: '15:00', endTime: '16:00' }, 201);
+  const races = await Promise.all([customer, competitor].map(token => fetch(base + '/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ slotId: raceSlot.id }) })));
+  assert.deepEqual(races.map(r => r.status).sort(), [201, 409]);
+  checks++;
+  console.log('PASS simultaneous customers: exactly one reservation succeeds');
+  const promo = await call('POST', '/promo', admin, { code: `QA${suffix}`, discountType: 'PERCENTAGE', discountValue: 10, maxUses: 2 }, 201);
+  scope.promoId = promo.id;
+  await call('POST', '/promo/validate', customer, { code: promo.code });
+  const tournament = await call('POST', '/tournaments', admin, { name: `QA Cup ${suffix}`, sportId: sport.id, startDate: date, maxTeams: 4, entryFee: 0 }, 201);
+  await call('POST', `/tournaments/${tournament.id}/register`, customer, { teamName: 'QA Team' }, 201);
+  await call('POST', `/tournaments/${tournament.id}/register`, customer, { teamName: 'QA Team' }, 409);
+  await call('POST', `/tournaments/${tournament.id}/register`, competitor, { teamName: 'QA Other Team' }, 201);
+  const fixtures = await call('POST', `/tournaments/${tournament.id}/fixtures`, admin, { scheduledAt: `${date}T12:00:00Z`, intervalMinutes: 120 }, 201);
+  assert.equal(fixtures.length, 1);
+  await call('POST', `/tournaments/${tournament.id}/fixtures`, admin, { scheduledAt: `${date}T12:00:00Z` }, 409);
+  const match = await call('POST', '/matches', admin, { tournamentId: tournament.id, team1: 'A', team2: 'B', scheduledAt: `${date}T10:00:00Z` }, 201);
+  await call('PUT', `/matches/${match.id}/result`, admin, { team1Score: '2', team2Score: '1', winner: 'A' });
+  const event = await call('POST', '/events', admin, { name: 'QA Camp', sportId: sport.id, startDate: date, fee: 0 }, 201);
+  await call('POST', `/events/${event.id}/register`, customer, {}, 201);
+  const equipment = await call('POST', '/equipment', admin, { name: 'QA Equipment', sportId: sport.id, quantity: 2, pricePerSlot: 10 }, 201);
+  await call('POST', `/equipment/${equipment.id}/rent`, customer, { quantity: 1, rentalDate: date }, 201);
+  await call('POST', `/equipment/${equipment.id}/rent`, competitor, { quantity: 2, rentalDate: date }, 409);
+  await call('POST', `/equipment/${equipment.id}/rent`, customer, { quantity: -1, rentalDate: date }, 400);
+  await call('GET', '/equipment/my-rentals', customer);
+  await call('POST', '/membership/purchase', customer, { tier: 'BASIC' }, 201);
+  await call('GET', '/membership/my', customer);
+  const complaint = await call('POST', '/complaints', customer, { title: `QA complaint ${suffix}`, description: 'QA workflow test' }, 201);
+  await call('PATCH', `/complaints/${complaint.id}`, admin, { status: 'RESOLVED', adminNote: 'QA resolved' });
+  await call('GET', '/notifications', customer);
+  await call('PATCH', '/notifications/read', customer, {});
+  await call('GET', '/recommendations/slots', customer);
+  for (const path of ['/reports/revenue', '/reports/bookings', '/reports/utilization', '/reports/customers', '/reviews', '/users', '/payments']) await call('GET', path, admin);
+  console.log(`SUCCESS: ${checks} HTTP checks. QA suffix: ${suffix}`);
+}
+async function cleanup() {
+  const users = { userId: { in: scope.userIds } };
+  await prisma.$transaction(async tx => {
+    await tx.review.deleteMany({ where: users });
+    await tx.notification.deleteMany({ where: { OR: [users, { title: 'New Complaint', body: { contains: String(scope.suffix) } }] } });
+    await tx.complaint.deleteMany({ where: users });
+    await tx.promoCodeUsage.deleteMany({ where: users });
+    await tx.payment.deleteMany({ where: users });
+    await tx.booking.deleteMany({ where: users });
+    await tx.teamRegistration.deleteMany({ where: users });
+    await tx.eventRegistration.deleteMany({ where: users });
+    await tx.equipmentRental.deleteMany({ where: users });
+    await tx.membership.deleteMany({ where: users });
+    if (scope.sportId) {
+      await tx.match.deleteMany({ where: { tournament: { sportId: scope.sportId } } });
+      await tx.tournament.deleteMany({ where: { sportId: scope.sportId } });
+      await tx.event.deleteMany({ where: { sportId: scope.sportId } });
+      await tx.equipment.deleteMany({ where: { sportId: scope.sportId } });
+      await tx.bookingSlot.deleteMany({ where: { venue: { sportId: scope.sportId } } });
+      await tx.venue.deleteMany({ where: { sportId: scope.sportId } });
+      await tx.sport.delete({ where: { id: scope.sportId } });
+    }
+    if (scope.promoId) await tx.promoCode.delete({ where: { id: scope.promoId } });
+    await tx.user.deleteMany({ where: { id: { in: scope.userIds } } });
+  });
+  console.log('QA records created by this run were removed. Existing records retained.');
+}
+main().catch(error => { console.error(error); process.exitCode = 1; }).finally(async () => {
+  try { await cleanup(); } catch (error) { console.error('QA cleanup failed:', error.message); process.exitCode = 1; }
+  await prisma.$disconnect();
+});

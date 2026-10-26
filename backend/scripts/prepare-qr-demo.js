@@ -1,0 +1,20 @@
+require('dotenv').config({quiet:true});
+const {randomUUID}=require('node:crypto');
+const prisma=require('../src/lib/prisma');
+const db=new URL(process.env.DATABASE_URL);
+if(db.hostname!=='127.0.0.1'||db.port!=='3307'||db.pathname!=='/smart_sports_hub_demo'||process.env.NODE_ENV==='production')throw Error('Demo database required');
+(async()=>{
+ const user=await prisma.user.findUnique({where:{email:'user@smartsportshub.com'}});
+ const sport=await prisma.sport.findFirst({where:{isActive:true}});
+ let venue=await prisma.venue.findFirst({where:{name:'QR Demo Court'}});
+ venue??=await prisma.venue.create({data:{name:'QR Demo Court',sportId:sport.id,description:'QR walkthrough. No real money collected.',pricePerSlot:0,openingTime:'00:00',closingTime:'23:59'}});
+ const local=new Date(Date.now()+5*3600000),hour=local.getUTCHours();
+ if(hour>=23)throw Error('Run walkthrough before 23:00 PKT');
+ const date=local.toISOString().slice(0,10),startTime=`${String(hour).padStart(2,'0')}:00`,endTime=`${String(hour+1).padStart(2,'0')}:00`;
+ let slot=await prisma.bookingSlot.findFirst({where:{venueId:venue.id,date:new Date(date),startTime,endTime}});
+ slot??=await prisma.bookingSlot.create({data:{venueId:venue.id,date:new Date(date),startTime,endTime,isBooked:true}});
+ let booking=await prisma.booking.findFirst({where:{slotId:slot.id,status:{in:['CONFIRMED','SCANNED']}}});
+ booking??=await prisma.booking.create({data:{userId:user.id,slotId:slot.id,status:'CONFIRMED',qrToken:randomUUID(),notes:'QR_ENTRY_WALKTHROUGH: Demo only. No real money collected.',payment:{create:{userId:user.id,amount:0,purpose:'BOOKING',status:'PAID'}}}});
+ await prisma.bookingSlot.update({where:{id:slot.id},data:{isBooked:true}});
+ console.log(JSON.stringify({bookingId:booking.id,date,startTime,endTime,status:booking.status}));
+})().catch(e=>{console.error(e.message);process.exitCode=1}).finally(()=>prisma.$disconnect());

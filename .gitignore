@@ -1,0 +1,8 @@
+# Local package download caches used during setup.
+**/.npm-cache/
+# Isolated local demo database, configuration and logs.
+.local-demo/
+# Firebase configuration stays on the machine that builds or runs the app.
+**/google-services.json
+**/*firebase-adminsdk*.json
+**/*service-account*.json

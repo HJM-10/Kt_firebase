@@ -1,0 +1,475 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  CANCELLED
+  SCANNED
+}
+
+enum TournamentFormat {
+  LEAGUE
+  KNOCKOUT
+}
+
+enum TournamentStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentPurpose {
+  BOOKING
+  TOURNAMENT_REGISTRATION
+  MEMBERSHIP
+  EVENT_REGISTRATION
+  EQUIPMENT_RENTAL
+}
+
+enum ComplaintStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  REJECTED
+}
+
+enum MembershipTier {
+  BASIC
+  SILVER
+  GOLD
+}
+
+enum EventType {
+  TRAINING
+  COACHING
+  CAMP
+  LEAGUE
+  FRIENDLY
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum RentalStatus {
+  CONFIRMED
+  CANCELLED
+  RETURNED
+}
+
+// ─── Core Models ─────────────────────────────────────────────────────────────
+
+model User {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique
+  password        String
+  phone           String?
+  role            Role              @default(CUSTOMER)
+  fcmToken        String?
+  bookings        Booking[]
+  registrations   TeamRegistration[]
+  payments        Payment[]
+  reviews         Review[]
+  complaints      Complaint[]
+  eventRegs       EventRegistration[]
+  rentals         EquipmentRental[]
+  promoUsages     PromoCodeUsage[]
+  membership      Membership?
+  notifications   Notification[]
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Sport {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String?
+  icon        String?
+  imageUrl    String?
+  isActive    Boolean      @default(true)
+  venues      Venue[]
+  tournaments Tournament[]
+  events      Event[]
+  equipment   Equipment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Venue {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  sportId      Int
+  sport        Sport         @relation(fields: [sportId], references: [id])
+  capacity     Int?
+  pricePerSlot Float         @default(0)
+  imageUrl     String?
+  isActive     Boolean       @default(true)
+  openingTime  String        @default("06:00")
+  closingTime  String        @default("23:00")
+  closedWeekdays Json?
+  closures     VenueClosure[]
+  slots        BookingSlot[]
+  reviews      Review[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model VenueClosure {
+  id Int @id @default(autoincrement())
+  venueId Int
+  venue Venue @relation(fields: [venueId], references: [id])
+  startAt DateTime
+  endAt DateTime
+  reason String
+  @@index([venueId, startAt, endAt])
+}
+
+model BookingSlot {
+  id        Int       @id @default(autoincrement())
+  venueId   Int
+  venue     Venue     @relation(fields: [venueId], references: [id])
+  date      DateTime  @db.Date
+  startTime String
+  endTime   String
+  isBooked  Boolean   @default(false)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Booking {
+  id              Int           @id @default(autoincrement())
+  userId          Int
+  user            User          @relation(fields: [userId], references: [id])
+  slotId          Int
+  slot            BookingSlot   @relation(fields: [slotId], references: [id])
+  status          BookingStatus @default(PENDING_PAYMENT)
+  qrCode          String?       @db.Text
+  qrToken         String?       @unique
+  basePrice       Float         @default(0)
+  membershipDiscount Float      @default(0)
+  promoDiscount   Float         @default(0)
+  finalPrice      Float         @default(0)
+  notes           String?
+  promoCodeId     Int?
+  promoCode       PromoCode?    @relation(fields: [promoCodeId], references: [id])
+  payment         Payment?
+  review          Review?
+  promoUsage      PromoCodeUsage?
+  @@index([slotId])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// ─── Payment ─────────────────────────────────────────────────────────────────
+
+model Payment {
+  id                    Int            @id @default(autoincrement())
+  userId                Int
+  user                  User           @relation(fields: [userId], references: [id])
+  amount                Float
+  currency              String         @default("PKR")
+  status                PaymentStatus  @default(PENDING)
+  purpose               PaymentPurpose
+  stripePaymentIntentId String?        @unique
+  stripeClientSecret    String?
+  stripeCheckoutSessionId String? @unique
+  expiresAt             DateTime?
+  refunds               Refund[]
+  bookingId             Int?           @unique
+  booking               Booking?       @relation(fields: [bookingId], references: [id])
+  tournamentRegId       Int?           @unique
+  tournamentReg         TeamRegistration? @relation(fields: [tournamentRegId], references: [id])
+  membershipId          Int?
+  membership            Membership?    @relation(fields: [membershipId], references: [id])
+  membershipChange      MembershipChange?
+  eventRegId            Int?           @unique
+  eventReg              EventRegistration? @relation(fields: [eventRegId], references: [id])
+  rentalId              Int?           @unique
+  rental                EquipmentRental? @relation(fields: [rentalId], references: [id])
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  @@index([membershipId])
+}
+
+model Refund {
+  id Int @id @default(autoincrement())
+  paymentId Int
+  payment Payment @relation(fields: [paymentId], references: [id])
+  sourceKey String @unique
+  providerIntentId String?
+  amount Float
+  status String @default("PENDING")
+  reference String?
+  error String? @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── Tournament & Match ───────────────────────────────────────────────────────
+
+model Tournament {
+  id            Int                @id @default(autoincrement())
+  name          String
+  description   String?
+  sportId       Int
+  sport         Sport              @relation(fields: [sportId], references: [id])
+  format        TournamentFormat   @default(KNOCKOUT)
+  status        TournamentStatus   @default(UPCOMING)
+  startDate     DateTime
+  endDate       DateTime?
+  maxTeams      Int                @default(8)
+  entryFee      Float              @default(0)
+  imageUrl      String?
+  champion      String?
+  matches       Match[]
+  registrations TeamRegistration[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model Match {
+  id           Int        @id @default(autoincrement())
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  team1        String
+  team2        String
+  scheduledAt  DateTime
+  venue        String?
+  result       String?
+  team1Score   String?
+  team2Score   String?
+  winner       String?
+  round        String?
+  isCompleted  Boolean    @default(false)
+  durationMinutes Int @default(120)
+  isBye Boolean @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model TeamRegistration {
+  id           Int        @id @default(autoincrement())
+  tournamentId Int
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  teamName     String
+  paymentId    Int?
+  payment      Payment?
+  status       String @default("ACTIVE")
+  createdAt    DateTime   @default(now())
+
+  @@unique([tournamentId, userId])
+}
+
+// ─── Reviews ─────────────────────────────────────────────────────────────────
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  venueId   Int
+  venue     Venue    @relation(fields: [venueId], references: [id])
+  bookingId Int      @unique
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  rating    Int      // 1–5
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([userId, venueId])
+}
+
+// ─── Complaints ───────────────────────────────────────────────────────────────
+
+model Complaint {
+  id          Int             @id @default(autoincrement())
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
+  title       String
+  description String          @db.Text
+  category    String          @default("General")
+  status      ComplaintStatus @default(OPEN)
+  adminNote   String?         @db.Text
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+// ─── Events ───────────────────────────────────────────────────────────────────
+
+model Event {
+  id              Int                 @id @default(autoincrement())
+  name            String
+  description     String?             @db.Text
+  sportId         Int
+  sport           Sport               @relation(fields: [sportId], references: [id])
+  type            EventType           @default(TRAINING)
+  startDate       DateTime
+  endDate         DateTime?
+  venue           String?
+  maxParticipants Int?
+  fee             Float               @default(0)
+  imageUrl        String?
+  status          EventStatus         @default(UPCOMING)
+  registrations   EventRegistration[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model EventRegistration {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  event     Event    @relation(fields: [eventId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  payment   Payment?
+  status    String @default("ACTIVE")
+  attendedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+}
+
+// ─── Equipment Rental ─────────────────────────────────────────────────────────
+
+model Equipment {
+  id           Int               @id @default(autoincrement())
+  name         String
+  description  String?
+  sportId      Int
+  sport        Sport             @relation(fields: [sportId], references: [id])
+  pricePerSlot Float             @default(0)
+  quantity     Int               @default(1)
+  imageUrl     String?
+  isActive     Boolean           @default(true)
+  rentals      EquipmentRental[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model EquipmentRental {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
+  equipmentId Int
+  equipment   Equipment    @relation(fields: [equipmentId], references: [id])
+  quantity    Int          @default(1)
+  totalPrice  Float        @default(0)
+  status      RentalStatus @default(CONFIRMED)
+  rentalDate  DateTime     @db.Date
+  returnDate  DateTime?    @db.Date
+  payment     Payment?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+// ─── Promo Codes ──────────────────────────────────────────────────────────────
+
+model PromoCode {
+  id              Int              @id @default(autoincrement())
+  code            String           @unique
+  discountType    DiscountType     @default(PERCENTAGE)
+  discountValue   Float
+  maxUses         Int?
+  usedCount       Int              @default(0)
+  minOrderAmount  Float?
+  expiresAt       DateTime?
+  isActive        Boolean          @default(true)
+  bookings        Booking[]
+  usages          PromoCodeUsage[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model PromoCodeUsage {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  bookingId   Int?      @unique
+  booking     Booking?  @relation(fields: [bookingId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+// ─── Membership ───────────────────────────────────────────────────────────────
+
+model Membership {
+  id         Int            @id @default(autoincrement())
+  userId     Int            @unique
+  user       User           @relation(fields: [userId], references: [id])
+  tier       MembershipTier @default(BASIC)
+  startDate  DateTime       @default(now())
+  endDate    DateTime?
+  isActive   Boolean        @default(true)
+  cardNumber String         @unique
+  payments   Payment[]
+  history    MembershipChange[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model MembershipChange {
+  id Int @id @default(autoincrement())
+  membershipId Int
+  membership Membership @relation(fields: [membershipId], references: [id])
+  paymentId Int? @unique
+  payment Payment? @relation(fields: [paymentId], references: [id])
+  tier MembershipTier
+  kind String
+  status String @default("PENDING")
+  startDate DateTime?
+  endDate DateTime?
+  activatedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([membershipId, createdAt])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String   @db.Text
+  isRead    Boolean  @default(false)
+  type      String   @default("INFO")
+  data      Json?
+  createdAt DateTime @default(now())
+}
+

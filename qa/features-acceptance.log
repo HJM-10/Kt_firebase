@@ -1,0 +1,50 @@
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+POST /api/membership/purchase 201 28.166 ms - 314
+POST /api/membership/purchase 201 11.075 ms - 314
+POST /api/membership/purchase 409 8.747 ms - 98
+POST /api/payments/confirm 200 28.402 ms - 410
+GET /api/membership/my 200 5.109 ms - 618
+POST /api/membership/purchase 201 11.254 ms - 334
+POST /api/membership/purchase 201 18.597 ms - 334
+POST /api/payments/confirm 200 24.797 ms - 410
+GET /api/membership/my 200 4.762 ms - 919
+PASS purchase, concurrent retry, annual expiry, renewal and stable card history
+POST /api/membership/purchase 201 9.675 ms - 334
+GET /api/membership/my 200 3.151 ms - 1156
+POST /api/payments/151/reconcile 403 1.810 ms - 51
+POST /api/payments/151/reconcile 200 24.098 ms - 471
+GET /api/membership/my 200 4.231 ms - 1216
+POST /api/membership/purchase 409 6.608 ms - 136
+GET /api/membership/my 200 3.959 ms - 1218
+POST /api/membership/purchase 201 13.492 ms - 334
+POST /api/payments/confirm 409 3.416 ms - 52
+POST /api/membership/purchase 201 16.128 ms - 292
+PASS paid upgrade, webhook idempotence, downgrade safeguard, expiry and retry
+POST /api/venues/26/reviews 403 2.690 ms - 94
+POST /api/venues/26/reviews 403 2.667 ms - 94
+POST /api/reviews/26 201 7.660 ms - 213
+POST /api/venues/26/reviews 201 8.116 ms - 213
+DELETE /api/reviews/5 403 3.950 ms - 44
+DELETE /api/reviews/5 200 6.029 ms - 56
+PASS checked-in review eligibility, both routes, ownership, update and moderation
+POST /api/complaints 201 12.230 ms - 239
+PATCH /api/complaints/6 403 1.841 ms - 51
+PATCH /api/complaints/6 200 11.856 ms - 254
+PATCH /api/complaints/6 200 13.252 ms - 261
+PATCH /api/complaints/6 400 2.014 ms - 44
+GET /api/complaints/my 200 4.206 ms - 26
+PASS complaint admin response, response-only notification, validation and privacy
+PATCH /api/notifications/read 200 5.025 ms - 57
+GET /api/notifications?limit=100 200 6.692 ms - 1267
+PATCH /api/notifications/read 400 2.334 ms - 89
+PATCH /api/notifications/read 200 4.800 ms - 57
+GET /api/notifications 200 5.180 ms - 1260
+GET /api/notifications?limit=-1 400 1.577 ms - 69
+GET /api/notifications?page=0 400 1.680 ms - 69
+POST /api/notifications/fcm-token 200 8.801 ms - 49
+POST /api/notifications/fcm-token 200 6.343 ms - 49
+PASS notification delivery/read ownership, pagination validation and token registration
+GET /api/payments/149/invoice 200 6.524 ms - 361
+GET /api/payments/149/invoice 403 5.129 ms - 44
+PASS paid invoice accuracy and owner access
+6 feature acceptance groups passed. MySQL used; provider settlement simulated; no live push sent.

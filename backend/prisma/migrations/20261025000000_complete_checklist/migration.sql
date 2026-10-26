@@ -1,0 +1,11 @@
+ALTER TABLE `Venue` ADD COLUMN `openingTime` VARCHAR(191) NOT NULL DEFAULT '06:00', ADD COLUMN `closingTime` VARCHAR(191) NOT NULL DEFAULT '23:00', ADD COLUMN `closedWeekdays` JSON NULL;
+CREATE TABLE `VenueClosure` (`id` INTEGER NOT NULL AUTO_INCREMENT, `venueId` INTEGER NOT NULL, `startAt` DATETIME(3) NOT NULL, `endAt` DATETIME(3) NOT NULL, `reason` VARCHAR(191) NOT NULL, INDEX `VenueClosure_venueId_startAt_endAt_idx` (`venueId`, `startAt`, `endAt`), PRIMARY KEY (`id`)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `VenueClosure` ADD CONSTRAINT `VenueClosure_venueId_fkey` FOREIGN KEY (`venueId`) REFERENCES `Venue`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Payment` ADD COLUMN `expiresAt` DATETIME(3) NULL, ADD COLUMN `stripeCheckoutSessionId` VARCHAR(191) NULL, ADD UNIQUE INDEX `Payment_stripeCheckoutSessionId_key` (`stripeCheckoutSessionId`);
+CREATE TABLE `Refund` (`id` INTEGER NOT NULL AUTO_INCREMENT, `paymentId` INTEGER NOT NULL, `sourceKey` VARCHAR(191) NOT NULL, `providerIntentId` VARCHAR(191) NULL, `amount` DOUBLE NOT NULL, `status` VARCHAR(191) NOT NULL DEFAULT 'PENDING', `reference` VARCHAR(191) NULL, `error` TEXT NULL, `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3), `updatedAt` DATETIME(3) NOT NULL, UNIQUE INDEX `Refund_sourceKey_key` (`sourceKey`), PRIMARY KEY (`id`)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `Refund` ADD CONSTRAINT `Refund_paymentId_fkey` FOREIGN KEY (`paymentId`) REFERENCES `Payment`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Tournament` ADD COLUMN `champion` VARCHAR(191) NULL;
+ALTER TABLE `Match` ADD COLUMN `durationMinutes` INTEGER NOT NULL DEFAULT 120, ADD COLUMN `isBye` BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE `TeamRegistration` ADD COLUMN `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE';
+ALTER TABLE `EventRegistration` ADD COLUMN `status` VARCHAR(191) NOT NULL DEFAULT 'ACTIVE', ADD COLUMN `attendedAt` DATETIME(3) NULL;
+UPDATE `Payment` SET `expiresAt` = DATE_ADD(`createdAt`, INTERVAL 30 MINUTE) WHERE `status` = 'PENDING' AND (`bookingId` IS NOT NULL OR `eventRegId` IS NOT NULL OR `tournamentRegId` IS NOT NULL);
