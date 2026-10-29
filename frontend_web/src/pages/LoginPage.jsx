@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import api from '../api/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { BrandMark } from '../components/ArenaUI';
 import useAuthStore from '../store/authStore';
@@ -7,6 +8,8 @@ import toast from 'react-hot-toast';
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [firebaseAvailable, setFirebaseAvailable] = useState(false), [firebase, setFirebase] = useState(false), [existingPassword, setExistingPassword] = useState('');
+  useEffect(() => { api.get('/auth/providers').then(r => setFirebaseAvailable(r.data.data.firebase)).catch(() => {}); }, []);
   const { login } = useAuthStore();
   const navigate = useNavigate();
 
@@ -14,11 +17,11 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const user = await login(form.email, form.password);
+      const user = await login(form.email, form.password, firebase, existingPassword);
       toast.success(`Welcome back, ${user.name}!`);
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      toast.error(err.response?.data?.message || err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -36,6 +39,8 @@ const LoginPage = () => {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          {firebaseAvailable && <label><input type="checkbox" checked={firebase} onChange={e => setFirebase(e.target.checked)} /> Sign in with my verified Firebase account</label>}
+          {firebase && <label className="form-label">Existing local password (only when linking an existing account)<input type="password" autoComplete="current-password" className="form-input" value={existingPassword} onChange={e => setExistingPassword(e.target.value)} /><small>New verified Firebase users become customers. Existing staff access requires proof of the local account.</small></label>}
           <div className="form-group">
             <label className="form-label" htmlFor="login-email">Email Address</label>
             <input

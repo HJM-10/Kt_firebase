@@ -4,6 +4,7 @@ import '../services/api_errors.dart';
 import '../services/live_refresh.dart';
 import 'equipment_screen.dart';
 import 'slots_screen.dart';
+import '../widgets/venue_location.dart';
 
 class VenueDetailsScreen extends StatefulWidget {
   final int venueId;
@@ -93,6 +94,8 @@ class _VenueDetailsScreenState extends State<VenueDetailsScreen>
                                 builder: (_) =>
                                     EquipmentScreen(venueId: widget.venueId))),
                         child: const Text('Reserve venue equipment')),
+                    const SizedBox(height: 24),
+                    VenueLocation(venue: v),
                     const SizedBox(height: 24),
                     Text('Equipment menu',
                         style: Theme.of(context).textTheme.titleLarge),

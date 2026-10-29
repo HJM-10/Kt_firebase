@@ -12,6 +12,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
+  final _existingPassword = TextEditingController();
+  static const _firebaseAvailable =
+      bool.fromEnvironment('FIREBASE_AUTH_ENABLED');
+  bool _firebase = false;
+
   bool _isLoading = false, _obscure = true;
   Future<void> _login() async {
     if (_isLoading) return;
@@ -21,9 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     setState(() => _isLoading = true);
-    final error = await context
-        .read<AuthProvider>()
-        .login(_emailCtrl.text.trim(), _passwordCtrl.text);
+    final error = await context.read<AuthProvider>().login(
+        _emailCtrl.text.trim(), _passwordCtrl.text,
+        firebase: _firebase, existingPassword: _existingPassword.text);
     if (!mounted) return;
     setState(() => _isLoading = false);
     if (error != null) {
@@ -36,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _existingPassword.dispose();
     super.dispose();
   }
 
@@ -96,6 +102,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined)))),
                       const SizedBox(height: 22),
+                      if (_firebaseAvailable)
+                        SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('Use verified Firebase account'),
+                            value: _firebase,
+                            onChanged: _isLoading
+                                ? null
+                                : (v) => setState(() => _firebase = v)),
+                      if (_firebase)
+                        TextField(
+                            controller: _existingPassword,
+                            obscureText: true,
+                            enabled: !_isLoading,
+                            decoration: const InputDecoration(
+                                labelText:
+                                    'Existing local password (for account linking only)',
+                                helperText:
+                                    'Only needed when this email already has a local account.',
+                                helperMaxLines: 3)),
                       ElevatedButton(
                           onPressed: _isLoading ? null : _login,
                           child: _isLoading

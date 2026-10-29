@@ -25,8 +25,9 @@ const { authenticate } = require('./middleware/auth');
 
 const app = express();
 app.disable('x-powered-by');
+if (process.env.TRUST_PROXY_HOPS) app.set('trust proxy', Number(process.env.TRUST_PROXY_HOPS));
 app.use(require('helmet')());
-app.use('/api/auth', require('express-rate-limit').rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: 'draft-7', legacyHeaders: false }));
+app.use('/api/auth', require('express-rate-limit').rateLimit({ ...require('./lib/shared-state').rateLimitStore('auth'), windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: 'draft-7', legacyHeaders: false }));
 
 // Middleware
 app.use(cors({
@@ -48,6 +49,19 @@ app.get('/api/health', (req, res) => {
     message: 'Smart Sports Hub API is running!',
     timestamp: new Date().toISOString()
   });
+});
+// A load balancer should remove this instance when its database is unavailable.
+app.get('/api/ready', async (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  try {
+    await require('./lib/prisma').$queryRaw`SELECT 1`;
+    const shared = require('./lib/shared-state').sharedState();
+    if (shared && !shared.client.isReady) throw new Error('Shared state unavailable');
+    if (!require('./lib/socket').healthy()) throw new Error('Live updates unavailable');
+    res.json({ success: true, status: 'ready' });
+  } catch {
+    res.status(503).json({ success: false, status: 'unavailable' });
+  }
 });
 
 // Routes

@@ -1,0 +1,54 @@
+{
+  "startedAt": "2026-10-29T10:02:22.746Z",
+  "environment": "single local API process + local MariaDB, demo data only",
+  "stages": [
+    {
+      "type": "authenticated HTTP reads",
+      "concurrency": 1,
+      "requests": 100,
+      "failures": 0,
+      "throughputRps": 127.6,
+      "p50ms": 7.7,
+      "p95ms": 10.5,
+      "p99ms": 11.9
+    },
+    {
+      "type": "authenticated HTTP reads",
+      "concurrency": 10,
+      "requests": 300,
+      "failures": 0,
+      "throughputRps": 356.7,
+      "p50ms": 25.8,
+      "p95ms": 42.3,
+      "p99ms": 56.9
+    },
+    {
+      "type": "authenticated HTTP reads",
+      "concurrency": 40,
+      "requests": 600,
+      "failures": 0,
+      "throughputRps": 362.4,
+      "p50ms": 109.4,
+      "p95ms": 130.1,
+      "p99ms": 164.9
+    },
+    {
+      "type": "same-slot booking race",
+      "concurrency": 30,
+      "confirmedHolds": 1,
+      "conflicts": 29,
+      "duplicateBookings": 0
+    },
+    {
+      "type": "equipment inventory race",
+      "concurrency": 20,
+      "capacity": 3,
+      "heldUnits": 3,
+      "conflicts": 17,
+      "oversoldUnits": 0
+    }
+  ],
+  "integrity": "PASS: location persistence/authorization, one active booking per slot, no inventory oversell, exact payment amounts",
+  "completedAt": "2026-10-29T10:02:26.943Z",
+  "fixtureCleanup": "complete"
+}

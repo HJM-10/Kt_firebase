@@ -1,6 +1,7 @@
 const handleError = require('../middleware/errorHandler');
 const prisma = require('../lib/prisma');
 const transaction = require('../lib/transaction');
+const { venueLocation } = require('../lib/venue-location');
 
 const getVenues = async (req, res) => {
   try {
@@ -36,12 +37,13 @@ const getVenueById = async (req, res) => {
 
 const createVenue = async (req, res) => {
   try {
+    const location = venueLocation(req.body);
     const { name, description, sportId, capacity, pricePerSlot, imageUrl, openingTime, closingTime, closedWeekdays, isActive } = req.body;
     if (!name || !sportId) {
       return res.status(400).json({ success: false, message: 'Name and sportId are required' });
     }
     const venue = await prisma.venue.create({
-      data: { name, description, sportId: parseInt(sportId), capacity, pricePerSlot, imageUrl, openingTime, closingTime, closedWeekdays, isActive, closures: { create: (req.body.closures || []).map(({ startAt, endAt, reason }) => ({ startAt: new Date(startAt), endAt: new Date(endAt), reason })) } },
+      data: { ...location, name, description, sportId: parseInt(sportId), capacity, pricePerSlot, imageUrl, openingTime, closingTime, closedWeekdays, isActive, closures: { create: (req.body.closures || []).map(({ startAt, endAt, reason }) => ({ startAt: new Date(startAt), endAt: new Date(endAt), reason })) } },
       include: { sport: { select: { id: true, name: true } } }
     });
     res.status(201).json({ success: true, data: venue });
@@ -53,6 +55,7 @@ const createVenue = async (req, res) => {
 
 const updateVenue = async (req, res) => {
   try {
+    const location = venueLocation(req.body);
     const { name, description, sportId, capacity, pricePerSlot, imageUrl, isActive, openingTime, closingTime, closedWeekdays, closures } = req.body;
     const venue = await transaction(async tx => {
       const current = await tx.venue.update({ where: { id: Number(req.params.id) }, data: { updatedAt: new Date() } });
@@ -66,7 +69,7 @@ const updateVenue = async (req, res) => {
       if (closures) await tx.venueClosure.deleteMany({ where: { venueId: current.id } });
       return tx.venue.update({
       where: { id: parseInt(req.params.id) },
-      data: { name, description, sportId: sportId ? parseInt(sportId) : undefined, capacity, pricePerSlot, imageUrl, isActive, openingTime, closingTime, closedWeekdays, ...(closures ? { closures: { create: closures.map(({ startAt, endAt, reason }) => ({ startAt: new Date(startAt), endAt: new Date(endAt), reason })) } } : {}) },
+      data: { ...location, name, description, sportId: sportId ? parseInt(sportId) : undefined, capacity, pricePerSlot, imageUrl, isActive, openingTime, closingTime, closedWeekdays, ...(closures ? { closures: { create: closures.map(({ startAt, endAt, reason }) => ({ startAt: new Date(startAt), endAt: new Date(endAt), reason })) } } : {}) },
       include: { sport: { select: { id: true, name: true } }, closures: true }
     }); });
     res.json({ success: true, data: venue });

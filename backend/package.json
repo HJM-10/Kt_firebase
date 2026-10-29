@@ -10,6 +10,7 @@
     "db:seed": "node prisma/seed.js",
     "db:studio": "npx prisma studio",
     "test": "cross-env JWT_SECRET=testsecret jest",
+    "test:load": "node scripts/load-integrity.js",
     "postinstall": "prisma skills sync || exit 0"
   },
   "keywords": [],
@@ -18,6 +19,7 @@
   "type": "commonjs",
   "dependencies": {
     "@prisma/client": "5.22.0",
+    "@socket.io/redis-adapter": "^8.3.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -31,6 +33,8 @@
     "morgan": "^1.12.1",
     "prisma": "5.22.0",
     "qrcode": "^1.5.4",
+    "rate-limit-redis": "^6.0.2",
+    "redis": "^6.3.1",
     "socket.io": "^4.8.3",
     "stripe": "^22.6.2",
     "zod": "^4.6.5"

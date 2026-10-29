@@ -1,0 +1,67 @@
+name: Project verification
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  api-and-integrity:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: local-ci-only
+          MYSQL_DATABASE: smart_sports_hub_demo
+        ports: ["3307:3306"]
+        options: --health-cmd="mysqladmin ping -h localhost -plocal-ci-only" --health-interval=10s --health-timeout=5s --health-retries=10
+    env:
+      DATABASE_URL: mysql://root:local-ci-only@127.0.0.1:3307/smart_sports_hub_demo
+      JWT_SECRET: ci-test-only-secret-never-use-in-production
+      FIREBASE_ENABLED: "false"
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx prisma generate
+      - run: npx prisma migrate deploy
+      - run: npm test -- --runInBand
+      - run: npm run test:load
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend_web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend_web/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend_mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.35.7"
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test

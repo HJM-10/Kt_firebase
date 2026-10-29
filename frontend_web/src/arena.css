@@ -275,3 +275,15 @@ thead { background: var(--bg-card-hover); }
   body:has(.invoice) .modal { max-height: none; width: 100%; max-width: none; border: 0; box-shadow: none; }
 }
 .sr-only { width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; border: 0 !important; clip-path: inset(50%); }
+/* Keep map controls inside their panel and below dialogs. */
+.venue-location { margin-top: 24px; }
+.venue-location h2 { display: flex; align-items: center; gap: 8px; }
+.venue-location p { margin: 12px 0; overflow-wrap: anywhere; }
+.venue-map-canvas { height: 280px; width: 100%; border-radius: 14px; isolation: isolate; z-index: 0; background: #e5e9e2; }
+.venue-location-map { min-width: 0; margin: 14px 0; }
+.venue-location-editor { border: 1px solid var(--border-color, #ddd); padding: 14px; border-radius: 14px; min-width: 0; }
+.venue-location-editor .grid-2 { margin-bottom: 12px; }
+.map-message { padding: 10px; font-size: 13px; }
+.network-status { padding: 12px 24px; color: #573e17; background: #fbefcf; border-bottom: 1px solid #d8c18e; }
+.leaflet-container { color: #222; font-family: inherit; }
+@media (max-width: 480px) { .venue-map-canvas { height: 230px; } .venue-location > .flex { flex-wrap: wrap; } }

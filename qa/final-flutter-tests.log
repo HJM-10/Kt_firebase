@@ -1,0 +1,57 @@
+00:00 +0: loading D:/python/project/kt_ssh/frontend_mobile/test/api_errors_test.dart
+00:00 +0: D:/python/project/kt_ssh/frontend_mobile/test/api_errors_test.dart: outages and permission errors keep session; expiry clears it
+00:00 +1: D:/python/project/kt_ssh/frontend_mobile/test/api_errors_test.dart: connection and service failures explain retry; credentials retain server message
+00:00 +2: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: (setUpAll)
+00:00 +2: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: status helpers use Pakistan midnight, published sessions, and real booking states
+00:00 +3: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:01 +4: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:01 +5: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:01 +6: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +7: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +8: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +9: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +10: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +11: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:03 +12: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:04 +13: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:04 +14: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:04 +15: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Arena Desk renders all four tabs in dark
+00:04 +16: D:/python/project/kt_ssh/frontend_mobile/test/check_in_screen_test.dart: Camera capture fills code once and requires explicit check-in
+00:05 +17: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:05 +18: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:05 +19: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:05 +20: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:05 +21: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +22: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +23: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +24: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +25: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +26: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +27: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +28: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +29: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:06 +30: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +31: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +32: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +33: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +34: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +35: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in dark
+00:07 +36: D:/python/project/kt_ssh/frontend_mobile/test/widget_test.dart: Login displays credentials and opens signup
+00:08 +37: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Walk-in sends customer identity and never auto-confirms money received
+00:08 +38: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Main screens render and navigation works in light
+00:08 +39: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: Facility editor saves capacity, price, image and availability
+  [1m[flutter_map][0m
+    We want to help keep OpenStreetMap available for everyone. Our examples
+    and demo app use the public tile servers, but they are NOT free to use by
+    everyone! Please review whether the OpenStreetMap tile servers are suitable
+    for your project.
+    See:
+      * https://operations.osmfoundation.org/policies/tiles (OSM Tile Usage Policy)
+      * https://docs.fleaflet.dev/osm-warn for more information about this warning
+00:09 +40: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Reservation requires a selection, preserves date and honours server status
+00:09 +41: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Reservation requires a selection, preserves date and honours server status
+00:09 +42: D:/python/project/kt_ssh/frontend_mobile/test/arena_desk_test.dart: All admin tabs and scrolled content support compact large-text layouts
+00:11 +43: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Compact screens support larger text without layout exceptions
+00:11 +44: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: Failed discovery requests offer retry and do not invent venues
+00:12 +45: D:/python/project/kt_ssh/frontend_mobile/test/clubhouse_flow_test.dart: (tearDownAll)
+00:12 +45: All tests passed!

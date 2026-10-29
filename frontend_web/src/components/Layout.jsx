@@ -8,6 +8,12 @@ export default function Layout() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [date, setDate] = useState(new Date());
+  const [online, setOnline] = useState(() => navigator.onLine);
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    window.addEventListener('online', update); window.addEventListener('offline', update);
+    return () => { window.removeEventListener('online', update); window.removeEventListener('offline', update); };
+  }, []);
   const location = useLocation();
   const user = useAuthStore(s => s.user);
   const pages = user?.role === 'ADMIN' ? allAdminPages : customerPages;
@@ -45,6 +51,7 @@ export default function Layout() {
         </div>
         <div className="workspace-tools"><span className="header-date"><CalendarDays size={16} /><span>{new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Karachi', weekday: 'short', day: 'numeric', month: 'short' }).format(date)}</span></span><ThemeToggle /><Link className="icon-button" to="/notifications" aria-label="Notifications"><Bell size={19} /></Link><Link to="/settings" className="header-user"><span className="sidebar-avatar">{user?.name?.charAt(0) || 'K'}</span><span><strong>{user?.name?.split(' ')[0] || 'Member'}</strong><small>{user?.role === 'ADMIN' ? 'Administrator' : 'Member'}</small></span></Link></div>
       </header>
+      {!online && <div role="alert" className="network-status">You’re offline. Displayed details may be out of date. Reconnect before making changes.</div>}
       <main className="page-content" id="main-content" tabIndex={-1} key={location.pathname}><Outlet /></main>
       <footer className="workspace-footer"><span>KT Smart Sport Hub</span><span>All session times in Pakistan time · PKR</span></footer>
     </div>

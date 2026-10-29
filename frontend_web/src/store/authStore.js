@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import api from '../api/axios.js';
 import { sessionExpired, errorMessage } from '../api/errors.js';
+import { firebaseLogin } from '../api/firebase-login.js';
 
 const useAuthStore = create((set) => ({
   authError: null,
@@ -32,8 +33,8 @@ const useAuthStore = create((set) => ({
     }
   },
 
-  login: async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
+  login: async (email, password, firebase = false, existingPassword = '') => {
+    const res = firebase ? await firebaseLogin(email, password, existingPassword) : await api.post('/auth/login', { email, password });
     const { user, token } = res.data.data;
     sessionStorage.setItem('ssh_token', token);
     set({ user, token, isAuthenticated: true, authError: null });

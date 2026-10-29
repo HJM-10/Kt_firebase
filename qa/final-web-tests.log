@@ -1,0 +1,25 @@
+
+> frontend_web@0.0.0 test
+> node --test tests/*.test.js
+
+✔ arena date and session boundaries use Pakistan time regardless of the browser timezone (4.7967ms)
+✔ schedule state retains the active booking, but cancelled history does not occupy an open session (2.7478ms)
+✔ schedule range covers the whole published duration, including half-hour boundaries (0.3756ms)
+✔ booking search combines explicit states with customer, venue and ID matches (0.8319ms)
+✔ currency is consistently labelled PKR and never renders missing values as NaN (31.5857ms)
+✔ rental quotes include both dates and reject cleared, impossible or backwards dates (0.4939ms)
+✔ rental desk scopes venue stock separately from shared stock and combines status and customer search (0.6451ms)
+✔ resource refresh handles changes, reconnect recovery and cleanup without disconnecting other screens (1.9061ms)
+✔ only complete finite coordinate pairs produce a Google directions link (2.6267ms)
+✔ location edits preserve precision, trim addresses and clear pins atomically (1.705ms)
+✔ startup outage retains token, blocks unverified access, and retry verifies role (5.563ms)
+✔ credential and permission errors preserve session; true expiry clears and redirects (2.3738ms)
+✔ light is the default, changing theme persists, and reloading restores dark mode (43.3317ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 605.5579

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { sessionExpired, errorMessage } from './errors.js';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env?.VITE_API_URL || '/api',
   timeout: 20000,
   headers: { 'Content-Type': 'application/json' }
 });
@@ -18,7 +18,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (sessionExpired(err)) {
+    if (sessionExpired(err) && err.config?.url !== '/auth/providers') {
       sessionStorage.removeItem('ssh_token');
       sessionStorage.removeItem('ssh_user');
       window.location.href = '/login';

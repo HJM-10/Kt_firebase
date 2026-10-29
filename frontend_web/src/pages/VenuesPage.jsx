@@ -7,6 +7,9 @@ import ConfirmModal from '../components/ConfirmModal';
 import { Link } from 'react-router-dom';
 import { PageHeading, SportPhoto, StatusBadge } from '../components/ArenaUI';
 import { money } from '../utils/arena';
+import VenueMap from '../components/VenueMap';
+import { locationPayload } from '../utils/location';
+import useDialogFocus from '../services/useDialogFocus';
 
 const VenuesPage = () => {
   const [venues, setVenues] = useState([]);
@@ -16,6 +19,8 @@ const VenuesPage = () => {
   const [query, setQuery] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const dialog = useDialogFocus(modalOpen, () => setModalOpen(false), saving);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [venueToDelete, setVenueToDelete] = useState(null);
   const [formData, setFormData] = useState({
@@ -48,8 +53,11 @@ const VenuesPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;
+    setSaving(true);
     try {
       const payload = {
+        ...locationPayload(formData),
         name: formData.name,
         description: formData.description,
         sportId: parseInt(formData.sportId),
@@ -69,7 +77,9 @@ const VenuesPage = () => {
       setModalOpen(false);
       fetchVenues();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error saving venue');
+      toast.error(err.response?.data?.message || err.message || 'Error saving venue');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -96,6 +106,7 @@ const VenuesPage = () => {
     if (venue) {
       setFormData({
         id: venue.id,
+        address: venue.address || '', latitude: venue.latitude ?? '', longitude: venue.longitude ?? '',
         name: venue.name,
         description: venue.description || '',
         sportId: venue.sportId?.toString() || '',
@@ -121,20 +132,28 @@ const VenuesPage = () => {
       {/* Create / Edit Modal */}
       {modalOpen && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal" ref={dialog} role="dialog" aria-modal="true" aria-labelledby="venue-editor-title">
             <div className="modal-header">
-              <h2 className="modal-title">{formData.id ? 'Edit Venue' : 'New Venue'}</h2>
-              <button className="modal-close" onClick={() => setModalOpen(false)}>×</button>
+              <h2 className="modal-title" id="venue-editor-title">{formData.id ? 'Edit Venue' : 'New Venue'}</h2>
+              <button className="modal-close" aria-label="Close venue editor" disabled={saving} onClick={() => setModalOpen(false)}>×</button>
             </div>
             <form className="modal-form" onSubmit={handleSubmit}>
+              <fieldset className="venue-location-editor" disabled={saving}><legend>Venue location & entrance</legend>
+                <p className="text-muted">Zoom in and click the actual entrance. You can also enter coordinates from Google Maps. The starting view is not a saved pin.</p>
+                <label className="form-label" htmlFor="venue-address">Street address / entrance instructions</label><textarea id="venue-address" className="form-input" maxLength={500} rows={2} value={formData.address || ''} onChange={e => setFormData({ ...formData, address: e.target.value })} placeholder="Street, area, city and gate number" />
+                <VenueMap venue={{ latitude: formData.latitude === '' || formData.latitude == null ? null : Number(formData.latitude), longitude: formData.longitude === '' || formData.longitude == null ? null : Number(formData.longitude) }} onChange={point => setFormData(current => ({ ...current, ...point }))} />
+                <div className="grid-2">{[['latitude', -90, 90], ['longitude', -180, 180]].map(([key, min, max]) => <label key={key} htmlFor={'venue-' + key}>{key === 'latitude' ? 'Latitude' : 'Longitude'}<input id={'venue-' + key} type="number" className="form-input" step="any" min={min} max={max} value={formData[key] ?? ''} onChange={e => setFormData({ ...formData, [key]: e.target.value })} /></label>)}</div>
+                <button type="button" className="btn btn-secondary btn-sm" onClick={() => setFormData({ ...formData, latitude: '', longitude: '' })}>Clear entrance pin</button>
+              </fieldset>
               <div className="grid-2">{['openingTime', 'closingTime'].map(key => <label key={key}>{key === 'openingTime' ? 'Opens (Pakistan time)' : 'Closes (Pakistan time)'}<input type="time" className="form-input" required value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} /></label>)}</div>
               <fieldset><legend>Closed weekdays</legend><div className="flex gap-8">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((day, i) => <label key={day}><input type="checkbox" checked={formData.closedWeekdays.includes(i)} onChange={e => setFormData({ ...formData, closedWeekdays: e.target.checked ? [...formData.closedWeekdays, i] : formData.closedWeekdays.filter(d => d !== i) })} />{day}</label>)}</div></fieldset>
               <label><input type="checkbox" checked={formData.isActive} onChange={e => setFormData({ ...formData, isActive: e.target.checked })} /> Facility active</label>
               <fieldset><legend>Closures (Pakistan time)</legend>{formData.closures.map((closure, i) => <div key={i} className="card">{['startAt', 'endAt', 'reason'].map(key => <label key={key}>{key === 'startAt' ? 'From' : key === 'endAt' ? 'Until' : 'Reason'}<input className="form-input" required type={key === 'reason' ? 'text' : 'datetime-local'} value={closure[key]} onChange={e => setFormData({ ...formData, closures: formData.closures.map((c, n) => n === i ? { ...c, [key]: e.target.value } : c) })} /></label>)}<button type="button" className="btn btn-secondary" onClick={() => setFormData({ ...formData, closures: formData.closures.filter((_, n) => n !== i) })}>Remove closure</button></div>)}<button type="button" className="btn btn-secondary" onClick={() => setFormData({ ...formData, closures: [...formData.closures, { startAt: '', endAt: '', reason: '' }] })}>Add closure</button></fieldset>
 
               <div className="form-group">
-                <label className="form-label">Venue Name *</label>
+                <label className="form-label" htmlFor="venue-name">Venue Name *</label>
                 <input
+                  id="venue-name"
                   required
                   className="form-input"
                   value={formData.name}
@@ -143,8 +162,9 @@ const VenuesPage = () => {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Sport *</label>
+                <label className="form-label" htmlFor="venue-sport">Sport *</label>
                 <select
+                  id="venue-sport"
                   required
                   className="form-select"
                   value={formData.sportId}
@@ -185,8 +205,9 @@ const VenuesPage = () => {
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Description</label>
+                <label className="form-label" htmlFor="venue-description">Description</label>
                 <textarea
+                  id="venue-description"
                   className="form-input"
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -195,8 +216,9 @@ const VenuesPage = () => {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Image URL</label>
+                <label className="form-label" htmlFor="venue-image">Image URL</label>
                 <input
+                  id="venue-image"
                   className="form-input"
                   value={formData.imageUrl}
                   onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
@@ -205,7 +227,7 @@ const VenuesPage = () => {
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn btn-secondary" onClick={() => setModalOpen(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">{formData.id ? 'Save Changes' : 'Create Venue'}</button>
+                <button type="submit" disabled={saving} className="btn btn-primary">{saving ? 'Saving…' : formData.id ? 'Save Changes' : 'Create Venue'}</button>
               </div>
             </form>
           </div>

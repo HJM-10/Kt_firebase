@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/api_errors.dart';
 import '../services/push_service.dart';
+import 'package:dio/dio.dart';
 
 class AuthProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -27,7 +28,9 @@ class AuthProvider with ChangeNotifier {
 
     // The user requested that the app should ALWAYS ask for a password on startup.
     // So we clear any existing token instead of attempting to auto-login.
-    if (await _apiService.storage.read(key: 'ssh_token') != null) await PushService.unregister();
+    if (await _apiService.storage.read(key: 'ssh_token') != null) {
+      await PushService.unregister();
+    }
     await _apiService.storage.delete(key: 'ssh_token');
     _user = null;
     _isAuthenticated = false;
@@ -36,12 +39,39 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> login(String email, String password) async {
+  Future<String?> login(String email, String password,
+      {bool firebase = false, String existingPassword = ''}) async {
     try {
-      final res = await _apiService.dio.post('/auth/login', data: {
-        'email': email,
-        'password': password,
-      });
+      final Response res;
+      if (firebase) {
+        final config =
+            (await _apiService.dio.get('/auth/providers')).data['data'];
+        if (config['firebase'] != true) {
+          return 'Firebase sign-in is not configured. Use your existing account.';
+        }
+        final identity = await Dio(BaseOptions(
+                connectTimeout: const Duration(seconds: 15),
+                receiveTimeout: const Duration(seconds: 20)))
+            .post(
+                'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+                queryParameters: {
+              'key': config['firebaseApiKey']
+            },
+                data: {
+              'email': email,
+              'password': password,
+              'returnSecureToken': true
+            });
+        res = await _apiService.dio.post('/auth/firebase', data: {
+          'idToken': identity.data['idToken'],
+          if (existingPassword.isNotEmpty) 'existingPassword': existingPassword
+        });
+      } else {
+        res = await _apiService.dio.post('/auth/login', data: {
+          'email': email,
+          'password': password,
+        });
+      }
       final data = res.data['data'];
       await _apiService.storage.write(key: 'ssh_token', value: data['token']);
       _user = data['user'];

@@ -1,0 +1,1280 @@
+
+> backend@1.0.0 test:load
+> node scripts/load-integrity.js
+
+◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+POST /api/venues 201 21.608 ms - 422
+GET /api/venues/32 200 9.333 ms - 592
+PUT /api/venues/32 403 3.147 ms - 51
+Error: Choose both a valid latitude (-90 to 90) and longitude (-180 to 180), or clear both
+    at fail (D:\python\project\kt_ssh\backend\src\lib\venue-location.js:3:49)
+    at venueLocation (D:\python\project\kt_ssh\backend\src\lib\venue-location.js:12:189)
+    at updateVenue (D:\python\project\kt_ssh\backend\src\controllers\venues.controller.js:58:22)
+    at Layer.handleRequest (D:\python\project\kt_ssh\backend\node_modules\router\lib\layer.js:152:17)
+    at next (D:\python\project\kt_ssh\backend\node_modules\router\lib\route.js:157:13)
+    at requireAdmin (D:\python\project\kt_ssh\backend\src\middleware\auth.js:38:3)
+    at Layer.handleRequest (D:\python\project\kt_ssh\backend\node_modules\router\lib\layer.js:152:17)
+    at next (D:\python\project\kt_ssh\backend\node_modules\router\lib\route.js:157:13)
+    at authenticate (D:\python\project\kt_ssh\backend\src\middleware\auth.js:5:24)
+    at Layer.handleRequest (D:\python\project\kt_ssh\backend\node_modules\router\lib\layer.js:152:17) {
+  status: 400
+}
+PUT /api/venues/32 400 4.818 ms - 113
+PUT /api/venues/32 200 26.588 ms - 467
+GET /api/sports 200 6.368 ms - 2181
+GET /api/venues/32 200 7.877 ms - 623
+GET /api/sports 200 5.072 ms - 2181
+GET /api/venues/32 200 5.688 ms - 623
+GET /api/sports 200 4.848 ms - 2181
+GET /api/venues/32 200 4.904 ms - 623
+GET /api/sports 200 4.151 ms - 2181
+GET /api/venues/32 200 5.347 ms - 623
+GET /api/sports 200 5.776 ms - 2181
+GET /api/venues/32 200 5.412 ms - 623
+GET /api/sports 200 4.888 ms - 2181
+GET /api/venues/32 200 5.244 ms - 623
+GET /api/sports 200 4.099 ms - 2181
+GET /api/venues/32 200 5.739 ms - 623
+GET /api/sports 200 4.330 ms - 2181
+GET /api/venues/32 200 4.729 ms - 623
+GET /api/sports 200 4.449 ms - 2181
+GET /api/venues/32 200 5.212 ms - 623
+GET /api/sports 200 3.996 ms - 2181
+GET /api/venues/32 200 5.321 ms - 623
+GET /api/sports 200 4.184 ms - 2181
+GET /api/venues/32 200 5.971 ms - 623
+GET /api/sports 200 4.279 ms - 2181
+GET /api/venues/32 200 5.422 ms - 623
+GET /api/sports 200 4.078 ms - 2181
+GET /api/venues/32 200 5.243 ms - 623
+GET /api/sports 200 4.111 ms - 2181
+GET /api/venues/32 200 5.047 ms - 623
+GET /api/sports 200 4.005 ms - 2181
+GET /api/venues/32 200 5.377 ms - 623
+GET /api/sports 200 3.874 ms - 2181
+GET /api/venues/32 200 5.672 ms - 623
+GET /api/sports 200 4.028 ms - 2181
+GET /api/venues/32 200 5.531 ms - 623
+GET /api/sports 200 5.097 ms - 2181
+GET /api/venues/32 200 6.351 ms - 623
+GET /api/sports 200 5.499 ms - 2181
+GET /api/venues/32 200 6.050 ms - 623
+GET /api/sports 200 4.366 ms - 2181
+GET /api/venues/32 200 5.735 ms - 623
+GET /api/sports 200 5.650 ms - 2181
+GET /api/venues/32 200 5.638 ms - 623
+GET /api/sports 200 4.687 ms - 2181
+GET /api/venues/32 200 6.154 ms - 623
+GET /api/sports 200 4.561 ms - 2181
+GET /api/venues/32 200 6.133 ms - 623
+GET /api/sports 200 4.956 ms - 2181
+GET /api/venues/32 200 5.849 ms - 623
+GET /api/sports 200 3.707 ms - 2181
+GET /api/venues/32 200 4.906 ms - 623
+GET /api/sports 200 4.958 ms - 2181
+GET /api/venues/32 200 6.087 ms - 623
+GET /api/sports 200 5.228 ms - 2181
+GET /api/venues/32 200 5.482 ms - 623
+GET /api/sports 200 5.138 ms - 2181
+GET /api/venues/32 200 6.714 ms - 623
+GET /api/sports 200 4.146 ms - 2181
+GET /api/venues/32 200 5.037 ms - 623
+GET /api/sports 200 5.468 ms - 2181
+GET /api/venues/32 200 6.070 ms - 623
+GET /api/sports 200 5.659 ms - 2181
+GET /api/venues/32 200 5.780 ms - 623
+GET /api/sports 200 5.007 ms - 2181
+GET /api/venues/32 200 6.114 ms - 623
+GET /api/sports 200 5.114 ms - 2181
+GET /api/venues/32 200 6.228 ms - 623
+GET /api/sports 200 5.025 ms - 2181
+GET /api/venues/32 200 5.707 ms - 623
+GET /api/sports 200 5.348 ms - 2181
+GET /api/venues/32 200 6.590 ms - 623
+GET /api/sports 200 5.477 ms - 2181
+GET /api/venues/32 200 5.619 ms - 623
+GET /api/sports 200 4.976 ms - 2181
+GET /api/venues/32 200 5.724 ms - 623
+GET /api/sports 200 4.928 ms - 2181
+GET /api/venues/32 200 5.628 ms - 623
+GET /api/sports 200 4.988 ms - 2181
+GET /api/venues/32 200 5.734 ms - 623
+GET /api/sports 200 4.487 ms - 2181
+GET /api/venues/32 200 5.280 ms - 623
+GET /api/sports 200 4.311 ms - 2181
+GET /api/venues/32 200 6.355 ms - 623
+GET /api/sports 200 4.524 ms - 2181
+GET /api/venues/32 200 5.675 ms - 623
+GET /api/sports 200 3.995 ms - 2181
+GET /api/venues/32 200 4.495 ms - 623
+GET /api/sports 200 4.361 ms - 2181
+GET /api/venues/32 200 4.901 ms - 623
+GET /api/sports 200 4.368 ms - 2181
+GET /api/venues/32 200 4.817 ms - 623
+GET /api/sports 200 3.648 ms - 2181
+GET /api/venues/32 200 5.725 ms - 623
+GET /api/sports 200 9.303 ms - 2181
+GET /api/venues/32 200 6.120 ms - 623
+GET /api/sports 200 6.816 ms - 2181
+GET /api/venues/32 200 7.132 ms - 623
+GET /api/sports 200 5.123 ms - 2181
+GET /api/venues/32 200 4.986 ms - 623
+GET /api/sports 200 5.183 ms - 2181
+GET /api/venues/32 200 5.575 ms - 623
+LOAD_RESULT {"type":"authenticated HTTP reads","concurrency":1,"requests":100,"failures":0,"throughputRps":127.6,"p50ms":7.7,"p95ms":10.5,"p99ms":11.9}
+GET /api/sports 200 18.306 ms - 2181
+GET /api/sports 200 16.001 ms - 2181
+GET /api/venues/32 200 16.479 ms - 623
+GET /api/sports 200 14.382 ms - 2181
+GET /api/venues/32 200 22.583 ms - 623
+GET /api/sports 200 19.941 ms - 2181
+GET /api/sports 200 17.035 ms - 2181
+GET /api/venues/32 200 21.599 ms - 623
+GET /api/venues/32 200 23.675 ms - 623
+GET /api/venues/32 200 24.527 ms - 623
+GET /api/sports 200 29.328 ms - 2181
+GET /api/venues/32 200 24.194 ms - 623
+GET /api/sports 200 19.192 ms - 2181
+GET /api/venues/32 200 18.509 ms - 623
+GET /api/sports 200 16.954 ms - 2181
+GET /api/sports 200 17.138 ms - 2181
+GET /api/venues/32 200 20.477 ms - 623
+GET /api/venues/32 200 18.539 ms - 623
+GET /api/venues/32 200 22.949 ms - 623
+GET /api/sports 200 22.078 ms - 2181
+GET /api/sports 200 23.196 ms - 2181
+GET /api/venues/32 200 23.723 ms - 623
+GET /api/sports 200 19.114 ms - 2181
+GET /api/sports 200 17.626 ms - 2181
+GET /api/sports 200 17.500 ms - 2181
+GET /api/venues/32 200 20.731 ms - 623
+GET /api/venues/32 200 21.881 ms - 623
+GET /api/venues/32 200 21.298 ms - 623
+GET /api/sports 200 26.542 ms - 2181
+GET /api/sports 200 25.330 ms - 2181
+GET /api/venues/32 200 21.659 ms - 623
+GET /api/venues/32 200 21.302 ms - 623
+GET /api/sports 200 18.724 ms - 2181
+GET /api/sports 200 15.192 ms - 2181
+GET /api/sports 200 14.981 ms - 2181
+GET /api/venues/32 200 17.907 ms - 623
+GET /api/venues/32 200 16.901 ms - 623
+GET /api/venues/32 200 16.164 ms - 623
+GET /api/sports 200 18.749 ms - 2181
+GET /api/sports 200 17.106 ms - 2181
+GET /api/venues/32 200 19.094 ms - 623
+GET /api/sports 200 16.728 ms - 2181
+GET /api/venues/32 200 18.646 ms - 623
+GET /api/venues/32 200 15.820 ms - 623
+GET /api/sports 200 15.345 ms - 2181
+GET /api/sports 200 14.464 ms - 2181
+GET /api/venues/32 200 16.151 ms - 623
+GET /api/venues/32 200 15.419 ms - 623
+GET /api/sports 200 15.366 ms - 2181
+GET /api/sports 200 14.243 ms - 2181
+GET /api/venues/32 200 15.786 ms - 623
+GET /api/sports 200 14.634 ms - 2181
+GET /api/venues/32 200 16.065 ms - 623
+GET /api/sports 200 12.344 ms - 2181
+GET /api/venues/32 200 13.823 ms - 623
+GET /api/sports 200 12.614 ms - 2181
+GET /api/venues/32 200 14.563 ms - 623
+GET /api/venues/32 200 13.512 ms - 623
+GET /api/sports 200 14.216 ms - 2181
+GET /api/venues/32 200 14.643 ms - 623
+GET /api/sports 200 14.514 ms - 2181
+GET /api/sports 200 16.076 ms - 2181
+GET /api/venues/32 200 17.516 ms - 623
+GET /api/venues/32 200 15.571 ms - 623
+GET /api/sports 200 15.842 ms - 2181
+GET /api/sports 200 14.681 ms - 2181
+GET /api/venues/32 200 16.007 ms - 623
+GET /api/venues/32 200 14.460 ms - 623
+GET /api/sports 200 15.751 ms - 2181
+GET /api/sports 200 14.454 ms - 2181
+GET /api/venues/32 200 15.807 ms - 623
+GET /api/sports 200 15.302 ms - 2181
+GET /api/venues/32 200 16.345 ms - 623
+GET /api/sports 200 13.826 ms - 2181
+GET /api/venues/32 200 14.931 ms - 623
+GET /api/sports 200 13.341 ms - 2181
+GET /api/venues/32 200 14.664 ms - 623
+GET /api/venues/32 200 13.039 ms - 623
+GET /api/sports 200 18.029 ms - 2181
+GET /api/sports 200 16.930 ms - 2181
+GET /api/venues/32 200 19.039 ms - 623
+GET /api/sports 200 18.772 ms - 2181
+GET /api/venues/32 200 20.976 ms - 623
+GET /api/venues/32 200 14.936 ms - 623
+GET /api/sports 200 14.693 ms - 2181
+GET /api/sports 200 13.713 ms - 2181
+GET /api/venues/32 200 15.201 ms - 623
+GET /api/venues/32 200 14.533 ms - 623
+GET /api/sports 200 13.945 ms - 2181
+GET /api/sports 200 12.845 ms - 2181
+GET /api/venues/32 200 13.942 ms - 623
+GET /api/venues/32 200 15.475 ms - 623
+GET /api/sports 200 15.180 ms - 2181
+GET /api/sports 200 14.001 ms - 2181
+GET /api/venues/32 200 15.073 ms - 623
+GET /api/sports 200 13.509 ms - 2181
+GET /api/venues/32 200 15.514 ms - 623
+GET /api/venues/32 200 14.325 ms - 623
+GET /api/sports 200 13.784 ms - 2181
+GET /api/sports 200 13.144 ms - 2181
+GET /api/venues/32 200 14.309 ms - 623
+GET /api/sports 200 13.204 ms - 2181
+GET /api/venues/32 200 14.594 ms - 623
+GET /api/sports 200 10.897 ms - 2181
+GET /api/venues/32 200 12.048 ms - 623
+GET /api/sports 200 11.263 ms - 2181
+GET /api/venues/32 200 12.503 ms - 623
+GET /api/venues/32 200 11.751 ms - 623
+GET /api/sports 200 13.955 ms - 2181
+GET /api/sports 200 13.598 ms - 2181
+GET /api/venues/32 200 14.500 ms - 623
+GET /api/sports 200 13.516 ms - 2181
+GET /api/venues/32 200 14.786 ms - 623
+GET /api/venues/32 200 12.014 ms - 623
+GET /api/sports 200 11.824 ms - 2181
+GET /api/sports 200 11.310 ms - 2181
+GET /api/venues/32 200 12.072 ms - 623
+GET /api/venues/32 200 13.369 ms - 623
+GET /api/sports 200 13.174 ms - 2181
+GET /api/venues/32 200 13.067 ms - 623
+GET /api/sports 200 13.504 ms - 2181
+GET /api/sports 200 16.087 ms - 2181
+GET /api/venues/32 200 17.910 ms - 623
+GET /api/sports 200 14.573 ms - 2181
+GET /api/sports 200 13.517 ms - 2181
+GET /api/venues/32 200 16.782 ms - 623
+GET /api/venues/32 200 15.185 ms - 623
+GET /api/venues/32 200 14.705 ms - 623
+GET /api/sports 200 13.684 ms - 2181
+GET /api/sports 200 12.446 ms - 2181
+GET /api/venues/32 200 14.163 ms - 623
+GET /api/sports 200 15.112 ms - 2181
+GET /api/venues/32 200 16.846 ms - 623
+GET /api/sports 200 15.361 ms - 2181
+GET /api/sports 200 14.166 ms - 2181
+GET /api/venues/32 200 17.642 ms - 623
+GET /api/venues/32 200 16.809 ms - 623
+GET /api/venues/32 200 15.955 ms - 623
+GET /api/sports 200 18.254 ms - 2181
+GET /api/venues/32 200 17.648 ms - 623
+GET /api/sports 200 17.140 ms - 2181
+GET /api/sports 200 21.506 ms - 2181
+GET /api/venues/32 200 23.299 ms - 623
+GET /api/sports 200 19.269 ms - 2181
+GET /api/venues/32 200 20.666 ms - 623
+GET /api/sports 200 16.747 ms - 2181
+GET /api/venues/32 200 19.119 ms - 623
+GET /api/venues/32 200 17.508 ms - 623
+GET /api/sports 200 18.237 ms - 2181
+GET /api/sports 200 16.322 ms - 2181
+GET /api/venues/32 200 18.062 ms - 623
+GET /api/sports 200 15.657 ms - 2181
+GET /api/venues/32 200 18.091 ms - 623
+GET /api/sports 200 14.922 ms - 2181
+GET /api/venues/32 200 15.978 ms - 623
+GET /api/sports 200 13.999 ms - 2181
+GET /api/venues/32 200 15.409 ms - 623
+GET /api/venues/32 200 14.336 ms - 623
+GET /api/sports 200 15.010 ms - 2181
+GET /api/sports 200 14.173 ms - 2181
+GET /api/venues/32 200 15.513 ms - 623
+GET /api/sports 200 15.592 ms - 2181
+GET /api/venues/32 200 17.104 ms - 623
+GET /api/sports 200 13.775 ms - 2181
+GET /api/sports 200 13.204 ms - 2181
+GET /api/venues/32 200 15.902 ms - 623
+GET /api/venues/32 200 14.723 ms - 623
+GET /api/venues/32 200 13.313 ms - 623
+GET /api/sports 200 15.337 ms - 2181
+GET /api/sports 200 13.828 ms - 2181
+GET /api/venues/32 200 16.030 ms - 623
+GET /api/sports 200 15.153 ms - 2181
+GET /api/venues/32 200 17.098 ms - 623
+GET /api/sports 200 12.688 ms - 2181
+GET /api/sports 200 11.967 ms - 2181
+GET /api/venues/32 200 14.425 ms - 623
+GET /api/venues/32 200 14.272 ms - 623
+GET /api/venues/32 200 12.762 ms - 623
+GET /api/sports 200 12.725 ms - 2181
+GET /api/sports 200 11.973 ms - 2181
+GET /api/venues/32 200 12.993 ms - 623
+GET /api/sports 200 13.455 ms - 2181
+GET /api/venues/32 200 14.648 ms - 623
+GET /api/sports 200 11.565 ms - 2181
+GET /api/venues/32 200 12.767 ms - 623
+GET /api/sports 200 11.244 ms - 2181
+GET /api/venues/32 200 10.833 ms - 623
+GET /api/venues/32 200 12.897 ms - 623
+GET /api/sports 200 12.577 ms - 2181
+GET /api/sports 200 11.802 ms - 2181
+GET /api/venues/32 200 13.130 ms - 623
+GET /api/venues/32 200 13.667 ms - 623
+GET /api/sports 200 13.704 ms - 2181
+GET /api/venues/32 200 13.720 ms - 623
+GET /api/sports 200 13.565 ms - 2181
+GET /api/sports 200 12.760 ms - 2181
+GET /api/venues/32 200 14.262 ms - 623
+GET /api/venues/32 200 13.326 ms - 623
+GET /api/sports 200 13.058 ms - 2181
+GET /api/sports 200 11.782 ms - 2181
+GET /api/venues/32 200 13.703 ms - 623
+GET /api/sports 200 13.112 ms - 2181
+GET /api/venues/32 200 14.423 ms - 623
+GET /api/venues/32 200 14.884 ms - 623
+GET /api/sports 200 13.911 ms - 2181
+GET /api/sports 200 12.895 ms - 2181
+GET /api/venues/32 200 13.711 ms - 623
+GET /api/venues/32 200 13.473 ms - 623
+GET /api/sports 200 12.206 ms - 2181
+GET /api/sports 200 11.726 ms - 2181
+GET /api/venues/32 200 12.747 ms - 623
+GET /api/sports 200 12.776 ms - 2181
+GET /api/venues/32 200 13.837 ms - 623
+GET /api/sports 200 12.534 ms - 2181
+GET /api/venues/32 200 13.700 ms - 623
+GET /api/sports 200 11.821 ms - 2181
+GET /api/venues/32 200 13.328 ms - 623
+GET /api/venues/32 200 12.007 ms - 623
+GET /api/sports 200 14.277 ms - 2181
+GET /api/sports 200 12.529 ms - 2181
+GET /api/venues/32 200 13.914 ms - 623
+GET /api/sports 200 13.765 ms - 2181
+GET /api/venues/32 200 16.161 ms - 623
+GET /api/sports 200 13.178 ms - 2181
+GET /api/venues/32 200 14.596 ms - 623
+GET /api/sports 200 11.997 ms - 2181
+GET /api/venues/32 200 13.562 ms - 623
+GET /api/venues/32 200 13.436 ms - 623
+GET /api/sports 200 12.466 ms - 2181
+GET /api/sports 200 12.619 ms - 2181
+GET /api/venues/32 200 13.820 ms - 623
+GET /api/sports 200 13.555 ms - 2181
+GET /api/venues/32 200 15.294 ms - 623
+GET /api/sports 200 11.990 ms - 2181
+GET /api/sports 200 11.496 ms - 2181
+GET /api/venues/32 200 14.496 ms - 623
+GET /api/venues/32 200 13.491 ms - 623
+GET /api/venues/32 200 12.121 ms - 623
+GET /api/sports 200 14.723 ms - 2181
+GET /api/venues/32 200 14.779 ms - 623
+GET /api/sports 200 14.072 ms - 2181
+GET /api/sports 200 13.669 ms - 2181
+GET /api/venues/32 200 14.977 ms - 623
+GET /api/sports 200 12.071 ms - 2181
+GET /api/venues/32 200 13.238 ms - 623
+GET /api/sports 200 11.306 ms - 2181
+GET /api/venues/32 200 12.841 ms - 623
+GET /api/venues/32 200 11.867 ms - 623
+GET /api/sports 200 13.000 ms - 2181
+GET /api/sports 200 12.381 ms - 2181
+GET /api/venues/32 200 13.947 ms - 623
+GET /api/sports 200 16.269 ms - 2181
+GET /api/venues/32 200 18.579 ms - 623
+GET /api/venues/32 200 15.979 ms - 623
+GET /api/sports 200 15.760 ms - 2181
+GET /api/sports 200 13.970 ms - 2181
+GET /api/venues/32 200 15.282 ms - 623
+GET /api/venues/32 200 12.639 ms - 623
+GET /api/sports 200 12.770 ms - 2181
+GET /api/sports 200 11.362 ms - 2181
+GET /api/venues/32 200 12.654 ms - 623
+GET /api/sports 200 13.760 ms - 2181
+GET /api/venues/32 200 15.057 ms - 623
+GET /api/sports 200 14.569 ms - 2181
+GET /api/venues/32 200 16.260 ms - 623
+GET /api/sports 200 15.064 ms - 2181
+GET /api/venues/32 200 16.579 ms - 623
+GET /api/venues/32 200 15.531 ms - 623
+GET /api/sports 200 15.709 ms - 2181
+GET /api/sports 200 14.939 ms - 2181
+GET /api/venues/32 200 15.840 ms - 623
+GET /api/sports 200 12.068 ms - 2181
+GET /api/venues/32 200 13.645 ms - 623
+GET /api/sports 200 12.390 ms - 2181
+GET /api/venues/32 200 13.596 ms - 623
+GET /api/sports 200 12.683 ms - 2181
+GET /api/venues/32 200 14.256 ms - 623
+GET /api/venues/32 200 13.763 ms - 623
+GET /api/sports 200 13.695 ms - 2181
+GET /api/sports 200 12.567 ms - 2181
+GET /api/venues/32 200 13.541 ms - 623
+GET /api/sports 200 12.110 ms - 2181
+GET /api/venues/32 200 14.103 ms - 623
+GET /api/sports 200 12.137 ms - 2181
+GET /api/venues/32 200 13.218 ms - 623
+GET /api/sports 200 11.915 ms - 2181
+GET /api/venues/32 200 13.127 ms - 623
+GET /api/venues/32 200 12.626 ms - 623
+GET /api/sports 200 12.489 ms - 2181
+GET /api/venues/32 200 12.727 ms - 623
+GET /api/sports 200 12.447 ms - 2181
+GET /api/venues/32 200 13.581 ms - 623
+GET /api/sports 200 13.344 ms - 2181
+GET /api/sports 200 9.070 ms - 2181
+GET /api/sports 200 8.403 ms - 2181
+GET /api/venues/32 200 10.645 ms - 623
+GET /api/venues/32 200 9.632 ms - 623
+GET /api/venues/32 200 8.463 ms - 623
+GET /api/sports 200 5.409 ms - 2181
+GET /api/venues/32 200 6.207 ms - 623
+LOAD_RESULT {"type":"authenticated HTTP reads","concurrency":10,"requests":300,"failures":0,"throughputRps":356.7,"p50ms":25.8,"p95ms":42.3,"p99ms":56.9}
+GET /api/sports 200 36.602 ms - 2181
+GET /api/sports 200 33.838 ms - 2181
+GET /api/sports 200 36.072 ms - 2181
+GET /api/sports 200 33.816 ms - 2181
+GET /api/venues/32 200 36.195 ms - 623
+GET /api/venues/32 200 38.410 ms - 623
+GET /api/venues/32 200 34.526 ms - 623
+GET /api/sports 200 33.575 ms - 2181
+GET /api/venues/32 200 36.419 ms - 623
+GET /api/sports 200 33.341 ms - 2181
+GET /api/sports 200 35.232 ms - 2181
+GET /api/sports 200 33.446 ms - 2181
+GET /api/venues/32 200 34.068 ms - 623
+GET /api/venues/32 200 34.204 ms - 623
+GET /api/venues/32 200 36.522 ms - 623
+GET /api/venues/32 200 37.661 ms - 623
+GET /api/sports 200 51.020 ms - 2181
+GET /api/venues/32 200 50.307 ms - 623
+GET /api/sports 200 49.697 ms - 2181
+GET /api/sports 200 48.829 ms - 2181
+GET /api/sports 200 47.821 ms - 2181
+GET /api/venues/32 200 48.746 ms - 623
+GET /api/venues/32 200 50.469 ms - 623
+GET /api/sports 200 47.568 ms - 2181
+GET /api/sports 200 46.991 ms - 2181
+GET /api/venues/32 200 48.705 ms - 623
+GET /api/venues/32 200 47.991 ms - 623
+GET /api/sports 200 47.204 ms - 2181
+GET /api/venues/32 200 48.026 ms - 623
+GET /api/sports 200 47.092 ms - 2181
+GET /api/venues/32 200 48.072 ms - 623
+GET /api/sports 200 49.398 ms - 2181
+GET /api/sports 200 48.149 ms - 2181
+GET /api/venues/32 200 50.921 ms - 623
+GET /api/venues/32 200 49.742 ms - 623
+GET /api/sports 200 48.254 ms - 2181
+GET /api/sports 200 48.013 ms - 2181
+GET /api/venues/32 200 48.816 ms - 623
+GET /api/venues/32 200 50.580 ms - 623
+GET /api/venues/32 200 49.012 ms - 623
+GET /api/sports 200 40.185 ms - 2181
+GET /api/sports 200 34.835 ms - 2181
+GET /api/venues/32 200 37.006 ms - 623
+GET /api/sports 200 34.733 ms - 2181
+GET /api/sports 200 34.148 ms - 2181
+GET /api/sports 200 33.729 ms - 2181
+GET /api/sports 200 33.243 ms - 2181
+GET /api/venues/32 200 37.299 ms - 623
+GET /api/venues/32 200 36.761 ms - 623
+GET /api/sports 200 33.513 ms - 2181
+GET /api/venues/32 200 35.711 ms - 623
+GET /api/venues/32 200 36.968 ms - 623
+GET /api/sports 200 34.172 ms - 2181
+GET /api/sports 200 34.283 ms - 2181
+GET /api/venues/32 200 36.386 ms - 623
+GET /api/venues/32 200 36.050 ms - 623
+GET /api/sports 200 34.536 ms - 2181
+GET /api/venues/32 200 35.644 ms - 623
+GET /api/sports 200 34.302 ms - 2181
+GET /api/venues/32 200 36.029 ms - 623
+GET /api/sports 200 34.736 ms - 2181
+GET /api/sports 200 34.036 ms - 2181
+GET /api/venues/32 200 36.897 ms - 623
+GET /api/venues/32 200 35.362 ms - 623
+GET /api/venues/32 200 36.430 ms - 623
+GET /api/sports 200 33.556 ms - 2181
+GET /api/venues/32 200 34.482 ms - 623
+GET /api/venues/32 200 35.563 ms - 623
+GET /api/sports 200 35.479 ms - 2181
+GET /api/sports 200 33.930 ms - 2181
+GET /api/sports 200 33.275 ms - 2181
+GET /api/venues/32 200 35.263 ms - 623
+GET /api/sports 200 33.244 ms - 2181
+GET /api/venues/32 200 34.911 ms - 623
+GET /api/sports 200 33.528 ms - 2181
+GET /api/venues/32 200 35.024 ms - 623
+GET /api/sports 200 33.383 ms - 2181
+GET /api/venues/32 200 35.129 ms - 623
+GET /api/venues/32 200 37.138 ms - 623
+GET /api/venues/32 200 35.801 ms - 623
+GET /api/sports 200 56.819 ms - 2181
+GET /api/sports 200 45.773 ms - 2181
+GET /api/venues/32 200 49.315 ms - 623
+GET /api/sports 200 45.867 ms - 2181
+GET /api/venues/32 200 46.553 ms - 623
+GET /api/sports 200 45.764 ms - 2181
+GET /api/sports 200 45.411 ms - 2181
+GET /api/venues/32 200 47.088 ms - 623
+GET /api/sports 200 45.215 ms - 2181
+GET /api/venues/32 200 47.025 ms - 623
+GET /api/sports 200 45.373 ms - 2181
+GET /api/venues/32 200 47.086 ms - 623
+GET /api/sports 200 44.818 ms - 2181
+GET /api/venues/32 200 46.820 ms - 623
+GET /api/venues/32 200 46.622 ms - 623
+GET /api/venues/32 200 45.740 ms - 623
+GET /api/sports 200 45.740 ms - 2181
+GET /api/sports 200 45.557 ms - 2181
+GET /api/venues/32 200 45.295 ms - 623
+GET /api/sports 200 45.201 ms - 2181
+GET /api/sports 200 44.221 ms - 2181
+GET /api/sports 200 42.899 ms - 2181
+GET /api/sports 200 41.966 ms - 2181
+GET /api/venues/32 200 46.624 ms - 623
+GET /api/venues/32 200 45.343 ms - 623
+GET /api/venues/32 200 44.688 ms - 623
+GET /api/sports 200 43.466 ms - 2181
+GET /api/sports 200 42.905 ms - 2181
+GET /api/venues/32 200 44.059 ms - 623
+GET /api/sports 200 43.021 ms - 2181
+GET /api/venues/32 200 46.543 ms - 623
+GET /api/venues/32 200 44.613 ms - 623
+GET /api/sports 200 44.663 ms - 2181
+GET /api/venues/32 200 44.666 ms - 623
+GET /api/venues/32 200 46.625 ms - 623
+GET /api/sports 200 47.434 ms - 2181
+GET /api/venues/32 200 55.252 ms - 623
+GET /api/sports 200 55.064 ms - 2181
+GET /api/venues/32 200 55.954 ms - 623
+GET /api/venues/32 200 68.259 ms - 623
+GET /api/sports 200 77.601 ms - 2181
+GET /api/sports 200 57.147 ms - 2181
+GET /api/venues/32 200 61.305 ms - 623
+GET /api/venues/32 200 56.497 ms - 623
+GET /api/sports 200 55.584 ms - 2181
+GET /api/sports 200 53.175 ms - 2181
+GET /api/venues/32 200 55.153 ms - 623
+GET /api/sports 200 52.937 ms - 2181
+GET /api/venues/32 200 54.250 ms - 623
+GET /api/sports 200 52.920 ms - 2181
+GET /api/venues/32 200 54.248 ms - 623
+GET /api/sports 200 53.306 ms - 2181
+GET /api/sports 200 52.772 ms - 2181
+GET /api/venues/32 200 53.732 ms - 623
+GET /api/venues/32 200 55.036 ms - 623
+GET /api/sports 200 52.681 ms - 2181
+GET /api/sports 200 51.344 ms - 2181
+GET /api/venues/32 200 53.889 ms - 623
+GET /api/venues/32 200 52.322 ms - 623
+GET /api/venues/32 200 54.146 ms - 623
+GET /api/sports 200 53.116 ms - 2181
+GET /api/sports 200 50.364 ms - 2181
+GET /api/venues/32 200 52.180 ms - 623
+GET /api/sports 200 49.068 ms - 2181
+GET /api/sports 200 48.039 ms - 2181
+GET /api/venues/32 200 51.305 ms - 623
+GET /api/venues/32 200 49.913 ms - 623
+GET /api/sports 200 46.955 ms - 2181
+GET /api/venues/32 200 49.267 ms - 623
+GET /api/sports 200 49.302 ms - 2181
+GET /api/venues/32 200 48.975 ms - 623
+GET /api/venues/32 200 48.048 ms - 623
+GET /api/sports 200 48.000 ms - 2181
+GET /api/sports 200 48.687 ms - 2181
+GET /api/venues/32 200 50.127 ms - 623
+GET /api/venues/32 200 48.766 ms - 623
+GET /api/sports 200 60.618 ms - 2181
+GET /api/venues/32 200 62.821 ms - 623
+GET /api/sports 200 64.760 ms - 2181
+GET /api/venues/32 200 71.404 ms - 623
+GET /api/sports 200 83.213 ms - 2181
+GET /api/sports 200 62.456 ms - 2181
+GET /api/venues/32 200 64.260 ms - 623
+GET /api/sports 200 61.882 ms - 2181
+GET /api/sports 200 61.090 ms - 2181
+GET /api/venues/32 200 64.340 ms - 623
+GET /api/sports 200 60.401 ms - 2181
+GET /api/venues/32 200 63.734 ms - 623
+GET /api/sports 200 59.480 ms - 2181
+GET /api/venues/32 200 63.166 ms - 623
+GET /api/sports 200 58.656 ms - 2181
+GET /api/venues/32 200 61.996 ms - 623
+GET /api/venues/32 200 60.603 ms - 623
+GET /api/sports 200 58.182 ms - 2181
+GET /api/venues/32 200 59.471 ms - 623
+GET /api/sports 200 57.762 ms - 2181
+GET /api/sports 200 56.610 ms - 2181
+GET /api/venues/32 200 59.589 ms - 623
+GET /api/venues/32 200 58.376 ms - 623
+GET /api/sports 200 56.382 ms - 2181
+GET /api/venues/32 200 57.860 ms - 623
+GET /api/sports 200 54.444 ms - 2181
+GET /api/venues/32 200 54.858 ms - 623
+GET /api/sports 200 54.283 ms - 2181
+GET /api/venues/32 200 58.774 ms - 623
+GET /api/venues/32 200 54.455 ms - 623
+GET /api/sports 200 51.118 ms - 2181
+GET /api/venues/32 200 51.660 ms - 623
+GET /api/sports 200 61.771 ms - 2181
+GET /api/venues/32 200 64.285 ms - 623
+GET /api/sports 200 64.199 ms - 2181
+GET /api/sports 200 63.833 ms - 2181
+GET /api/sports 200 61.659 ms - 2181
+GET /api/venues/32 200 63.051 ms - 623
+GET /api/sports 200 60.702 ms - 2181
+GET /api/venues/32 200 61.855 ms - 623
+GET /api/sports 200 59.984 ms - 2181
+GET /api/venues/32 200 61.714 ms - 623
+GET /api/venues/32 200 61.343 ms - 623
+GET /api/venues/32 200 61.014 ms - 623
+GET /api/sports 200 79.601 ms - 2181
+GET /api/sports 200 72.237 ms - 2181
+GET /api/venues/32 200 74.657 ms - 623
+GET /api/sports 200 70.779 ms - 2181
+GET /api/sports 200 68.822 ms - 2181
+GET /api/venues/32 200 73.334 ms - 623
+GET /api/venues/32 200 71.029 ms - 623
+GET /api/sports 200 67.584 ms - 2181
+GET /api/sports 200 65.627 ms - 2181
+GET /api/venues/32 200 69.878 ms - 623
+GET /api/venues/32 200 67.761 ms - 623
+GET /api/sports 200 65.364 ms - 2181
+GET /api/venues/32 200 66.799 ms - 623
+GET /api/sports 200 64.537 ms - 2181
+GET /api/sports 200 63.208 ms - 2181
+GET /api/venues/32 200 64.536 ms - 623
+GET /api/sports 200 61.708 ms - 2181
+GET /api/venues/32 200 63.194 ms - 623
+GET /api/venues/32 200 67.612 ms - 623
+GET /api/sports 200 60.772 ms - 2181
+GET /api/sports 200 59.115 ms - 2181
+GET /api/venues/32 200 60.909 ms - 623
+GET /api/venues/32 200 64.133 ms - 623
+GET /api/sports 200 57.831 ms - 2181
+GET /api/venues/32 200 58.951 ms - 623
+GET /api/venues/32 200 57.886 ms - 623
+GET /api/sports 200 56.563 ms - 2181
+GET /api/venues/32 200 55.283 ms - 623
+GET /api/sports 200 62.302 ms - 2181
+GET /api/sports 200 59.095 ms - 2181
+GET /api/venues/32 200 60.889 ms - 623
+GET /api/sports 200 57.620 ms - 2181
+GET /api/venues/32 200 58.975 ms - 623
+GET /api/sports 200 57.444 ms - 2181
+GET /api/venues/32 200 59.076 ms - 623
+GET /api/sports 200 57.216 ms - 2181
+GET /api/venues/32 200 58.587 ms - 623
+GET /api/sports 200 56.531 ms - 2181
+GET /api/venues/32 200 59.434 ms - 623
+GET /api/venues/32 200 58.397 ms - 623
+GET /api/sports 200 69.208 ms - 2181
+GET /api/sports 200 58.261 ms - 2181
+GET /api/venues/32 200 60.056 ms - 623
+GET /api/sports 200 56.730 ms - 2181
+GET /api/sports 200 55.422 ms - 2181
+GET /api/venues/32 200 59.485 ms - 623
+GET /api/sports 200 54.612 ms - 2181
+GET /api/venues/32 200 57.995 ms - 623
+GET /api/sports 200 54.195 ms - 2181
+GET /api/sports 200 53.425 ms - 2181
+GET /api/venues/32 200 58.041 ms - 623
+GET /api/sports 200 52.405 ms - 2181
+GET /api/venues/32 200 55.513 ms - 623
+GET /api/venues/32 200 57.416 ms - 623
+GET /api/sports 200 51.137 ms - 2181
+GET /api/venues/32 200 54.749 ms - 623
+GET /api/sports 200 50.161 ms - 2181
+GET /api/venues/32 200 53.281 ms - 623
+GET /api/venues/32 200 51.472 ms - 623
+GET /api/sports 200 49.833 ms - 2181
+GET /api/venues/32 200 50.976 ms - 623
+GET /api/sports 200 49.048 ms - 2181
+GET /api/sports 200 48.393 ms - 2181
+GET /api/venues/32 200 50.566 ms - 623
+GET /api/venues/32 200 49.798 ms - 623
+GET /api/sports 200 46.984 ms - 2181
+GET /api/venues/32 200 48.481 ms - 623
+GET /api/venues/32 200 47.366 ms - 623
+GET /api/sports 200 48.836 ms - 2181
+GET /api/sports 200 46.259 ms - 2181
+GET /api/venues/32 200 47.627 ms - 623
+GET /api/sports 200 45.344 ms - 2181
+GET /api/sports 200 44.035 ms - 2181
+GET /api/venues/32 200 47.060 ms - 623
+GET /api/sports 200 43.206 ms - 2181
+GET /api/sports 200 42.644 ms - 2181
+GET /api/venues/32 200 46.644 ms - 623
+GET /api/venues/32 200 46.547 ms - 623
+GET /api/venues/32 200 45.447 ms - 623
+GET /api/venues/32 200 45.857 ms - 623
+GET /api/sports 200 57.715 ms - 2181
+GET /api/sports 200 55.604 ms - 2181
+GET /api/venues/32 200 57.624 ms - 623
+GET /api/venues/32 200 55.758 ms - 623
+GET /api/sports 200 55.388 ms - 2181
+GET /api/sports 200 53.696 ms - 2181
+GET /api/sports 200 53.007 ms - 2181
+GET /api/venues/32 200 55.436 ms - 623
+GET /api/venues/32 200 54.207 ms - 623
+GET /api/sports 200 53.522 ms - 2181
+GET /api/sports 200 52.972 ms - 2181
+GET /api/venues/32 200 55.481 ms - 623
+GET /api/sports 200 53.226 ms - 2181
+GET /api/venues/32 200 55.499 ms - 623
+GET /api/sports 200 51.895 ms - 2181
+GET /api/venues/32 200 55.217 ms - 623
+GET /api/venues/32 200 53.840 ms - 623
+GET /api/venues/32 200 52.551 ms - 623
+GET /api/sports 200 52.071 ms - 2181
+GET /api/sports 200 50.474 ms - 2181
+GET /api/venues/32 200 52.316 ms - 623
+GET /api/sports 200 48.306 ms - 2181
+GET /api/sports 200 47.114 ms - 2181
+GET /api/venues/32 200 50.629 ms - 623
+GET /api/sports 200 46.844 ms - 2181
+GET /api/venues/32 200 49.356 ms - 623
+GET /api/venues/32 200 48.638 ms - 623
+GET /api/venues/32 200 47.547 ms - 623
+GET /api/sports 200 54.963 ms - 2181
+GET /api/sports 200 53.088 ms - 2181
+GET /api/sports 200 51.609 ms - 2181
+GET /api/sports 200 50.206 ms - 2181
+GET /api/venues/32 200 53.546 ms - 623
+GET /api/venues/32 200 51.414 ms - 623
+GET /api/sports 200 49.688 ms - 2181
+GET /api/venues/32 200 56.949 ms - 623
+GET /api/venues/32 200 52.174 ms - 623
+GET /api/sports 200 49.460 ms - 2181
+GET /api/venues/32 200 51.135 ms - 623
+GET /api/venues/32 200 50.420 ms - 623
+GET /api/sports 200 59.525 ms - 2181
+GET /api/sports 200 53.531 ms - 2181
+GET /api/venues/32 200 55.640 ms - 623
+GET /api/sports 200 52.582 ms - 2181
+GET /api/sports 200 51.448 ms - 2181
+GET /api/sports 200 51.147 ms - 2181
+GET /api/venues/32 200 55.852 ms - 623
+GET /api/venues/32 200 54.685 ms - 623
+GET /api/sports 200 51.439 ms - 2181
+GET /api/venues/32 200 54.136 ms - 623
+GET /api/venues/32 200 52.978 ms - 623
+GET /api/sports 200 51.157 ms - 2181
+GET /api/sports 200 49.608 ms - 2181
+GET /api/venues/32 200 52.957 ms - 623
+GET /api/venues/32 200 51.764 ms - 623
+GET /api/sports 200 49.630 ms - 2181
+GET /api/sports 200 48.814 ms - 2181
+GET /api/venues/32 200 51.158 ms - 623
+GET /api/sports 200 48.165 ms - 2181
+GET /api/venues/32 200 50.661 ms - 623
+GET /api/venues/32 200 49.373 ms - 623
+GET /api/sports 200 47.828 ms - 2181
+GET /api/sports 200 46.809 ms - 2181
+GET /api/venues/32 200 48.959 ms - 623
+GET /api/sports 200 45.779 ms - 2181
+GET /api/venues/32 200 48.606 ms - 623
+GET /api/venues/32 200 47.896 ms - 623
+GET /api/venues/32 200 47.348 ms - 623
+GET /api/sports 200 53.020 ms - 2181
+GET /api/sports 200 50.729 ms - 2181
+GET /api/sports 200 49.670 ms - 2181
+GET /api/venues/32 200 53.286 ms - 623
+GET /api/venues/32 200 51.235 ms - 623
+GET /api/sports 200 49.463 ms - 2181
+GET /api/sports 200 48.468 ms - 2181
+GET /api/venues/32 200 51.566 ms - 623
+GET /api/venues/32 200 49.814 ms - 623
+GET /api/sports 200 47.621 ms - 2181
+GET /api/venues/32 200 48.863 ms - 623
+GET /api/venues/32 200 48.634 ms - 623
+GET /api/sports 200 67.247 ms - 2181
+GET /api/sports 200 67.721 ms - 2181
+GET /api/venues/32 200 70.231 ms - 623
+GET /api/sports 200 67.023 ms - 2181
+GET /api/sports 200 66.428 ms - 2181
+GET /api/venues/32 200 68.456 ms - 623
+GET /api/sports 200 65.856 ms - 2181
+GET /api/venues/32 200 68.141 ms - 623
+GET /api/sports 200 65.302 ms - 2181
+GET /api/venues/32 200 67.676 ms - 623
+GET /api/sports 200 64.276 ms - 2181
+GET /api/venues/32 200 67.558 ms - 623
+GET /api/venues/32 200 66.300 ms - 623
+GET /api/sports 200 64.908 ms - 2181
+GET /api/venues/32 200 65.982 ms - 623
+GET /api/sports 200 63.974 ms - 2181
+GET /api/venues/32 200 65.133 ms - 623
+GET /api/sports 200 63.316 ms - 2181
+GET /api/sports 200 62.450 ms - 2181
+GET /api/venues/32 200 64.796 ms - 623
+GET /api/venues/32 200 63.638 ms - 623
+GET /api/sports 200 62.123 ms - 2181
+GET /api/venues/32 200 63.151 ms - 623
+GET /api/sports 200 61.721 ms - 2181
+GET /api/venues/32 200 62.738 ms - 623
+GET /api/sports 200 61.001 ms - 2181
+GET /api/venues/32 200 62.157 ms - 623
+GET /api/venues/32 200 61.364 ms - 623
+GET /api/sports 200 50.863 ms - 2181
+GET /api/sports 200 48.748 ms - 2181
+GET /api/sports 200 46.429 ms - 2181
+GET /api/venues/32 200 50.850 ms - 623
+GET /api/venues/32 200 48.377 ms - 623
+GET /api/sports 200 45.086 ms - 2181
+GET /api/sports 200 44.245 ms - 2181
+GET /api/venues/32 200 47.699 ms - 623
+GET /api/venues/32 200 46.342 ms - 623
+GET /api/sports 200 44.406 ms - 2181
+GET /api/venues/32 200 47.009 ms - 623
+GET /api/venues/32 200 45.792 ms - 623
+GET /api/sports 200 66.092 ms - 2181
+GET /api/venues/32 200 67.046 ms - 623
+GET /api/sports 200 65.834 ms - 2181
+GET /api/sports 200 63.401 ms - 2181
+GET /api/sports 200 61.788 ms - 2181
+GET /api/sports 200 59.896 ms - 2181
+GET /api/venues/32 200 66.246 ms - 623
+GET /api/venues/32 200 64.350 ms - 623
+GET /api/sports 200 57.657 ms - 2181
+GET /api/sports 200 59.727 ms - 2181
+GET /api/venues/32 200 61.152 ms - 623
+GET /api/sports 200 55.768 ms - 2181
+GET /api/sports 200 57.667 ms - 2181
+GET /api/venues/32 200 65.113 ms - 623
+GET /api/venues/32 200 59.854 ms - 623
+GET /api/venues/32 200 61.694 ms - 623
+GET /api/sports 200 56.943 ms - 2181
+GET /api/sports 200 55.767 ms - 2181
+GET /api/venues/32 200 59.290 ms - 623
+GET /api/venues/32 200 58.519 ms - 623
+GET /api/sports 200 55.469 ms - 2181
+GET /api/venues/32 200 57.713 ms - 623
+GET /api/venues/32 200 56.881 ms - 623
+GET /api/sports 200 55.006 ms - 2181
+GET /api/sports 200 53.300 ms - 2181
+GET /api/venues/32 200 57.090 ms - 623
+GET /api/venues/32 200 55.879 ms - 623
+GET /api/venues/32 200 54.407 ms - 623
+GET /api/sports 200 51.750 ms - 2181
+GET /api/sports 200 50.508 ms - 2181
+GET /api/sports 200 49.706 ms - 2181
+GET /api/venues/32 200 52.897 ms - 623
+GET /api/sports 200 48.880 ms - 2181
+GET /api/venues/32 200 52.545 ms - 623
+GET /api/venues/32 200 51.010 ms - 623
+GET /api/sports 200 49.098 ms - 2181
+GET /api/venues/32 200 50.787 ms - 623
+GET /api/venues/32 200 51.477 ms - 623
+GET /api/sports 200 50.392 ms - 2181
+GET /api/venues/32 200 55.520 ms - 623
+GET /api/sports 200 66.095 ms - 2181
+GET /api/sports 200 63.978 ms - 2181
+GET /api/venues/32 200 67.912 ms - 623
+GET /api/venues/32 200 62.619 ms - 623
+GET /api/sports 200 62.302 ms - 2181
+GET /api/sports 200 60.181 ms - 2181
+GET /api/sports 200 56.454 ms - 2181
+GET /api/sports 200 58.846 ms - 2181
+GET /api/venues/32 200 63.092 ms - 623
+GET /api/venues/32 200 60.616 ms - 623
+GET /api/sports 200 57.004 ms - 2181
+GET /api/venues/32 200 59.676 ms - 623
+GET /api/venues/32 200 56.921 ms - 623
+GET /api/sports 200 55.204 ms - 2181
+GET /api/venues/32 200 59.587 ms - 623
+GET /api/sports 200 55.187 ms - 2181
+GET /api/sports 200 58.795 ms - 2181
+GET /api/venues/32 200 58.622 ms - 623
+GET /api/sports 200 55.479 ms - 2181
+GET /api/venues/32 200 58.433 ms - 623
+GET /api/venues/32 200 56.848 ms - 623
+GET /api/sports 200 55.278 ms - 2181
+GET /api/sports 200 54.508 ms - 2181
+GET /api/venues/32 200 56.686 ms - 623
+GET /api/venues/32 200 55.891 ms - 623
+GET /api/sports 200 54.611 ms - 2181
+GET /api/venues/32 200 55.344 ms - 623
+GET /api/venues/32 200 55.094 ms - 623
+GET /api/sports 200 52.265 ms - 2181
+GET /api/sports 200 50.437 ms - 2181
+GET /api/sports 200 48.465 ms - 2181
+GET /api/sports 200 47.257 ms - 2181
+GET /api/venues/32 200 53.063 ms - 623
+GET /api/sports 200 46.195 ms - 2181
+GET /api/venues/32 200 51.326 ms - 623
+GET /api/venues/32 200 49.357 ms - 623
+GET /api/venues/32 200 48.950 ms - 623
+GET /api/sports 200 45.850 ms - 2181
+GET /api/venues/32 200 47.030 ms - 623
+GET /api/venues/32 200 46.425 ms - 623
+GET /api/sports 200 54.199 ms - 2181
+GET /api/venues/32 200 54.135 ms - 623
+GET /api/sports 200 52.996 ms - 2181
+GET /api/sports 200 52.394 ms - 2181
+GET /api/sports 200 51.909 ms - 2181
+GET /api/sports 200 51.084 ms - 2181
+GET /api/venues/32 200 53.473 ms - 623
+GET /api/sports 200 51.230 ms - 2181
+GET /api/venues/32 200 55.983 ms - 623
+GET /api/venues/32 200 53.836 ms - 623
+GET /api/sports 200 51.235 ms - 2181
+GET /api/venues/32 200 52.364 ms - 623
+GET /api/sports 200 50.193 ms - 2181
+GET /api/venues/32 200 51.146 ms - 623
+GET /api/sports 200 49.081 ms - 2181
+GET /api/venues/32 200 54.753 ms - 623
+GET /api/venues/32 200 50.813 ms - 623
+GET /api/sports 200 48.608 ms - 2181
+GET /api/sports 200 48.012 ms - 2181
+GET /api/venues/32 200 49.821 ms - 623
+GET /api/sports 200 47.203 ms - 2181
+GET /api/sports 200 46.429 ms - 2181
+GET /api/sports 200 50.205 ms - 2181
+GET /api/venues/32 200 54.966 ms - 623
+GET /api/venues/32 200 54.690 ms - 623
+GET /api/venues/32 200 52.983 ms - 623
+GET /api/venues/32 200 54.287 ms - 623
+GET /api/venues/32 200 53.953 ms - 623
+GET /api/sports 200 63.157 ms - 2181
+GET /api/sports 200 61.930 ms - 2181
+GET /api/venues/32 200 63.613 ms - 623
+GET /api/sports 200 61.528 ms - 2181
+GET /api/venues/32 200 62.589 ms - 623
+GET /api/venues/32 200 61.931 ms - 623
+GET /api/sports 200 61.835 ms - 2181
+GET /api/sports 200 61.114 ms - 2181
+GET /api/venues/32 200 62.735 ms - 623
+GET /api/sports 200 63.516 ms - 2181
+GET /api/venues/32 200 64.562 ms - 623
+GET /api/venues/32 200 66.258 ms - 623
+GET /api/sports 200 73.891 ms - 2181
+GET /api/venues/32 200 65.191 ms - 623
+GET /api/sports 200 65.525 ms - 2181
+GET /api/sports 200 62.785 ms - 2181
+GET /api/venues/32 200 64.121 ms - 623
+GET /api/sports 200 61.521 ms - 2181
+GET /api/sports 200 59.991 ms - 2181
+GET /api/sports 200 58.836 ms - 2181
+GET /api/venues/32 200 64.291 ms - 623
+GET /api/sports 200 58.569 ms - 2181
+GET /api/venues/32 200 62.835 ms - 623
+GET /api/sports 200 57.384 ms - 2181
+GET /api/venues/32 200 61.861 ms - 623
+GET /api/sports 200 57.120 ms - 2181
+GET /api/sports 200 55.944 ms - 2181
+GET /api/venues/32 200 61.759 ms - 623
+GET /api/sports 200 54.914 ms - 2181
+GET /api/venues/32 200 59.459 ms - 623
+GET /api/venues/32 200 60.846 ms - 623
+GET /api/sports 200 53.900 ms - 2181
+GET /api/venues/32 200 57.016 ms - 623
+GET /api/venues/32 200 59.172 ms - 623
+GET /api/sports 200 52.598 ms - 2181
+GET /api/venues/32 200 55.857 ms - 623
+GET /api/venues/32 200 53.996 ms - 623
+GET /api/sports 200 51.235 ms - 2181
+GET /api/venues/32 200 52.765 ms - 623
+GET /api/venues/32 200 50.118 ms - 623
+GET /api/sports 200 57.777 ms - 2181
+GET /api/sports 200 54.303 ms - 2181
+GET /api/sports 200 51.657 ms - 2181
+GET /api/venues/32 200 58.022 ms - 623
+GET /api/sports 200 50.886 ms - 2181
+GET /api/sports 200 50.970 ms - 2181
+GET /api/venues/32 200 57.847 ms - 623
+GET /api/venues/32 200 55.470 ms - 623
+GET /api/venues/32 200 54.045 ms - 623
+GET /api/venues/32 200 53.872 ms - 623
+GET /api/sports 200 52.471 ms - 2181
+GET /api/venues/32 200 54.370 ms - 623
+GET /api/sports 200 70.348 ms - 2181
+GET /api/venues/32 200 64.870 ms - 623
+GET /api/sports 200 63.313 ms - 2181
+GET /api/sports 200 62.013 ms - 2181
+GET /api/venues/32 200 64.475 ms - 623
+GET /api/venues/32 200 62.099 ms - 623
+GET /api/sports 200 63.495 ms - 2181
+GET /api/sports 200 61.410 ms - 2181
+GET /api/sports 200 60.233 ms - 2181
+GET /api/venues/32 200 63.412 ms - 623
+GET /api/sports 200 59.451 ms - 2181
+GET /api/sports 200 57.989 ms - 2181
+GET /api/venues/32 200 62.720 ms - 623
+GET /api/venues/32 200 59.747 ms - 623
+GET /api/sports 200 56.717 ms - 2181
+GET /api/sports 200 55.369 ms - 2181
+GET /api/venues/32 200 58.682 ms - 623
+GET /api/venues/32 200 62.921 ms - 623
+GET /api/sports 200 55.540 ms - 2181
+GET /api/sports 200 55.224 ms - 2181
+GET /api/venues/32 200 59.747 ms - 623
+GET /api/venues/32 200 58.495 ms - 623
+GET /api/sports 200 55.160 ms - 2181
+GET /api/sports 200 49.340 ms - 2181
+GET /api/venues/32 200 56.740 ms - 623
+GET /api/venues/32 200 59.282 ms - 623
+GET /api/venues/32 200 52.129 ms - 623
+GET /api/venues/32 200 50.999 ms - 623
+GET /api/sports 200 40.001 ms - 2181
+GET /api/sports 200 38.286 ms - 2181
+GET /api/sports 200 37.085 ms - 2181
+GET /api/sports 200 35.621 ms - 2181
+GET /api/venues/32 200 40.535 ms - 623
+GET /api/venues/32 200 38.833 ms - 623
+GET /api/venues/32 200 37.247 ms - 623
+GET /api/sports 200 34.583 ms - 2181
+GET /api/venues/32 200 35.889 ms - 623
+GET /api/venues/32 200 34.977 ms - 623
+GET /api/sports 200 33.737 ms - 2181
+GET /api/venues/32 200 31.163 ms - 623
+LOAD_RESULT {"type":"authenticated HTTP reads","concurrency":40,"requests":600,"failures":0,"throughputRps":362.4,"p50ms":109.4,"p95ms":130.1,"p99ms":164.9}
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 115.351 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 126.767 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 135.798 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 144.067 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 156.413 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 162.732 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 174.860 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 180.237 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 196.736 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 205.610 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 214.048 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 218.868 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 231.092 ms - 49
+POST /api/bookings 201 254.206 ms - 1101
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 250.969 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 258.000 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 269.744 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 270.785 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 280.129 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 285.182 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 294.388 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 305.391 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 310.524 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 317.230 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 327.473 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 336.705 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 340.288 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 355.290 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 358.237 ms - 49
+Error: Slot already booked
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:194:47
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 409
+}
+POST /api/bookings 409 367.041 ms - 49
+POST /api/equipment/8/rent 201 51.751 ms - 363
+POST /api/equipment/8/rent 201 64.174 ms - 363
+POST /api/equipment/8/rent 201 77.377 ms - 363
+POST /api/equipment/8/rent 409 81.128 ms - 75
+POST /api/equipment/8/rent 409 89.246 ms - 75
+POST /api/equipment/8/rent 409 95.203 ms - 75
+POST /api/equipment/8/rent 409 100.095 ms - 75
+POST /api/equipment/8/rent 409 106.568 ms - 75
+POST /api/equipment/8/rent 409 107.795 ms - 75
+POST /api/equipment/8/rent 409 119.230 ms - 75
+POST /api/equipment/8/rent 409 124.971 ms - 75
+POST /api/equipment/8/rent 409 128.769 ms - 75
+POST /api/equipment/8/rent 409 130.154 ms - 75
+POST /api/equipment/8/rent 409 141.341 ms - 75
+POST /api/equipment/8/rent 409 145.004 ms - 75
+POST /api/equipment/8/rent 409 149.706 ms - 75
+POST /api/equipment/8/rent 409 153.260 ms - 75
+POST /api/equipment/8/rent 409 157.118 ms - 75
+POST /api/equipment/8/rent 409 170.135 ms - 75
+POST /api/equipment/8/rent 409 170.138 ms - 75
+PUT /api/venues/32 200 12.641 ms - 457

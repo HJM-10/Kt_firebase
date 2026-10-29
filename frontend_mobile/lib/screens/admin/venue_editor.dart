@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../services/api_service.dart';
 import '../../services/api_errors.dart';
 import '../../widgets/clubhouse.dart';
+import '../../widgets/venue_location.dart';
 
 class AdminVenueEditor extends StatefulWidget {
   final Map<String, dynamic>? venue;
@@ -21,6 +22,9 @@ class _AdminVenueEditorState extends State<AdminVenueEditor> {
       _image = TextEditingController(),
       _opening = TextEditingController(),
       _closing = TextEditingController();
+  final _address = TextEditingController(),
+      _latitude = TextEditingController(),
+      _longitude = TextEditingController();
   List<int> _closedDays = [];
   List<Map<String, dynamic>> _closures = [];
   int? _sportId;
@@ -29,6 +33,9 @@ class _AdminVenueEditorState extends State<AdminVenueEditor> {
   void initState() {
     super.initState();
     final v = widget.venue;
+    _address.text = v?['address'] ?? '';
+    _latitude.text = v?['latitude']?.toString() ?? '';
+    _longitude.text = v?['longitude']?.toString() ?? '';
     _name.text = v?['name'] ?? '';
     _description.text = v?['description'] ?? '';
     _price.text = '${v?['pricePerSlot'] ?? 0}';
@@ -55,7 +62,10 @@ class _AdminVenueEditorState extends State<AdminVenueEditor> {
       _capacity,
       _image,
       _opening,
-      _closing
+      _closing,
+      _address,
+      _latitude,
+      _longitude
     ]) {
       c.dispose();
     }
@@ -67,6 +77,12 @@ class _AdminVenueEditorState extends State<AdminVenueEditor> {
     setState(() => _saving = true);
     try {
       final data = {
+        'address': _address.text.trim().isEmpty ? null : _address.text.trim(),
+        'latitude':
+            _latitude.text.trim().isEmpty ? null : double.parse(_latitude.text),
+        'longitude': _longitude.text.trim().isEmpty
+            ? null
+            : double.parse(_longitude.text),
         'name': _name.text.trim(),
         'description': _description.text.trim(),
         'sportId': _sportId,
@@ -195,6 +211,60 @@ class _AdminVenueEditorState extends State<AdminVenueEditor> {
                 enabled: !_saving,
                 maxLines: 3,
                 decoration: const InputDecoration(labelText: 'Description')),
+            const SizedBox(height: 20),
+            Text('Venue location & entrance',
+                style: Theme.of(context).textTheme.titleLarge),
+            const Text(
+                'Tap the map at the entrance, or type coordinates from Google Maps. The starting view is not a saved pin.'),
+            TextFormField(
+                controller: _address,
+                enabled: !_saving,
+                maxLength: 500,
+                maxLines: 2,
+                decoration: const InputDecoration(
+                    labelText: 'Street address / gate instructions')),
+            VenueMap(
+                venue: {
+                  'latitude': double.tryParse(_latitude.text),
+                  'longitude': double.tryParse(_longitude.text)
+                },
+                onChanged: _saving
+                    ? null
+                    : (lat, lng) => setState(() {
+                          _latitude.text = lat.toStringAsFixed(6);
+                          _longitude.text = lng.toStringAsFixed(6);
+                        })),
+            for (final entry in [
+              (_latitude, 'Latitude', 90),
+              (_longitude, 'Longitude', 180)
+            ])
+              TextFormField(
+                  controller: entry.$1,
+                  enabled: !_saving,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true, signed: true),
+                  decoration: InputDecoration(labelText: entry.$2),
+                  onChanged: (_) => setState(() {}),
+                  validator: (v) {
+                    final other = entry.$1 == _latitude
+                        ? _longitude.text
+                        : _latitude.text;
+                    if ((v ?? '').trim().isEmpty && other.trim().isEmpty) {
+                      return null;
+                    }
+                    final n = double.tryParse(v ?? '');
+                    return n == null || !n.isFinite || n.abs() > entry.$3
+                        ? 'Enter both valid coordinates (${entry.$2}: -${entry.$3} to ${entry.$3}).'
+                        : null;
+                  }),
+            TextButton(
+                onPressed: _saving
+                    ? null
+                    : () => setState(() {
+                          _latitude.clear();
+                          _longitude.clear();
+                        }),
+                child: const Text('Clear entrance pin')),
             const SizedBox(height: 16),
             TextFormField(
                 controller: _price,
