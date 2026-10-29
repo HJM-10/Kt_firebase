@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import useThemeStore from '../store/themeStore';
 import { FiSun, FiMoon } from 'react-icons/fi';
 import useAuthStore from '../store/authStore';
 import api from '../api/axios';
@@ -6,7 +7,7 @@ import toast from 'react-hot-toast';
 import { User, Lock, Save } from 'lucide-react';
 
 const SettingsPage = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const { theme, setTheme } = useThemeStore();
   const { user, updateUser } = useAuthStore();
   
   // Profile State
@@ -24,17 +25,8 @@ const SettingsPage = () => {
   });
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  useEffect(() => {
-    if (theme === 'light') {
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   const handleProfileUpdate = async (e) => {

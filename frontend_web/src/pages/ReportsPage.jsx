@@ -2,7 +2,9 @@ import useLiveRefresh from '../services/useLiveRefresh';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from '../api/axios';
 import toast from 'react-hot-toast';
-import { BarChart3, TrendingUp, Users, Calendar, DollarSign } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, Calendar, DollarSign, Wallet, Undo2 } from 'lucide-react';
+import { PageHeading, StatCard, ErrorPanel } from '../components/ArenaUI';
+import { money } from '../utils/arena';
 
 const ReportsPage = () => {
   const [range, setRange] = useState({ from: '', to: '' });
@@ -11,6 +13,7 @@ const ReportsPage = () => {
   const [bookings, setBookings] = useState(null);
   const [utilization, setUtilization] = useState(null);
   const [customers, setCustomers] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const requestVersion = useRef(0);
 
@@ -25,12 +28,13 @@ const ReportsPage = () => {
       ]);
       
       if (version !== requestVersion.current) return;
+      setError('');
       setRevenue(revRes.data.data);
       setBookings(bookRes.data.data);
       setUtilization(utilRes.data.data);
       setCustomers(custRes.data.data);
     } catch {
-      if (version === requestVersion.current) toast.error('Failed to load reports');
+      if (version === requestVersion.current) setError('The requested report could not load. Any previous figures shown are from the last successful update. Please retry.');
     } finally {
       if (version === requestVersion.current) setLoading(false);
     }
@@ -60,59 +64,11 @@ const ReportsPage = () => {
   if (loading) return <div className="p-6 text-white text-center">Gathering analytics...</div>;
 
   return (
-    <div className="p-6 text-white h-full overflow-auto">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">
-            Analytics & Reports
-          </h1>
-          <p className="text-gray-400 mt-1">Platform performance and insights</p>
-        </div>
-        <button 
-          onClick={handleExport}
-          className="btn btn-secondary"
-        >
-          <BarChart3 size={18} /> Export Data
-        </button>
-      </div>
-
-<form className="card modal-form mb-24" onSubmit={e => { e.preventDefault(); const values = Object.fromEntries(new FormData(e.currentTarget)); setRange(values); setApplied(values); }}><div className="grid-3"><label>From<input className="form-input" type="date" name="from" value={range.from} onChange={e => setRange({ ...range, from: e.target.value })} /></label><label>Through<input className="form-input" type="date" name="to" min={range.from} value={range.to} onChange={e => setRange({ ...range, to: e.target.value })} /></label><button className="btn btn-primary">Apply dates</button></div><p className="text-muted">Pakistan calendar days. Revenue uses payment receipt and refund completion dates; booking counts and export use creation dates; utilization uses session dates.</p></form><div className="card mb-24"><p>Gross receipts: PKR {revenue?.grossRevenue?.toLocaleString() || 0} · Completed refunds: PKR {revenue?.refundedAmount?.toLocaleString() || 0} · Pending refunds: PKR {revenue?.pendingRefunds?.toLocaleString() || 0}</p></div>
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(16,185,129,0.2)', color: 'var(--success)' }}><DollarSign size={24} /></div>
-          <div>
-            <div className="stat-value">Rs. {revenue?.totalRevenue?.toLocaleString() || 0}</div>
-            <div className="stat-label">Net Revenue</div>
-          </div>
-        </div>
-        
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(6,182,212,0.2)', color: 'var(--secondary)' }}><TrendingUp size={24} /></div>
-          <div>
-            <div className="stat-value">{utilization?.utilizationRate?.toFixed(1) || 0}%</div>
-            <div className="stat-label">{utilization?.bookedSlots} / {utilization?.totalSlots} confirmed slots · rate weighted by minutes</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(99,102,241,0.2)', color: 'var(--primary-light)' }}><Users size={24} /></div>
-          <div>
-            <div className="stat-value">{customers?.totalCustomers || 0}</div>
-            <div className="stat-label">Total Customers</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(245,158,11,0.2)', color: 'var(--warning)' }}><Calendar size={24} /></div>
-          <div>
-            <div className="stat-value">
-              {(bookings?.statusCounts?.CONFIRMED || 0) + (bookings?.statusCounts?.SCANNED || 0)}
-            </div>
-            <div className="stat-label">Confirmed / Checked-in Bookings</div>
-          </div>
-        </div>
-      </div>
-
+    <div>
+      <PageHeading eyebrow="Finance · Reports" title="A clear view of your club." description="Receipts, refunds and court utilization, with dates and definitions you can rely on." actions={<button onClick={handleExport} disabled={!!error} className="btn btn-secondary"><BarChart3 size={17} />Export bookings</button>} />
+{error && <ErrorPanel message={error} onRetry={fetchReports} />}
+<form className="card modal-form mb-24" onSubmit={e => { e.preventDefault(); const values = Object.fromEntries(new FormData(e.currentTarget)); setRange(values); setApplied(values); }}><div className="grid-3"><label>From<input className="form-input" type="date" name="from" value={range.from} onInput={e => setRange({ ...range, from: e.target.value })} /></label><label>Through<input className="form-input" type="date" name="to" min={range.from} value={range.to} onInput={e => setRange({ ...range, to: e.target.value })} /></label><button className="btn btn-primary">Apply dates</button></div><p className="text-muted">Pakistan calendar days. Revenue uses payment receipt and refund completion dates; booking counts and export use creation dates; utilization uses session dates.</p></form><div className="financial-grid"><StatCard icon={Wallet} value={money(revenue?.grossRevenue)} label="Gross receipts" /><StatCard icon={Undo2} value={money(revenue?.refundedAmount)} label="Completed refunds" /><StatCard icon={DollarSign} value={money(revenue?.totalRevenue)} label="Net revenue" /></div><div className="notice-panel"><span><strong>{money(revenue?.pendingRefunds)}</strong> pending refunds</span><span>Pending refunds are shown separately and reduce net revenue when completed.</span></div>
+      <div className="stats-grid"><StatCard icon={TrendingUp} value={((utilization?.utilizationRate || 0).toFixed(1)) + '%'} label="Court utilization by minutes" note={(utilization?.bookedSlots || 0) + ' of ' + (utilization?.totalSlots || 0) + ' eligible sessions confirmed'} /><StatCard icon={Users} value={customers?.totalCustomers || 0} label="Customers through end date" /><StatCard icon={Calendar} value={(bookings?.statusCounts?.CONFIRMED || 0) + (bookings?.statusCounts?.SCANNED || 0)} label="Confirmed or checked-in bookings" /></div>
       <div className="grid-2">
         <div className="card">
           <h2 className="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">Top Spending Customers</h2>
@@ -128,7 +84,7 @@ const ReportsPage = () => {
                     <div className="text-xs text-gray-400">{c.user.email}</div>
                   </div>
                 </div>
-                <div className="text-emerald-400 font-bold">Rs. {c.totalSpent.toLocaleString()}</div>
+                <div className="text-emerald-400 font-bold">{money(c.totalSpent)}</div>
               </div>
             ))}
             {(!customers?.topCustomers || customers.topCustomers.length === 0) && (
@@ -138,19 +94,19 @@ const ReportsPage = () => {
         </div>
         
         <div className="card">
-          <h2 className="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">Revenue by Month</h2>
+          <h2 className="text-xl font-bold mb-6 text-white border-b border-white/10 pb-4">Net revenue by month</h2>
           <div className="space-y-4">
             {revenue?.revenueByMonth && Object.keys(revenue.revenueByMonth).length > 0 ? (
               Object.keys(revenue.revenueByMonth).sort().reverse().map(month => (
                 <div key={month} className="revenue-item">
                   <div className="revenue-item-header">
                     <div className="font-bold text-white">{month}</div>
-                    <div className="text-emerald-400 font-bold">Rs. {revenue.revenueByMonth[month].toLocaleString()}</div>
+                    <div className="text-emerald-400 font-bold">{money(revenue.revenueByMonth[month])}</div>
                   </div>
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
                       className="bg-emerald-500 h-2 rounded-full" 
-                      style={{ width: `${Math.min(100, (revenue.revenueByMonth[month] / revenue.totalRevenue) * 100)}%` }}
+                      style={{ height: 6, borderRadius: 4, background: revenue.revenueByMonth[month] < 0 ? 'var(--danger)' : 'var(--primary)', width: `${Math.min(100, Math.abs(revenue.revenueByMonth[month]) / Math.max(1, ...Object.values(revenue.revenueByMonth).map(Math.abs)) * 100)}%` }}
                     ></div>
                   </div>
                 </div>

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import useLiveRefresh from '../services/useLiveRefresh';
+import { validDay } from '../utils/arena';
+import { PageHeading } from '../components/ArenaUI';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
@@ -18,7 +20,7 @@ export default function ReservePage() {
   useEffect(() => { loadRecommendations(); }, [loadRecommendations]);
   useLiveRefresh('recommendations', loadRecommendations);
   const [venueId, setVenueId] = useState(params.get('venueId') || '');
-  const [date, setDate] = useState(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date()));
+  const [date, setDate] = useState(validDay(params.get('date')) ? params.get('date') : new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date()));
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -62,11 +64,11 @@ export default function ReservePage() {
     finally { setBusy(false); }
   };
   return <div>
-    <div className="page-header"><h1 className="page-title">{params.get('reschedule') ? 'Reschedule booking' : 'Book a venue'}</h1><p className="page-subtitle">Published availability in Pakistan time. Reservations update live.</p></div>
+    <PageHeading eyebrow="The arena · Sessions" title={params.get('reschedule') ? 'Reschedule booking' : isAdmin ? 'Schedule & sessions' : 'Book your next game.'} description="Published availability in Pakistan time. Choose a venue and day to see its sessions." />
     {!params.get('reschedule') && recommendations.length > 0 && <section className="mb-24"><h2 className="mb-16">Suggested for your next game</h2><div className="grid-3">{recommendations.map(s => <article className="card" key={s.id}><h3>{s.venue.name}</h3><p>{s.date.slice(0, 10)} · {s.startTime}–{s.endTime}</p><p className="text-muted">{s.recommendationReason}</p><button className="btn btn-secondary" onClick={() => { setVenueId(String(s.venueId)); setDate(s.date.slice(0, 10)); }}>View available sessions</button></article>)}</div></section>}
     <div className="card form-panel modal-form mb-24">
       <FormField label="Venue"><select className="form-input" value={venueId} onChange={e => setVenueId(e.target.value)}><option value="">Choose a venue</option>{venues.map(v => <option key={v.id} value={v.id}>{v.sport.name} · {v.name} · PKR {v.pricePerSlot}</option>)}</select></FormField>
-      <FormField label="Date"><input className="form-input" type="date" value={date} min={new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date())} onChange={e => setDate(e.target.value)} /></FormField>
+      <FormField label="Date"><input className="form-input" type="date" value={date} min={new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date())} onInput={e => setDate(e.target.value)} /></FormField>
       {!params.get('reschedule') && <FormField label="Promo code" hint="Optional. Enter an arena promo code to apply a discount."><input className="form-input" value={promoCode} onChange={e => setPromoCode(e.target.value)} /></FormField>}
     </div>
     {venueId && <div className="card mb-24"><Link className="btn btn-secondary" to={`/venues/${venueId}`}>Venue details & equipment menu</Link></div>}

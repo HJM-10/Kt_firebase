@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import api from '../api/axios';
+import useDialogFocus from '../services/useDialogFocus';
 
 export default function PaymentModal({ isOpen, onClose, amount, paymentId }) {
   const [loading, setLoading] = useState(false);
+  const dialogRef = useDialogFocus(isOpen, onClose, loading);
   if (!isOpen) return null;
   const pay = async () => {
     setLoading(true);
@@ -17,7 +19,7 @@ export default function PaymentModal({ isOpen, onClose, amount, paymentId }) {
       setLoading(false);
     }
   };
-  return <div className="modal-overlay"><div className="modal" role="dialog" aria-modal="true" aria-label="Complete payment">
+  return <div className="modal-overlay"><div className="modal" ref={dialogRef} role="dialog" aria-modal="true" aria-label="Complete payment">
     <h2>Complete payment</h2>
     <p>Amount due: Rs. {amount}</p>
     <p>Enter payment details securely on Stripe. Return to your bookings after checkout and refresh to see confirmation.</p>

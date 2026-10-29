@@ -4,12 +4,16 @@ import api from '../api/axios';
 import { Plus, Edit2, Trash2, Building2, DollarSign, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
+import { Link } from 'react-router-dom';
+import { PageHeading, SportPhoto, StatusBadge } from '../components/ArenaUI';
+import { money } from '../utils/arena';
 
 const VenuesPage = () => {
   const [venues, setVenues] = useState([]);
   const [sports, setSports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterSport, setFilterSport] = useState('');
+  const [query, setQuery] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -109,89 +113,10 @@ const VenuesPage = () => {
 
   return (
     <div>
-      <div className="page-header flex justify-between items-center">
-        <div>
-          <h1 className="page-title">Venues</h1>
-          <div className="page-subtitle">Manage courts and playing areas for each sport</div>
-        </div>
-        <button className="btn btn-primary" onClick={() => openModal()}>
-          <Plus size={18} /> Add Venue
-        </button>
-      </div>
-
-      {/* Filter */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <select
-          className="form-select"
-          style={{ width: 220 }}
-          value={filterSport}
-          onChange={(e) => setFilterSport(e.target.value)}
-        >
-          <option value="">All Sports</option>
-          {sports.map(s => (
-            <option key={s.id} value={s.id}>{s.name}</option>
-          ))}
-        </select>
-      </div>
-
-      {loading ? (
-        <div className="loader-wrap"><div className="spinner" /></div>
-      ) : venues.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon"><Building2 size={48} className="text-muted" /></div>
-          <div className="empty-title">No Venues Found</div>
-          <div className="text-muted">Add a venue to get started.</div>
-        </div>
-      ) : (
-        <div className="table-wrap">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Sport</th>
-                <th><DollarSign size={14} style={{ display: 'inline' }} /> Price / Slot</th>
-                <th><Users size={14} style={{ display: 'inline' }} /> Capacity</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {venues.map(venue => (
-                <tr key={venue.id}>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{venue.name}</div>
-                    {venue.description && (
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                        {venue.description.slice(0, 60)}{venue.description.length > 60 ? '...' : ''}
-                      </div>
-                    )}
-                  </td>
-                  <td>
-                    <span className="badge badge-primary">{venue.sport?.name}</span>
-                  </td>
-                  <td>Rs. {venue.pricePerSlot?.toFixed(0)}<p>{venue.openingTime}–{venue.closingTime} PKT</p></td>
-                  <td>{venue.capacity ?? '—'}</td>
-                  <td>
-                    <span className={`badge ${venue.isActive ? 'badge-success' : 'badge-danger'}`}>
-                      {venue.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="flex gap-8">
-                      <button className="btn btn-secondary btn-sm" onClick={() => openModal(venue)}>
-                        <Edit2 size={14} />
-                      </button>
-                      <button className="btn btn-danger btn-sm" onClick={() => confirmDelete(venue.id)}>
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <PageHeading eyebrow="The clubhouse · Venues" title="A place for every game." description="Manage your courts, playing areas and venue equipment from one considered workspace." actions={<button className="btn btn-primary" onClick={() => openModal()}><Plus size={17} />Add venue</button>} />
+      <div className="toolbar"><label className="toolbar-search"><span className="sr-only">Search venues</span><input className="form-input" placeholder="Search venue or sport…" value={query} onChange={e => setQuery(e.target.value)} /></label><select className="form-select" aria-label="Filter venues by sport" value={filterSport} onChange={e => setFilterSport(e.target.value)}><option value="">All sports</option>{sports.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select><span className="text-muted">{venues.length} venues in this sport selection</span></div>
+      {loading ? <div className="loader-wrap" role="status">Loading venues…</div> : <div className="venue-grid">{venues.filter(v => [v.name, v.sport?.name].some(value => String(value || '').toLowerCase().includes(query.trim().toLowerCase()))).map(venue => <article className="card venue-card" key={venue.id}><SportPhoto venue={venue} /><div className="venue-card-body"><div className="flex justify-between items-center"><span className="badge badge-primary">{venue.sport?.name}</span><StatusBadge status={venue.isActive ? 'CONFIRMED' : 'UNAVAILABLE'}>{venue.isActive ? 'Active venue' : 'Inactive'}</StatusBadge></div><h2>{venue.name}</h2><p>{venue.description || 'View sessions, equipment and playing details for this venue.'}</p><div className="venue-card-meta"><span><DollarSign size={13} />{money(venue.pricePerSlot)} / session</span>{venue.capacity && <span><Users size={13} />{venue.capacity} players</span>}<span>{venue.openingTime}–{venue.closingTime} PKT</span></div><div className="venue-card-actions"><Link className="btn btn-primary btn-sm" to={'/reserve?venueId=' + venue.id}>Manage sessions</Link><Link className="btn btn-secondary btn-sm" to={'/equipment?venueId=' + venue.id}>Equipment</Link><button className="icon-button" aria-label={'Edit ' + venue.name} title="Edit venue" onClick={() => openModal(venue)}><Edit2 size={16} /></button><button className="icon-button" aria-label={'Deactivate ' + venue.name} title="Deactivate venue" onClick={() => confirmDelete(venue.id)}><Trash2 size={16} /></button></div><Link className="venue-details-link" to={'/venues/' + venue.id}>View venue details →</Link></div></article>)}</div>}
+      {!loading && !venues.some(v => [v.name, v.sport?.name].some(value => String(value || '').toLowerCase().includes(query.trim().toLowerCase()))) && <div className="card empty-state"><Building2 size={30} /><h3 className="mt-16">No matching venues</h3><p className="mt-8">Try another sport or search, or add a new venue.</p></div>}
 
       {/* Create / Edit Modal */}
       {modalOpen && (

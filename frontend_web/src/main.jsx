@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
+import './arena.css'
+import './store/themeStore.js'
 import useAuthStore from './store/authStore.js'
 
 function Root() {

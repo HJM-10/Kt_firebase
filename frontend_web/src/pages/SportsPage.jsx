@@ -5,7 +5,8 @@ import { Plus, Edit2, Trash2, Activity } from 'lucide-react';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
-import SportIcon, { AVAILABLE_ICONS } from '../components/SportIcon';
+import { AVAILABLE_ICONS } from '../components/SportIcon';
+import { SportPhoto } from '../components/ArenaUI';
 
 const SportsPage = () => {
   const [sports, setSports] = useState([]);
@@ -104,7 +105,7 @@ const SportsPage = () => {
         <div className="grid-4">
           {sports.map(sport => (
             <div key={sport.id} className="sport-card">
-              <div className="sport-emoji text-primary"><SportIcon iconName={sport.icon} size={48} /></div>
+              <SportPhoto venue={{ name: sport.name, sport: { name: sport.name }, imageUrl: sport.imageUrl }} className="sport-catalogue-photo" />
               <div className="sport-name">{sport.name}</div>
               <div className="sport-meta">{sport._count?.venues || 0} Venues • {sport._count?.tournaments || 0} Tournaments</div>
               

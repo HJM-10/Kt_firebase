@@ -35,7 +35,7 @@ const FixturesPage = lazy(() => import('./pages/FixturesPage'));
 function App() {
   return (
     <Router><Suspense fallback={<div className="loader-wrap" role="status">Loading page…</div>}>
-      <Toaster position="top-right" toastOptions={{ style: { background: '#16162a', color: '#fff', border: '1px solid rgba(255,255,255,0.1)' } }} />
+      <Toaster position="top-right" toastOptions={{ style: { background: 'var(--bg-card)', color: 'var(--text)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' } }} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

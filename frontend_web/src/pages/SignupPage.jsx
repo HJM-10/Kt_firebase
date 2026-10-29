@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building } from 'lucide-react';
+import { BrandMark } from '../components/ArenaUI';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';
 
@@ -29,7 +29,7 @@ const SignupPage = () => {
       <div className="auth-card">
         <div className="auth-logo">
           <div className="auth-logo-icon">
-            <img src="/logo.jpg" alt="Smart Sports Hub" style={{ width: 64, height: 64, borderRadius: 16 }} />
+            <span className="brand-mark"><BrandMark /></span>
           </div>
           <div className="auth-title">Create Account</div>
           <div className="auth-subtitle">Join Smart Sports Hub today</div>

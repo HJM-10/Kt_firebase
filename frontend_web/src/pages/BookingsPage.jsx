@@ -1,212 +1,56 @@
-import useLiveRefresh from '../services/useLiveRefresh';
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { CalendarCheck, Clock3, Plus, Search, CheckCheck, RefreshCw, ArrowUpRight } from 'lucide-react';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
-
-const BookingsPage = () => {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Walk-in booking modal state
-  const [showModal, setShowModal] = useState(false);
-  const [sports, setSports] = useState([]);
-  const [venues, setVenues] = useState([]);
-  const [slots, setSlots] = useState([]);
-  const [bookingForm, setBookingForm] = useState({
-    sportId: '', venueId: '', date: '', slotId: '', walkInName: '', walkInPhone: ''
-  });
-
-  const fetchBookings = async () => {
+import useLiveRefresh from '../services/useLiveRefresh';
+import { ErrorPanel, PageHeading, SportPhoto, StatCard, StatusBadge } from '../components/ArenaUI';
+import ConfirmModal from '../components/ConfirmModal';
+import WalkInModal from '../components/WalkInModal';
+import { arenaDay, filterBookings, money, validDay } from '../utils/arena';
+export default function BookingsPage() {
+  const [params, setParams] = useSearchParams();
+  const [date, setDate] = useState(validDay(params.get('date')) ? params.get('date') : '');
+  const [bookings, setBookings] = useState([]), [query, setQuery] = useState(''), [status, setStatus] = useState('ALL');
+  const [selectedId, setSelectedId] = useState(Number(params.get('booking')) || null), [loading, setLoading] = useState(true), [error, setError] = useState('');
+  const [walkIn, setWalkIn] = useState(params.get('walkIn') === '1'), [confirming, setConfirming] = useState(null), [busy, setBusy] = useState(false), [hasMore, setHasMore] = useState(false);
+  const version = useRef(0), page = useRef(1), lock = useRef(false);
+  const load = useCallback(async () => {
+    const request = ++version.current; setLoading(true);
     try {
-      setLoading(true);
-      const res = await api.get('/bookings');
-      setBookings(res.data.data);
-    } catch (err) {
-      toast.error('Failed to load bookings');
-    } finally {
-      setLoading(false);
-    }
+      const r = date ? await api.get('/reports/arena-desk', { params: { date } }) : await api.get('/bookings', { params: { page: 1, limit: 100 } });
+      if (request !== version.current) return;
+      const rows = date ? r.data.data.bookings : r.data.data;
+      setBookings(rows); page.current = 1; setHasMore(!date && rows.length === 100); setError('');
+    } catch (e) { if (request === version.current) setError(e.response?.data?.message || 'Bookings could not load. Please retry.'); }
+    finally { if (request === version.current) setLoading(false); }
+  }, [date]);
+  useEffect(() => { void load(); }, [load]);
+  useLiveRefresh('bookings', load);
+  const loadMore = async () => {
+    if (loading) return; const request = version.current; setLoading(true);
+    try { const r = await api.get('/bookings', { params: { page: page.current + 1, limit: 100 } }); if (request !== version.current) return; const ids = new Set(bookings.map(b => b.id)); setBookings(prev => [...prev, ...r.data.data.filter(b => !ids.has(b.id))]); page.current++; setHasMore(r.data.data.length === 100); }
+    catch { setError('More bookings could not load. Please retry.'); } finally { setLoading(false); }
   };
-
-  const confirmBooking = async (id) => {
-    try {
-      await api.put(`/bookings/${id}/confirm`, { receivedInPerson: true });
-      toast.success('Booking confirmed');
-      fetchBookings();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to confirm booking');
-    }
+  const changeDate = value => { setBookings([]); setSelectedId(null); setDate(value); };
+  const closeWalkIn = () => { setWalkIn(false); if (params.has('walkIn')) { const next = new URLSearchParams(params); next.delete('walkIn'); setParams(next, { replace: true }); } };
+  const rows = filterBookings(bookings, { query, status });
+  const selected = rows.find(b => b.id === selectedId) || rows[0];
+  const confirmCash = async () => {
+    if (lock.current || !confirming) return; lock.current = true; setBusy(true);
+    try { await api.put(`/bookings/${confirming.id}/confirm`, { receivedInPerson: true }); toast.success('Cash received and booking confirmed'); setConfirming(null); await load(); }
+    catch (e) { toast.error(e.response?.data?.message || 'Could not record payment'); } finally { lock.current = false; setBusy(false); }
   };
-
-  const handleOpenModal = async () => {
-    try {
-      const res = await api.get('/sports');
-      setSports(res.data.data);
-      setShowModal(true);
-    } catch (err) { toast.error('Failed to load sports'); }
-  };
-
-  const handleSportChange = async (e) => {
-    const sportId = e.target.value;
-    setBookingForm({ ...bookingForm, sportId, venueId: '', slotId: '' });
-    if (!sportId) { setVenues([]); return; }
-    try {
-      const res = await api.get(`/venues?sportId=${sportId}`);
-      setVenues(res.data.data);
-    } catch (err) {}
-  };
-
-  const fetchSlots = async (venueId, date) => {
-    if (!venueId || !date) return;
-    try {
-      const res = await api.get(`/bookings/slots?venueId=${venueId}&date=${date}`);
-      setSlots(res.data.data.filter(s => !s.isBooked));
-    } catch (err) {}
-  };
-
-  const handleWalkInBooking = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post('/bookings', {
-        slotId: bookingForm.slotId,
-        walkInName: bookingForm.walkInName,
-        walkInPhone: bookingForm.walkInPhone
-      });
-      toast.success('Walk-in booking successful');
-      setShowModal(false);
-      setBookingForm({ sportId: '', venueId: '', date: '', slotId: '', walkInName: '', walkInPhone: '' });
-      fetchBookings();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create booking');
-    }
-  };
-
-  useLiveRefresh('bookings', fetchBookings);
-  useEffect(() => { fetchBookings(); }, []);
-
-  return (
-    <div>
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 className="page-title">All Bookings</h1>
-          <div className="page-subtitle">View all customer reservations</div>
-        </div>
-        <button className="btn btn-primary" onClick={handleOpenModal}>+ Book for Walk-in</button>
-      </div>
-
-      {showModal && (
-        <div className="modal-backdrop">
-          <div className="modal-content" style={{maxWidth: 500}}>
-            <h2>Walk-in Booking</h2>
-            <form onSubmit={handleWalkInBooking}>
-              <div className="form-group">
-                <label>Sport</label>
-                <select className="form-control" value={bookingForm.sportId} onChange={handleSportChange} required>
-                  <option value="">Select Sport</option>
-                  {sports.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Venue</label>
-                <select className="form-control" value={bookingForm.venueId} onChange={(e) => {
-                  setBookingForm({...bookingForm, venueId: e.target.value, slotId: ''});
-                  fetchSlots(e.target.value, bookingForm.date);
-                }} required>
-                  <option value="">Select Venue</option>
-                  {venues.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Date</label>
-                <input type="date" className="form-control" value={bookingForm.date} onChange={(e) => {
-                  setBookingForm({...bookingForm, date: e.target.value, slotId: ''});
-                  fetchSlots(bookingForm.venueId, e.target.value);
-                }} required min={new Date().toISOString().split('T')[0]} />
-              </div>
-              <div className="form-group">
-                <label>Available Slots</label>
-                <select className="form-control" value={bookingForm.slotId} onChange={(e) => setBookingForm({...bookingForm, slotId: e.target.value})} required>
-                  <option value="">Select Slot</option>
-                  {slots.map(s => <option key={s.id} value={s.id}>{s.startTime} - {s.endTime}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Customer Name</label>
-                <input type="text" className="form-control" value={bookingForm.walkInName} onChange={(e) => setBookingForm({...bookingForm, walkInName: e.target.value})} required placeholder="e.g. John Doe"/>
-              </div>
-              <div className="form-group">
-                <label>Customer Phone</label>
-                <input type="tel" className="form-control" value={bookingForm.walkInPhone} onChange={(e) => setBookingForm({...bookingForm, walkInPhone: e.target.value})} required placeholder="e.g. 03001234567"/>
-              </div>
-              <div style={{display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 24}}>
-                <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Create Booking</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="loader-wrap"><div className="spinner"></div></div>
-      ) : (
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Sport / Venue</th>
-                <th>Date & Time</th>
-                <th>Status</th>
-                <th>Price</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bookings.map(b => (
-                <tr key={b.id}>
-                  <td>#{b.id}</td>
-                  <td>
-                    <div style={{fontWeight: 600}}>{b.user?.name}</div>
-                    <div className="text-muted" style={{fontSize: 12}}>{b.user?.email}</div>
-                  </td>
-                  <td>
-                    <div style={{fontWeight: 600}}>{b.slot?.venue?.sport?.name}</div>
-                    <div className="text-muted" style={{fontSize: 12}}>{b.slot?.venue?.name}</div>
-                  </td>
-                  <td>
-                    <div>{new Date(b.slot?.date).toLocaleDateString()}</div>
-                    <div className="text-muted" style={{fontSize: 12}}>{b.slot?.startTime} - {b.slot?.endTime}</div>
-                  </td>
-                  <td>
-                    <span className={`badge badge-${b.status === 'CONFIRMED' ? 'primary' : b.status === 'SCANNED' ? 'success' : 'danger'}`}>
-                      {b.status}
-                    </span>
-                  </td>
-                  <td style={{fontWeight: 700}}>Rs. {b.finalPrice}</td>
-                  <td>
-                    {b.status === 'PENDING_PAYMENT' && (
-                      <button 
-                        className="btn btn-sm" 
-                        style={{background: 'var(--success)', border: 'none'}}
-                        onClick={() => confirmBooking(b.id)}
-                      >
-                        Confirm
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {bookings.length === 0 && (
-                <tr><td colSpan="7" className="text-center py-8">No bookings found</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+  return <div><PageHeading eyebrow="Front desk · Reservations" title="Every booking, in its place." description="Find a reservation, review its payment and help the next player get on court." actions={<><button className="btn btn-secondary" disabled={loading} onClick={load}><RefreshCw size={16} />Refresh</button><button className="btn btn-primary" onClick={() => setWalkIn(true)}><Plus size={17} />New walk-in</button></>} />
+    <div className="stats-grid"><StatCard icon={CalendarCheck} value={bookings.length} label={date ? 'Bookings on selected day' : 'Bookings loaded'} /><StatCard icon={Clock3} value={bookings.filter(b => b.status === 'PENDING_PAYMENT').length} label="Awaiting payment in view" tone="brass" /><StatCard icon={CheckCheck} value={bookings.filter(b => ['CONFIRMED', 'SCANNED'].includes(b.status)).length} label="Confirmed or checked in" /></div>
+    {error && <ErrorPanel message={error} onRetry={load} />}
+    <div className="toolbar"><div className="toolbar-search"><Search size={16} /><input className="form-input" aria-label="Search bookings" placeholder="Customer, booking ID or venue…" value={query} onChange={e => setQuery(e.target.value)} /></div><label className="sr-only" htmlFor="booking-date">Filter bookings by date</label><input id="booking-date" className="form-input" type="date" value={date} onInput={e => changeDate(e.target.value)} /><button className="btn btn-secondary btn-sm" onClick={() => changeDate('')}>All dates</button><button className="btn btn-secondary btn-sm" onClick={() => changeDate(arenaDay())}>Today</button></div>
+    <div className="segmented-tabs mb-24" aria-label="Booking status filters">{['ALL', 'PENDING_PAYMENT', 'CONFIRMED', 'SCANNED', 'CANCELLED'].map(s => <button key={s} className={status === s ? 'active' : ''} aria-pressed={status === s} onClick={() => setStatus(s)}>{{ ALL: 'All bookings', PENDING_PAYMENT: 'Awaiting payment', CONFIRMED: 'Confirmed', SCANNED: 'Checked in', CANCELLED: 'Cancelled' }[s]}</button>)}</div>
+    <div className="booking-workspace"><section className="table-wrapper booking-table" aria-label="Bookings"><table><thead><tr><th>Reference / time</th><th>Customer</th><th>Venue</th><th>Amount</th><th>Status</th></tr></thead><tbody>{rows.map(b => <tr className={selected?.id === b.id ? 'selected' : ''} key={b.id} onClick={() => setSelectedId(b.id)}><td><button className="record-button" onClick={() => setSelectedId(b.id)} aria-label={`View booking ${b.id}`}>#{b.id} · {b.slot?.startTime}</button><p className="text-muted">{String(b.slot?.date).slice(0, 10)}</p></td><td><strong>{b.user?.name}</strong><p className="text-muted">{b.user?.email || b.user?.phone || 'Walk-in customer'}</p></td><td>{b.slot?.venue?.name}<p className="text-muted">{b.slot?.venue?.sport?.name}</p></td><td>{money(b.finalPrice)}</td><td><StatusBadge status={b.status} /></td></tr>)}</tbody></table>{loading && !bookings.length ? <p className="empty-state" role="status">Loading reservations…</p> : !rows.length && <div className="empty-state"><h3>No matching bookings</h3><p className="mt-8">Try a different day, search or status filter.</p></div>}<div className="load-more"><span>{rows.length} matching · {bookings.length} loaded{date && ` · ${date}`}</span>{hasMore && <button className="btn btn-secondary btn-sm" disabled={loading} onClick={loadMore}>{loading ? 'Loading…' : 'Load more'}</button>}</div></section>
+      <aside className="card booking-detail" aria-label="Booking details">{selected ? <><div className="panel-heading"><h2>Booking #{selected.id}</h2><ArrowUpRight size={17} /></div><StatusBadge status={selected.status} /><SportPhoto venue={selected.slot?.venue} /><h3>{selected.slot?.venue?.name}</h3><dl><div><dt>Customer</dt><dd>{selected.user?.name}<br /><small>{selected.user?.phone || selected.user?.email}</small></dd></div><div><dt>Session · Pakistan time</dt><dd>{String(selected.slot?.date).slice(0, 10)}<br />{selected.slot?.startTime}–{selected.slot?.endTime}</dd></div><div><dt>Booking amount</dt><dd><strong>{money(selected.finalPrice)}</strong></dd></div>{selected.notes && <div><dt>Notes</dt><dd>{selected.notes}</dd></div>}</dl><div className="modal-form">
+        {selected.status === 'PENDING_PAYMENT' && <button className="btn btn-primary btn-full" disabled={busy || !!error} onClick={() => setConfirming(selected)}>Record cash received</button>}<Link className="btn btn-secondary btn-full" to={`/payments?bookingId=${selected.id}`}>Review payments</Link>{['CONFIRMED', 'SCANNED'].includes(selected.status) && <Link className="btn btn-secondary btn-full" to={`/my-bookings/${selected.id}/qr`}>View entry pass</Link>}<Link className="btn btn-secondary btn-full" to="/scan">Check entry pass</Link></div><p className="section-note">Cash confirmation requires money received in person. Entry passes remain subject to the server’s check-in window.</p></> : <div className="empty-state">Select a booking to see its details.</div>}</aside>
     </div>
-  );
-};
-
-export default BookingsPage;
+    {walkIn && <WalkInModal initialDate={date || arenaDay()} onClose={closeWalkIn} onCreated={booking => { closeWalkIn(); toast.success(booking.status === 'PENDING_PAYMENT' ? 'Reserved. Payment is required to confirm.' : 'Booking confirmed'); setSelectedId(booking.id); const bookingDate = String(booking.slot?.date || '').slice(0, 10); if (date && validDay(bookingDate) && bookingDate !== date) { setBookings([]); setDate(bookingDate); } else void load(); }} />}
+    <ConfirmModal isOpen={!!confirming} title="Record cash received?" message={`Confirm that you have received ${money(confirming?.finalPrice)} in person for booking #${confirming?.id}. This confirms the reservation.`} confirmText={busy ? 'Recording…' : 'Money received'} onConfirm={confirmCash} onCancel={() => { if (!busy) setConfirming(null); }} busy={busy} />
+  </div>;
+}

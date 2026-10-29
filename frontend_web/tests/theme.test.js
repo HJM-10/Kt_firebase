@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+const storage = new Map();
+const classes = new Set();
+globalThis.localStorage = { getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value) };
+globalThis.document = { documentElement: { dataset: {}, style: {}, classList: { toggle: (name, enabled) => enabled ? classes.add(name) : classes.delete(name) } } };
+test('light is the default, changing theme persists, and reloading restores dark mode', async () => {
+  const { default: first } = await import('../src/store/themeStore.js?initial');
+  assert.equal(first.getState().theme, 'light');
+  assert.equal(classes.has('light'), true);
+  first.getState().setTheme('dark');
+  assert.equal(storage.get('theme'), 'dark');
+  assert.equal(classes.has('light'), false);
+  assert.equal(document.documentElement.style.colorScheme, 'dark');
+  const { default: reloaded } = await import('../src/store/themeStore.js?reload');
+  assert.equal(reloaded.getState().theme, 'dark');
+  reloaded.getState().setTheme('light');
+  assert.equal(document.documentElement.dataset.theme, 'light');
+  assert.equal(storage.get('theme'), 'light');
+});

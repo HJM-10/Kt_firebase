@@ -45,11 +45,13 @@ QR camera scanning is available on Android. The server permits check-in from the
 ## Verification
 
 - Backend: `npm test -- --runInBand` in `backend`.
-- Web: `npm run build`, `npm run lint`, and `node --test tests/session.test.js` in `frontend_web`.
+- Web: `npm test`, `npm run build`, and `npm run lint` in `frontend_web`.
 - Flutter: `flutter analyze --no-pub`, `flutter test --no-pub`, and a Firebase-enabled debug APK build in `frontend_mobile`.
 - Database acceptance: `node scripts/checklist-acceptance.js` and `node scripts/feature-acceptance.js` in `backend`. Both refuse production or any database other than `127.0.0.1:3307/smart_sports_hub_demo`, create disposable test records, and disable real push delivery. Stripe interactions are simulated.
 
 See `qa/FEATURE_VERIFICATION.md` for the recorded results and remaining live-service checks.
+
+The React website now follows the selected Arena Desk direction, with a white light-mode sidebar, daily schedule overview, booking workspace, photo-led venue catalogue, Venue & Gear Studio, and matching financial pages. See [qa/REACT_ADMIN_UI.md](qa/REACT_ADMIN_UI.md) for implementation notes, tests and actual browser captures.
 
 Venue equipment menus, daily rentals, customer offers, per-customer promo limits, recommendation filtering and dated financial/utilization reporting are documented in [qa/AGENDA_VERIFICATION.md](qa/AGENDA_VERIFICATION.md). Apply the inventory/promo migration before starting the updated API. Administrators maintain equipment specifications and venue assignments on the web Equipment page; unspecified details are never inferred. New isolated database checks: `node scripts/agenda-acceptance.js`.
 

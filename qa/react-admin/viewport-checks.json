@@ -1,0 +1,17 @@
+[
+  {
+    "url": "http://localhost:5174/bookings",
+    "bodyWidth": 314,
+    "viewport": 320
+  },
+  {
+    "url": "http://localhost:5174/venues",
+    "bodyWidth": 314,
+    "viewport": 320
+  },
+  {
+    "url": "http://localhost:5174/reports",
+    "bodyWidth": 314,
+    "viewport": 320
+  }
+]
