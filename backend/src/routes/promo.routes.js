@@ -6,10 +6,10 @@ const { validatePromo, getAllPromos, createPromo, updatePromo } = require('../co
 router.use(authenticate);
 
 router.post('/validate', validatePromo);
+router.get('/', getAllPromos);
 
 router.use(requireAdmin);
 
-router.get('/', getAllPromos);
 router.post('/', createPromo);
 router.patch('/:id', updatePromo);
 

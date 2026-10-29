@@ -32,13 +32,14 @@ const confirmPayment = async (req, res) => {
     const updatedPayment = await transaction(async tx => {
       await tx.payment.update({ where: { id: payment.id }, data: { updatedAt: new Date() } });
       await assertPayable(tx, await tx.payment.findUnique({ where: { id: payment.id } }));
-      const claimed = await tx.payment.updateMany({ where: { id: payment.id, status: 'PENDING' }, data: { status: 'PAID', stripePaymentIntentId: null, stripeClientSecret: null } });
+      const claimed = await tx.payment.updateMany({ where: { id: payment.id, status: 'PENDING' }, data: { status: 'PAID', paidAt: new Date(), stripePaymentIntentId: null, stripeClientSecret: null } });
       if (!claimed.count) throw Object.assign(new Error('Payment changed; refresh and retry'), { status: 409 });
       if (payment.bookingId) {
         const changed = await tx.booking.updateMany({ where: { id: payment.bookingId, status: 'PENDING_PAYMENT' }, data: { status: 'CONFIRMED' } });
         if (!changed.count) throw Object.assign(new Error('Booking changed; refresh and retry'), { status: 409 });
       }
       if (payment.membershipId) await require('../lib/membership').activateMembership(tx, payment);
+      if (payment.rentalId) await tx.equipmentRental.update({ where: { id: payment.rentalId }, data: { status: 'CONFIRMED' } });
       return tx.payment.findUnique({ where: { id: payment.id } });
     });
 
@@ -53,13 +54,10 @@ const confirmPayment = async (req, res) => {
     } else if (payment.purpose === 'EVENT_REGISTRATION' && payment.eventRegId) {
       await createNotification(payment.userId, 'Event Registration', `Your event registration was successful.`, 'EVENT');
     } else if (payment.purpose === 'EQUIPMENT_RENTAL' && payment.rentalId) {
-      await prisma.equipmentRental.update({
-        where: { id: payment.rentalId },
-        data: { status: 'CONFIRMED' }
-      });
       await createNotification(payment.userId, 'Equipment Rental', `Your equipment rental payment was successful.`, 'RENTAL');
     }
 
+    emitChange();
     res.json({ success: true, data: updatedPayment });
   } catch (err) {
     console.error(err);

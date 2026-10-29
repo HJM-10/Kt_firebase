@@ -40,6 +40,7 @@ const Sidebar = () => {
         { to: '/matches', icon: <Swords />, label: 'Matches' },
         { to: '/events', icon: <CalendarCheck />, label: 'Events' },
         { to: '/equipment', icon: <Dumbbell />, label: 'Equipment' },
+        { to: '/promo', icon: <Star />, label: 'Offers & Discounts' },
         { to: '/my-bookings', icon: <CalendarCheck />, label: 'My Bookings' },
         { to: '/membership', icon: <Star />, label: 'Membership' },
         { to: '/payments', icon: <CalendarCheck />, label: 'Payments and Invoices' },

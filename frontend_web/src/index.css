@@ -604,3 +604,20 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--primary-light);
   .page-content form div:has(> label):has(> :is(input, select, textarea)) > label { padding-top: 0; }
   .form-footer .btn { flex: 1; justify-content: center; white-space: normal; }
 }
+
+.gear-specs { margin: 20px 0; display: grid; gap: 10px; }
+.gear-specs > div { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--border-color, rgba(128,128,128,.18)); padding-bottom: 8px; }
+.gear-specs dt { color: var(--text-muted, #9299a9); font-size: .85rem; }
+.gear-specs dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.venue-hero { padding: clamp(24px, 5vw, 56px); background: linear-gradient(120deg, rgba(16,185,129,.12), rgba(99,102,241,.08)); }
+.promo-code { font-family: monospace; font-size: 1.4rem; letter-spacing: .12em; padding: 12px; border: 1px dashed currentColor; border-radius: 8px; }
+
+/* Embedded labels stack above controls so filters remain usable in narrow cards. */
+.page-content label.form-group { display: flex; flex-direction: column; align-items: stretch; gap: 8px; min-width: 0; padding: 8px 0; border-bottom: 0; font-size: 14px; color: var(--text-muted); }
+.page-content .modal { max-height: calc(100dvh - 48px); overflow-y: auto; }
+.page-content .modal-form { gap: 16px; }
+.gear-specs, .grid-3 > .card { min-width: 0; }
+.gear-specs dd { max-width: 60%; }
+.page-content .inventory-editor { max-width: 800px; }
+.page-content .inventory-editor .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 600px) { .page-content .inventory-editor .grid-2 { grid-template-columns: minmax(0, 1fr); } }

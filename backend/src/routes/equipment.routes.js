@@ -9,8 +9,10 @@ router.use(authenticate);
 
 router.post('/:id/rent', rentEquipment);
 router.get('/my-rentals', getMyRentals);
+router.post('/rentals/:id/cancel', require('../controllers/equipment.controller').cancelRental);
 
 router.use(requireAdmin);
+router.post('/rentals/:id/return', require('../controllers/equipment.controller').returnRental);
 
 router.post('/', createEquipment);
 router.put('/:id', updateEquipment);

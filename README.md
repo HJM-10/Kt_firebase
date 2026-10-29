@@ -51,4 +51,6 @@ QR camera scanning is available on Android. The server permits check-in from the
 
 See `qa/FEATURE_VERIFICATION.md` for the recorded results and remaining live-service checks.
 
+Venue equipment menus, daily rentals, customer offers, per-customer promo limits, recommendation filtering and dated financial/utilization reporting are documented in [qa/AGENDA_VERIFICATION.md](qa/AGENDA_VERIFICATION.md). Apply the inventory/promo migration before starting the updated API. Administrators maintain equipment specifications and venue assignments on the web Equipment page; unspecified details are never inferred. New isolated database checks: `node scripts/agenda-acceptance.js`.
+
 Official setup references: [FCM for Flutter](https://firebase.google.com/docs/cloud-messaging/flutter/get-started), [receiving messages](https://firebase.google.com/docs/cloud-messaging/flutter/receive-messages), and [Firebase Android configuration](https://firebase.google.com/docs/android/setup).

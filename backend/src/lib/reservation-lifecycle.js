@@ -19,11 +19,12 @@ async function cancelPayment(tx, payment) {
 }
 
 async function releaseReservation(tx, payment) {
+  if (payment.rentalId) await tx.equipmentRental.updateMany({ where: { id: payment.rentalId, status: 'PENDING_PAYMENT' }, data: { status: 'CANCELLED' } });
   if (payment.membershipId) await tx.membershipChange.updateMany({ where: { paymentId: payment.id, status: 'PENDING' }, data: { status: 'EXPIRED' } });
   if (payment.bookingId) {
     const booking = await tx.booking.findUnique({ where: { id: payment.bookingId } });
     const changed = await tx.booking.updateMany({ where: { id: payment.bookingId, status: 'PENDING_PAYMENT' }, data: { status: 'CANCELLED' } });
-    if (changed.count) await tx.bookingSlot.update({ where: { id: booking.slotId }, data: { isBooked: false } });
+    if (changed.count) { await tx.bookingSlot.update({ where: { id: booking.slotId }, data: { isBooked: false } }); await require('./promo-policy').releasePromo(tx, booking.id); }
   }
   if (payment.eventRegId) await tx.eventRegistration.updateMany({ where: { id: payment.eventRegId, status: 'ACTIVE', attendedAt: null }, data: { status: 'EXPIRED' } });
   if (payment.tournamentRegId) await tx.teamRegistration.updateMany({ where: { id: payment.tournamentRegId, status: 'ACTIVE' }, data: { status: 'EXPIRED' } });
@@ -34,11 +35,12 @@ async function expireReservations(now = new Date()) {
   for (const payment of due) await transaction(async tx => {
     const claimed = await tx.payment.updateMany({ where: { id: payment.id, status: 'PENDING', expiresAt: { lte: now } }, data: { status: 'FAILED' } });
     if (!claimed.count) return;
+    if (payment.rentalId) await tx.equipmentRental.updateMany({ where: { id: payment.rentalId, status: 'PENDING_PAYMENT' }, data: { status: 'CANCELLED' } });
     if (payment.membershipId) await tx.membershipChange.updateMany({ where: { paymentId: payment.id, status: 'PENDING' }, data: { status: 'EXPIRED' } });
     if (payment.bookingId) {
       const booking = await tx.booking.findUnique({ where: { id: payment.bookingId } });
       const changed = await tx.booking.updateMany({ where: { id: payment.bookingId, status: 'PENDING_PAYMENT' }, data: { status: 'CANCELLED' } });
-      if (changed.count) await tx.bookingSlot.update({ where: { id: booking.slotId }, data: { isBooked: false } });
+      if (changed.count) { await tx.bookingSlot.update({ where: { id: booking.slotId }, data: { isBooked: false } }); await require('./promo-policy').releasePromo(tx, booking.id); }
     }
     if (payment.eventRegId) await tx.eventRegistration.updateMany({ where: { id: payment.eventRegId, status: 'ACTIVE' }, data: { status: 'EXPIRED' } });
     if (payment.tournamentRegId) await tx.teamRegistration.updateMany({ where: { id: payment.tournamentRegId, status: 'ACTIVE' }, data: { status: 'EXPIRED' } });
@@ -47,6 +49,10 @@ async function expireReservations(now = new Date()) {
 }
 
 async function assertPayable(tx, payment) {
+  if (payment.rentalId) {
+    const rental = await tx.equipmentRental.findUnique({ where: { id: payment.rentalId } });
+    if (rental?.status !== 'PENDING_PAYMENT') throw fail('Rental is no longer awaiting payment');
+  }
   if (payment.membershipId) {
     const change = await tx.membershipChange.findUnique({ where: { paymentId: payment.id } });
     if (change?.status !== 'PENDING') throw fail('Membership request is no longer pending');
@@ -89,7 +95,7 @@ async function processRefunds() {
     } catch (error) { await prisma.refund.update({ where: { id: refund.id }, data: { status: 'FAILED', error: error.message } }); }
   }
 }
-function emitChange() { try { require('./socket').getIO().emit('booking_updated', {}); require('./socket').getIO().emit('resource_changed', { resource: 'bookings' }); require('./socket').getIO().emit('resource_changed', { resource: 'events' }); require('./socket').getIO().emit('resource_changed', { resource: 'payments' }); require('./socket').getIO().emit('resource_changed', { resource: 'tournaments' }); } catch {} }
+function emitChange() { try { for (const resource of ['equipment', 'promo', 'reports', 'recommendations', 'venues']) require('./socket').getIO().emit('resource_changed', { resource }); } catch {} try { require('./socket').getIO().emit('booking_updated', {}); require('./socket').getIO().emit('resource_changed', { resource: 'bookings' }); require('./socket').getIO().emit('resource_changed', { resource: 'events' }); require('./socket').getIO().emit('resource_changed', { resource: 'payments' }); require('./socket').getIO().emit('resource_changed', { resource: 'tournaments' }); } catch {} }
 function startLifecycleWorker() {
   let busy = false;
   const tick = async () => { if (busy) return; busy = true; try { await expireReservations(); await processRefunds(); } catch (e) { console.error('Reservation lifecycle:', e.message); } finally { busy = false; } };

@@ -84,6 +84,7 @@ enum DiscountType {
 }
 
 enum RentalStatus {
+  PENDING_PAYMENT
   CONFIRMED
   CANCELLED
   RETURNED
@@ -145,6 +146,7 @@ model Venue {
   closures     VenueClosure[]
   slots        BookingSlot[]
   reviews      Review[]
+  equipment    Equipment[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -207,6 +209,7 @@ model Payment {
   purpose               PaymentPurpose
   stripePaymentIntentId String?        @unique
   stripeClientSecret    String?
+  paidAt                DateTime?
   stripeCheckoutSessionId String? @unique
   expiresAt             DateTime?
   refunds               Refund[]
@@ -370,6 +373,13 @@ model Equipment {
   id           Int               @id @default(autoincrement())
   name         String
   description  String?
+  venueId      Int?
+  venue        Venue?            @relation(fields: [venueId], references: [id])
+  brand        String?
+  model        String?
+  material     String?
+  ballType     String?
+  condition    String?
   sportId      Int
   sport        Sport             @relation(fields: [sportId], references: [id])
   pricePerSlot Float             @default(0)
@@ -392,9 +402,13 @@ model EquipmentRental {
   status      RentalStatus @default(CONFIRMED)
   rentalDate  DateTime     @db.Date
   returnDate  DateTime?    @db.Date
+  returnedAt  DateTime?
+  damageNotes String?      @db.Text
+  damagedQuantity Int     @default(0)
   payment     Payment?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  @@index([equipmentId, status, rentalDate, returnDate], map: "EquipmentRental_equipmentId_status_dates_idx")
 }
 
 // ─── Promo Codes ──────────────────────────────────────────────────────────────
@@ -405,6 +419,7 @@ model PromoCode {
   discountType    DiscountType     @default(PERCENTAGE)
   discountValue   Float
   maxUses         Int?
+  perCustomerLimit Int             @default(1)
   usedCount       Int              @default(0)
   minOrderAmount  Float?
   expiresAt       DateTime?

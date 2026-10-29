@@ -29,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   final Set<String> _failed = {};
   int _version = 0;
   @override
-  List<String> get liveResources => ['sports', 'venues', 'bookings'];
+  List<String> get liveResources => ['sports', 'venues', 'bookings', 'recommendations'];
   @override
   Future<void> refreshForLiveUpdates() => _fetch();
   @override
@@ -276,6 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       '/tournaments'),
                   _feature('Matches', Icons.sports, '/matches'),
                   _feature('Events', Icons.event_outlined, '/events'),
+                  _feature('Offers & discounts', Icons.local_offer_outlined, '/promo'),
                   _feature('Equipment', Icons.sports_tennis, '/equipment'),
                   _feature('Membership', Icons.card_membership, '/membership'),
                   _feature('Support', Icons.support_agent, '/complaints'),

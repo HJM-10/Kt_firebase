@@ -1,0 +1,11 @@
+✔ resource refresh handles changes, reconnect recovery and cleanup without disconnecting other screens (1.5122ms)
+✔ startup outage retains token, blocks unverified access, and retry verifies role (8.6657ms)
+✔ credential and permission errors preserve session; true expiry clears and redirects (2.6054ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 507.111

@@ -23,6 +23,7 @@ const PromoCodesPage = lazy(() => import('./pages/PromoCodesPage'));
 const ReportsPage = lazy(() => import('./pages/ReportsPage'));
 const PaymentsPage = lazy(() => import('./pages/PaymentHistoryPage'));
 const UsersPage = lazy(() => import('./pages/UsersPage'));
+const VenueDetailsPage = lazy(() => import('./pages/VenueDetailsPage'));
 const VenuesPage = lazy(() => import('./pages/VenuesPage'));
 const ReviewsPage = lazy(() => import('./pages/ReviewsPage'));
 const ReservePage = lazy(() => import('./pages/ReservePage'));
@@ -59,7 +60,8 @@ function App() {
           <Route path="bookings" element={<ProtectedRoute adminOnly><BookingsPage /></ProtectedRoute>} />
           <Route path="fixtures" element={<ProtectedRoute adminOnly><FixturesPage /></ProtectedRoute>} />
           <Route path="scan" element={<ProtectedRoute adminOnly><ScanBookingPage /></ProtectedRoute>} />
-          <Route path="promo" element={<ProtectedRoute adminOnly><PromoCodesPage /></ProtectedRoute>} />
+          <Route path="promo" element={<PromoCodesPage />} />
+          <Route path="venues/:id" element={<VenueDetailsPage />} />
           <Route path="reports" element={<ProtectedRoute adminOnly><ReportsPage /></ProtectedRoute>} />
           <Route path="venues" element={<ProtectedRoute adminOnly><VenuesPage /></ProtectedRoute>} />
           <Route path="reviews" element={<ProtectedRoute adminOnly><ReviewsPage /></ProtectedRoute>} />

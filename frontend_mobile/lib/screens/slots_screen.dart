@@ -8,6 +8,7 @@ import '../providers/auth_provider.dart';
 import '../utils/booking_time.dart';
 import '../widgets/clubhouse.dart';
 import 'my_bookings_screen.dart';
+import 'venue_details_screen.dart';
 
 class SlotsScreen extends StatefulWidget {
   final int venueId;
@@ -43,15 +44,20 @@ class _SlotsScreenState extends State<SlotsScreen> {
     _loadVenue();
     load();
     ApiService().socket.on('booking_updated', onUpdate);
+    ApiService().socket.on('connect', onUpdate);
   }
 
   void onUpdate(dynamic _) {
-    if (mounted) load();
+    if (mounted) {
+      load();
+      _loadVenue();
+    }
   }
 
   @override
   void dispose() {
     ApiService().socket.off('booking_updated', onUpdate);
+    ApiService().socket.off('connect', onUpdate);
     promo.dispose();
     super.dispose();
   }
@@ -238,7 +244,17 @@ class _SlotsScreenState extends State<SlotsScreen> {
           title: Text(widget.rescheduleBookingId == null
               ? 'Book a court'
               : 'Reschedule booking'),
-          actions: const [ThemeToggle()]),
+          actions: [
+            IconButton(
+                tooltip: 'Venue equipment menu',
+                icon: const Icon(Icons.info_outline),
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            VenueDetailsScreen(venueId: widget.venueId)))),
+            const ThemeToggle()
+          ]),
       body: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [

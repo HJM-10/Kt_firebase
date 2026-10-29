@@ -15,6 +15,7 @@ import 'providers/theme_provider.dart';
 import 'screens/admin_dashboard_screen.dart';
 import 'screens/events_screen.dart';
 import 'screens/equipment_screen.dart';
+import 'screens/promo_codes_screen.dart';
 import 'screens/membership_screen.dart';
 import 'screens/complaints_screen.dart';
 import 'screens/notifications_screen.dart';
@@ -70,6 +71,7 @@ class SmartSportsHubApp extends StatelessWidget {
             '/signup': (context) => const SignupScreen(),
             '/events': (context) => const EventsScreen(),
             '/equipment': (context) => const EquipmentScreen(),
+            '/promo': (context) => const PromoCodesScreen(),
             '/membership': (context) => const MembershipScreen(),
             '/complaints': (context) => const ComplaintsScreen(),
             '/notifications': (context) => const NotificationsScreen(),

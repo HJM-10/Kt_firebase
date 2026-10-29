@@ -62,6 +62,7 @@ app.use('/api', (req, res, next) => {
     res.once('finish', () => {
       if (res.statusCode >= 200 && res.statusCode < 300) {
         try { require('./lib/socket').getIO().emit('resource_changed', { resource }); } catch {}
+        if (['bookings', 'venues', 'sports', 'payments', 'equipment', 'promo', 'events', 'tournaments', 'matches'].includes(resource)) require('./lib/reservation-lifecycle').emitChange();
       }
     });
   }

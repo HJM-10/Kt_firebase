@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
     if (body[key] !== undefined && body[key] !== null && (!Number.isFinite(Number(body[key])) || Number(body[key]) < 0)) return reject(`${key} must be a nonnegative amount`);
   }
   for (const key of ['sportId', 'tournamentId', 'venueId', 'slotId', 'quantity', 'capacity', 'maxParticipants', 'maxTeams', 'maxUses']) {
-    if (body[key] !== undefined && body[key] !== null && (!Number.isSafeInteger(Number(body[key])) || Number(body[key]) < 1)) return reject(`${key} must be a positive integer`);
+    if (body[key] !== undefined && body[key] !== null && (!Number.isSafeInteger(Number(body[key])) || Number(body[key]) < (resource === 'equipment' && key === 'quantity' && !req.path.endsWith('/rent') ? 0 : 1))) return reject(`${key} must be a positive integer`);
   }
   for (const key of ['startDate', 'endDate', 'scheduledAt', 'rentalDate', 'returnDate', 'expiresAt']) {
     if (body[key] && !Number.isFinite(Date.parse(body[key]))) return reject(`${key} must be a valid date`);

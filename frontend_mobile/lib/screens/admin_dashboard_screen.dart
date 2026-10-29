@@ -18,6 +18,8 @@ import 'admin_users_screen.dart';
 import 'admin_tournaments_screen.dart';
 import 'admin_events_screen.dart';
 import 'admin_reports_screen.dart';
+import 'equipment_screen.dart';
+import 'promo_codes_screen.dart';
 import 'payments_screen.dart';
 import 'fixtures_screen.dart';
 import 'check_in_screen.dart';
@@ -870,6 +872,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen>
             const FixturesScreen()),
         _module('Payments & invoices', 'Review payments and receipts',
             ArenaSymbol.money, const PaymentsScreen(admin: true)),
+        _module('Equipment rentals', 'Inventory and returns',
+            ArenaSymbol.equipment, const EquipmentScreen()),
+        _module('Offers & discounts', 'Current promo code terms',
+            ArenaSymbol.money, const PromoCodesScreen()),
         _module('Reports', 'Revenue and performance', ArenaSymbol.report,
             const AdminReportsScreen()),
         _module('Verify an entry pass', 'Scan or enter a booking pass',

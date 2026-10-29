@@ -3,7 +3,7 @@ import '../services/live_refresh.dart';
 import '../services/api_service.dart';
 import '../widgets/clubhouse.dart';
 import '../widgets/venue_card.dart';
-import 'slots_screen.dart';
+import 'venue_details_screen.dart';
 
 class VenuesScreen extends StatefulWidget {
   final int sportId;
@@ -79,10 +79,8 @@ class _VenuesScreenState extends State<VenuesScreen>
                         onBook: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => SlotsScreen(
-                                    venueId: v['id'],
-                                    initialVenue:
-                                        Map<String, dynamic>.from(v)))))),
+                                builder: (_) =>
+                                    VenueDetailsScreen(venueId: v['id']))))),
                 ])),
       );
 }

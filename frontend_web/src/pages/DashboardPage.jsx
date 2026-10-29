@@ -62,11 +62,13 @@ const DashboardPage = () => {
 
     socket.connect();
     socket.on('booking_updated', fetchStats);
+    socket.on('connect', fetchStats);
     socket.on('event_updated', fetchStats);
     socket.on('complaint_updated', fetchStats);
 
     return () => {
       socket.off('booking_updated', fetchStats);
+      socket.off('connect', fetchStats);
       socket.off('event_updated', fetchStats);
       socket.off('complaint_updated', fetchStats);
     };

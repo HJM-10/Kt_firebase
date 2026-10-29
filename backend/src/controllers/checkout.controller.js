@@ -16,13 +16,14 @@ async function settle(session) {
     if (['PAID', 'REFUNDED'].includes(payment.status)) { await queueRefund(tx, payment, session.payment_intent); return; }
     let payable = true;
     try { await assertPayable(tx, payment); } catch (error) { if (error.status !== 409) throw error; payable = false; }
-    await tx.payment.update({ where: { id }, data: { status: 'PAID', stripePaymentIntentId: session.payment_intent } });
+    await tx.payment.update({ where: { id }, data: { status: 'PAID', paidAt: new Date(), stripePaymentIntentId: session.payment_intent } });
     if (!payable) { await require('../lib/reservation-lifecycle').releaseReservation(tx, payment); await queueRefund(tx, payment, session.payment_intent); return; }
     if (payment.bookingId) {
       const changed = await tx.booking.updateMany({ where: { id: payment.bookingId, status: 'PENDING_PAYMENT' }, data: { status: 'CONFIRMED' } });
       if (!changed.count) throw new Error('Booking requires payment reconciliation');
     }
     if (payment.membershipId) await require('../lib/membership').activateMembership(tx, payment);
+    if (payment.rentalId) await tx.equipmentRental.update({ where: { id: payment.rentalId }, data: { status: 'CONFIRMED' } });
     return tx.notification.create({ data: { userId: payment.userId, title: 'Payment received', body: `Payment #${id} of ${payment.currency} ${payment.amount} was received.`, type: 'PAYMENT' } });
   });
   if (notification) await require('../lib/notifications').deliverNotification(notification);

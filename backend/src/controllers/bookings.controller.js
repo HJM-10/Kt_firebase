@@ -7,6 +7,7 @@ const socket = require('../lib/socket');
 const { entryPass, bookingForClient } = require('../lib/entry-pass');
 const { startsAt, endsAt, deadline, assertVenueAvailable, fail, hasNotice } = require('../lib/arena-time');
 const { expireReservations, cancelPayment } = require('../lib/reservation-lifecycle');
+const { normalizeCode, assertPromo, releasePromo } = require('../lib/promo-policy');
 
 const getSlots = async (req, res) => {
   try {
@@ -135,11 +136,12 @@ const createBooking = async (req, res) => {
       if (membership.tier === 'GOLD') membershipDiscount = basePrice * 0.20;
     }
     
-    finalPrice -= membershipDiscount;
+    membershipDiscount = Number(membershipDiscount.toFixed(2));
+    finalPrice = Number((finalPrice - membershipDiscount).toFixed(2));
 
     // Promo code logic
     if (promoCode) {
-      const promo = await prisma.promoCode.findUnique({ where: { code: promoCode } });
+      const promo = await prisma.promoCode.findUnique({ where: { code: normalizeCode(promoCode) } });
       if (promo && promo.isActive && (!promo.expiresAt || new Date() <= promo.expiresAt) && (!promo.maxUses || promo.usedCount < promo.maxUses)) {
         if (!promo.minOrderAmount || basePrice >= promo.minOrderAmount) {
           if (promo.discountType === 'PERCENTAGE') {
@@ -153,6 +155,7 @@ const createBooking = async (req, res) => {
       if (!promoCodeId) return res.status(400).json({ success: false, message: 'Promo code is invalid, expired, exhausted or below its minimum order value' });
     }
     
+    promoDiscount = Math.min(finalPrice, Number(promoDiscount.toFixed(2)));
     finalPrice -= promoDiscount;
     if (finalPrice < 0) finalPrice = 0;
     finalPrice = Number(finalPrice.toFixed(2));
@@ -212,6 +215,10 @@ const createBooking = async (req, res) => {
       if (promoCodeId) {
          await tx.promoCode.update({ where: { id: promoCodeId }, data: { updatedAt: new Date() } });
          const currentPromo = await tx.promoCode.findUnique({ where: { id: promoCodeId } });
+         const uses = await tx.promoCodeUsage.count({ where: { promoCodeId, userId: targetUserId } });
+         assertPromo(currentPromo, { amount: basePrice, uses });
+         const currentDiscount = Math.min(basePrice - membershipDiscount, currentPromo.discountType === 'PERCENTAGE' ? (basePrice - membershipDiscount) * currentPromo.discountValue / 100 : currentPromo.discountValue);
+         if (Math.abs(currentDiscount - Math.min(promoDiscount, basePrice - membershipDiscount)) > 0.005) throw fail('Promo terms changed; refresh and retry');
          if (!currentPromo.isActive || (currentPromo.expiresAt && currentPromo.expiresAt <= new Date()) || (currentPromo.maxUses && currentPromo.usedCount >= currentPromo.maxUses)) throw Object.assign(new Error('Promo code is no longer available'), { status: 409 });
          await tx.promoCode.update({ where: { id: promoCodeId }, data: { usedCount: { increment: 1 } } });
          await tx.promoCodeUsage.create({ data: { promoCodeId, userId: targetUserId, bookingId: b.id } });
@@ -224,7 +231,7 @@ const createBooking = async (req, res) => {
           amount: finalPrice,
           purpose: 'BOOKING',
           bookingId: b.id,
-          status: finalPrice === 0 ? 'PAID' : 'PENDING'
+          status: finalPrice === 0 ? 'PAID' : 'PENDING', paidAt: finalPrice === 0 ? new Date() : null
           ,expiresAt: finalPrice === 0 ? null : deadline()
         }
       });
@@ -235,6 +242,7 @@ const createBooking = async (req, res) => {
 
     await require('../lib/notifications').createNotification(booking.userId, 'Booking created', `Booking #${booking.id} is ${booking.status === 'CONFIRMED' ? 'confirmed' : 'reserved pending payment'}.`, 'BOOKING');
     res.status(201).json({ success: true, data: bookingForClient(booking) });
+    require('../lib/reservation-lifecycle').emitChange();
     try { socket.getIO().emit('booking_updated', { slotId: booking.slotId }); } catch (e) {}
   } catch (err) {
     console.error(err);
@@ -268,6 +276,7 @@ const cancelBooking = async (req, res) => {
       await cancelPayment(tx, payment);
       const changed = await tx.booking.updateMany({ where: { id: booking.id, slotId: booking.slotId, status: { in: ['CONFIRMED', 'PENDING_PAYMENT'] } }, data: { status: 'CANCELLED' } });
       if (!changed.count) throw Object.assign(new Error('Booking changed; refresh and retry'), { status: 409 });
+      await releasePromo(tx, booking.id);
       await tx.payment.updateMany({ where: { bookingId: booking.id, status: 'PENDING' }, data: { status: 'FAILED' } });
       await tx.bookingSlot.update({ where: { id: booking.slotId }, data: { isBooked: false } });
     });

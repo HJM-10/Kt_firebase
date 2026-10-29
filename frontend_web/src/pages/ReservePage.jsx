@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import useLiveRefresh from '../services/useLiveRefresh';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
 import PaymentModal from '../components/PaymentModal';
@@ -12,6 +13,10 @@ export default function ReservePage() {
   const navigate = useNavigate();
   const isAdmin = useAuthStore(s => s.user?.role === 'ADMIN');
   const [venues, setVenues] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const loadRecommendations = useCallback(() => api.get('/recommendations/slots').then(r => setRecommendations(r.data.data)).catch(() => setRecommendations([])), []);
+  useEffect(() => { loadRecommendations(); }, [loadRecommendations]);
+  useLiveRefresh('recommendations', loadRecommendations);
   const [venueId, setVenueId] = useState(params.get('venueId') || '');
   const [date, setDate] = useState(new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date()));
   const [slots, setSlots] = useState([]);
@@ -20,7 +25,9 @@ export default function ReservePage() {
   const [promoCode, setPromoCode] = useState('');
   const [payment, setPayment] = useState(null);
   const [times, setTimes] = useState({ startTime: '09:00', endTime: '10:00' });
-  useEffect(() => { api.get('/venues').then(r => setVenues(r.data.data)).catch(() => toast.error('Could not load venues')); }, []);
+  const loadVenues = useCallback(() => api.get('/venues').then(r => setVenues(r.data.data)).catch(() => toast.error('Could not load venues')), []);
+  useEffect(() => { loadVenues(); }, [loadVenues]);
+  useLiveRefresh('venues', loadVenues);
   useEffect(() => {
     if (!venueId) { setSlots([]); return; }
     let active = true;
@@ -56,11 +63,13 @@ export default function ReservePage() {
   };
   return <div>
     <div className="page-header"><h1 className="page-title">{params.get('reschedule') ? 'Reschedule booking' : 'Book a venue'}</h1><p className="page-subtitle">Published availability in Pakistan time. Reservations update live.</p></div>
+    {!params.get('reschedule') && recommendations.length > 0 && <section className="mb-24"><h2 className="mb-16">Suggested for your next game</h2><div className="grid-3">{recommendations.map(s => <article className="card" key={s.id}><h3>{s.venue.name}</h3><p>{s.date.slice(0, 10)} · {s.startTime}–{s.endTime}</p><p className="text-muted">{s.recommendationReason}</p><button className="btn btn-secondary" onClick={() => { setVenueId(String(s.venueId)); setDate(s.date.slice(0, 10)); }}>View available sessions</button></article>)}</div></section>}
     <div className="card form-panel modal-form mb-24">
       <FormField label="Venue"><select className="form-input" value={venueId} onChange={e => setVenueId(e.target.value)}><option value="">Choose a venue</option>{venues.map(v => <option key={v.id} value={v.id}>{v.sport.name} · {v.name} · PKR {v.pricePerSlot}</option>)}</select></FormField>
       <FormField label="Date"><input className="form-input" type="date" value={date} min={new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date())} onChange={e => setDate(e.target.value)} /></FormField>
       {!params.get('reschedule') && <FormField label="Promo code" hint="Optional. Enter an arena promo code to apply a discount."><input className="form-input" value={promoCode} onChange={e => setPromoCode(e.target.value)} /></FormField>}
     </div>
+    {venueId && <div className="card mb-24"><Link className="btn btn-secondary" to={`/venues/${venueId}`}>Venue details & equipment menu</Link></div>}
     {isAdmin && venueId && <form className="card form-panel modal-form mb-24" onSubmit={publish}><h2 className="form-section-title">Publish availability</h2><FormField label="Start time"><input type="time" className="form-input" required value={times.startTime} onChange={e => setTimes({ ...times, startTime: e.target.value })} /></FormField><FormField label="End time"><input type="time" className="form-input" required value={times.endTime} onChange={e => setTimes({ ...times, endTime: e.target.value })} /></FormField><div className="form-footer"><button className="btn btn-primary" disabled={busy}>Publish slot</button></div></form>}
     {loading ? <p role="status">Loading availability…</p> : venueId && slots.length === 0 ? <div className="empty-state">No slots have been published for this date.</div> : <div className="grid-3">{slots.map(s => {
       const unavailable = s.isBooked || new Date(`${s.date.slice(0, 10)}T${s.startTime}:00+05:00`) <= new Date();

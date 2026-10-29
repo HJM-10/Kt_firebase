@@ -24,7 +24,7 @@ const getVenueById = async (req, res) => {
   try {
     const venue = await prisma.venue.findUnique({
       where: { id: parseInt(req.params.id) },
-      include: { sport: true, closures: true }
+      include: { sport: true, closures: true, equipment: { include: { sport: true } } }
     });
     if (!venue) return res.status(404).json({ success: false, message: 'Venue not found' });
     res.json({ success: true, data: venue });

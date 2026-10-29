@@ -1,165 +1,27 @@
-import { useState, useEffect } from 'react';
-import axios from '../api/axios';
+import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../api/axios';
 import toast from 'react-hot-toast';
-
-const PromoCodesPage = () => {
-  const [promos, setPromos] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Form states
-  const [code, setCode] = useState('');
-  const [discountType, setDiscountType] = useState('PERCENTAGE');
-  const [discountValue, setDiscountValue] = useState('');
-  const [maxUses, setMaxUses] = useState('');
-  const [minOrderAmount, setMinOrderAmount] = useState('');
-  const [expiresAt, setExpiresAt] = useState('');
-
-  const fetchPromos = async () => {
-    try {
-      const res = await axios.get('/promo');
-      if (res.data.success) {
-        setPromos(res.data.data);
-      }
-    } catch (err) {
-      toast.error('Failed to load promo codes');
-    } finally {
-      setLoading(false);
-    }
+import useAuthStore from '../store/authStore';
+import useLiveRefresh from '../services/useLiveRefresh';
+const blank = { code: '', discountType: 'PERCENTAGE', discountValue: '', maxUses: '', perCustomerLimit: 1, minOrderAmount: '', expiresAt: '' };
+export default function PromoCodesPage() {
+  const admin = useAuthStore(s => s.user?.role === 'ADMIN');
+  const [promos, setPromos] = useState([]), [form, setForm] = useState(blank), [loading, setLoading] = useState(true), [error, setError] = useState(''), [busy, setBusy] = useState(false);
+  const load = useCallback(async () => { try { const r = await api.get('/promo'); setPromos(r.data.data); setError(''); } catch { setError('Could not load offers. Please retry.'); } finally { setLoading(false); } }, []);
+  useEffect(() => { load(); }, [load]); useLiveRefresh('promo', load); useLiveRefresh('bookings', load);
+  const save = async e => {
+    e.preventDefault(); setBusy(true);
+    try { await api.post('/promo', { ...form, discountValue: Number(form.discountValue), perCustomerLimit: Number(form.perCustomerLimit), maxUses: form.maxUses ? Number(form.maxUses) : null, minOrderAmount: form.minOrderAmount ? Number(form.minOrderAmount) : null, expiresAt: form.expiresAt ? new Date(`${form.expiresAt}T23:59:59+05:00`).toISOString() : null }); setForm(blank); toast.success('Offer created'); await load(); }
+    catch (e) { toast.error(e.response?.data?.message || 'Could not create offer'); } finally { setBusy(false); }
   };
-
-  useEffect(() => {
-    fetchPromos();
-  }, []);
-
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post('/promo', {
-        code: code.toUpperCase(),
-        discountType,
-        discountValue: parseFloat(discountValue),
-        maxUses: maxUses ? parseInt(maxUses) : null,
-        minOrderAmount: minOrderAmount ? parseFloat(minOrderAmount) : null,
-        expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null
-      });
-      if (res.data.success) {
-        toast.success('Promo code created');
-        fetchPromos();
-        setCode(''); setDiscountValue(''); setMaxUses(''); setMinOrderAmount(''); setExpiresAt('');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create promo code');
-    }
-  };
-
-  const toggleStatus = async (id, currentStatus) => {
-    try {
-      await axios.patch(`/promo/${id}`, { isActive: !currentStatus });
-      toast.success('Status updated');
-      fetchPromos();
-    } catch (err) {
-      toast.error('Failed to update status');
-    }
-  };
-
-  if (loading) return <div className="p-6 text-white text-center">Loading...</div>;
-
-  return (
-    <div className="p-6 text-white h-full overflow-auto">
-      <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400 mb-8">
-        Promo Codes Management
-      </h1>
-
-      <div>
-        <div className="card mb-24">
-          <h2 className="text-xl font-bold mb-16">Create New Code</h2>
-          <form onSubmit={handleCreate} className="grid-3 items-center">
-            <div className="form-group">
-              <label className="form-label">Code</label>
-              <input type="text" value={code} onChange={e => setCode(e.target.value)} required className="form-input uppercase" placeholder="e.g. SUMMER20" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Type</label>
-              <select value={discountType} onChange={e => setDiscountType(e.target.value)} className="form-select">
-                <option value="PERCENTAGE" className="text-black">Percentage (%)</option>
-                <option value="FIXED" className="text-black">Fixed Amount (Rs)</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Value</label>
-              <input type="number" value={discountValue} onChange={e => setDiscountValue(e.target.value)} required className="form-input" placeholder="20" min="1" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Max Uses</label>
-              <input type="number" value={maxUses} onChange={e => setMaxUses(e.target.value)} className="form-input" placeholder="Unlimited" min="1" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Min Order (Rs)</label>
-              <input type="number" value={minOrderAmount} onChange={e => setMinOrderAmount(e.target.value)} className="form-input" placeholder="0" min="0" />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Expiry Date (Optional)</label>
-              <input type="date" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} className="form-input" />
-            </div>
-            <div style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
-              <button type="submit" className="btn btn-primary btn-full">
-                Create Code
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div>
-          <div className="card overflow-hidden" style={{ padding: 0 }}>
-            <table className="w-full text-left text-sm text-gray-300">
-              <thead className="text-xs uppercase bg-white/5 text-gray-400 border-b border-white/10">
-                <tr>
-                  <th className="px-6 py-4">Code</th>
-                  <th className="px-6 py-4">Discount</th>
-                  <th className="px-6 py-4">Usage</th>
-                  <th className="px-6 py-4">Expiry</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {promos.map(promo => (
-                  <tr key={promo.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-bold text-white">{promo.code}</td>
-                    <td className="px-6 py-4 text-emerald-400">
-                      {promo.discountType === 'PERCENTAGE' ? `${promo.discountValue}%` : `Rs. ${promo.discountValue}`}
-                    </td>
-                    <td className="px-6 py-4">
-                      {promo.usedCount} / {promo.maxUses || '∞'}
-                    </td>
-                    <td className="px-6 py-4">
-                      {promo.expiresAt ? new Date(promo.expiresAt).toLocaleDateString() : 'Never'}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded text-xs font-bold ${promo.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
-                        {promo.isActive ? 'ACTIVE' : 'INACTIVE'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button 
-                        onClick={() => toggleStatus(promo.id, promo.isActive)}
-                        className="btn btn-secondary btn-sm"
-                      >
-                        Toggle
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {promos.length === 0 && (
-              <div className="p-8 text-center text-gray-400">No promo codes created yet.</div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default PromoCodesPage;
+  const toggle = async p => { setBusy(true); try { await api.patch(`/promo/${p.id}`, { isActive: !p.isActive }); await load(); } catch { toast.error('Could not update offer'); } finally { setBusy(false); } };
+  return <div><div className="page-header"><h1 className="page-title">Promo codes & discounts</h1><p className="page-subtitle">Save on your next court booking. Membership savings apply first; promo savings apply to the remaining price.</p></div>
+    {admin && <form className="card modal-form mb-24" onSubmit={save}><h2>Create an offer</h2><div className="grid-3">{[['code', 'Promo code', 'text'], ['discountValue', 'Discount value', 'number'], ['maxUses', 'Total use limit (optional)', 'number'], ['perCustomerLimit', 'Uses per customer', 'number'], ['minOrderAmount', 'Minimum booking value (PKR)', 'number'], ['expiresAt', 'Last valid date (Pakistan time)', 'date']].map(([key, label, type]) => <label className="form-group" key={key}>{label}<input className="form-input" type={type} required={['code', 'discountValue', 'perCustomerLimit'].includes(key)} min={key === 'minOrderAmount' ? 0 : 1} max={key === 'discountValue' && form.discountType === 'PERCENTAGE' ? 100 : undefined} step={['discountValue', 'minOrderAmount'].includes(key) ? '0.01' : undefined} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} /></label>)}<label className="form-group">Discount type<select className="form-select" value={form.discountType} onChange={e => setForm({ ...form, discountType: e.target.value })}><option value="PERCENTAGE">Percentage</option><option value="FIXED">Fixed PKR</option></select></label></div><button disabled={busy} className="btn btn-primary">Create offer</button></form>}
+    <div className="card mb-24"><p>Enter your code when booking a venue. The minimum applies to the original venue price. A cancelled or expired reservation restores your promo allowance. Discounts never exceed the payable booking amount.</p></div>
+    {error && <div className="card" role="alert">{error} <button className="btn btn-secondary" onClick={load}>Retry</button></div>}{loading ? <p role="status">Loading offers…</p> : <div className="grid-3">{promos.map(p => {
+      const available = p.available ?? (p.isActive && (!p.expiresAt || new Date(p.expiresAt) > new Date()) && (p.maxUses == null || p.usedCount < p.maxUses));
+      return <article className="card" key={p.id}><span className={`badge ${available ? 'badge-success' : 'badge-danger'}`}>{available ? 'Available' : 'Unavailable'}</span><h2 style={{ margin: '16px 0' }}>{p.discountType === 'PERCENTAGE' ? `${p.discountValue}% off` : `PKR ${p.discountValue} off`}</h2><p className="promo-code">{p.code}</p><p>Minimum booking: PKR {p.minOrderAmount || 0}</p><p>{p.perCustomerLimit} uses per customer{p.remainingUses !== undefined && ` · ${p.remainingUses} remaining`}</p><p className="text-muted">{p.expiresAt ? `Expires ${new Date(p.expiresAt).toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })}` : 'No expiry date'}</p>{admin ? <><p>{p.usedCount} / {p.maxUses ?? 'Unlimited'} total uses</p><button disabled={busy} className="btn btn-secondary" onClick={() => toggle(p)}>{p.isActive ? 'Deactivate' : 'Activate'}</button></> : available && <Link className="btn btn-primary" to={`/reserve?promo=${encodeURIComponent(p.code)}`}>Use this offer</Link>}</article>;
+    })}</div>}{!loading && !error && !promos.length && <div className="empty-state">No offers available right now. Check back soon.</div>}
+  </div>;
+}

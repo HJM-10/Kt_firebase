@@ -1,277 +1,75 @@
-import useLiveRefresh from '../services/useLiveRefresh';
-import { useState, useEffect } from 'react';
-import axios from '../api/axios';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import api from '../api/axios';
 import useAuthStore from '../store/authStore';
-import toast from 'react-hot-toast';
+import useLiveRefresh from '../services/useLiveRefresh';
 import PaymentModal from '../components/PaymentModal';
-
-const EquipmentPage = () => {
-  const { user } = useAuthStore();
-  const isAdmin = user?.role === 'ADMIN';
-  const [equipment, setEquipment] = useState([]);
-  const [loading, setLoading] = useState(true);
-  
-  const [paymentData, setPaymentData] = useState(null);
-  const [showPayment, setShowPayment] = useState(false);
-
-  const [rentals, setRentals] = useState([]);
-  const [showAdminModal, setShowAdminModal] = useState(false);
-  const [sports, setSports] = useState([]);
-
-  // Create Equipment state
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '', description: '', sportId: '', pricePerSlot: 0, quantity: 1, imageUrl: ''
-  });
-
-  const fetchEquipment = async () => {
+import ConfirmModal from '../components/ConfirmModal';
+import toast from 'react-hot-toast';
+const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Karachi' }).format(new Date());
+const blank = { name: '', description: '', sportId: '', venueId: '', pricePerSlot: 0, quantity: 1, brand: '', model: '', material: '', ballType: '', condition: '', imageUrl: '', isActive: true };
+export default function EquipmentPage() {
+  const isAdmin = useAuthStore(s => s.user?.role === 'ADMIN');
+  const [params] = useSearchParams();
+  const [venueId, setVenueId] = useState(params.get('venueId') || '');
+  const [dates, setDates] = useState({ rentalDate: today(), returnDate: today() });
+  const [items, setItems] = useState([]), [rentals, setRentals] = useState([]), [venues, setVenues] = useState([]), [sports, setSports] = useState([]);
+  const [loading, setLoading] = useState(true), [error, setError] = useState(''), [busy, setBusy] = useState(false);
+  const [selection, setSelection] = useState(null), [quantity, setQuantity] = useState(1), [payment, setPayment] = useState(null);
+  const [editor, setEditor] = useState(null), [returning, setReturning] = useState(null), [damage, setDamage] = useState({ damagedQuantity: 0, damageNotes: '' }), [cancelling, setCancelling] = useState(null);
+  const loadVersion = useRef(0);
+  const load = useCallback(async () => {
+    const version = ++loadVersion.current;
     try {
-      const res = await axios.get('/equipment');
-      if (res.data.success) {
-        setEquipment(res.data.data);
-      }
-    } catch (err) {
-      toast.error('Failed to load equipment');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSports = async () => {
-    try {
-      const res = await axios.get('/sports');
-      setSports(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useLiveRefresh('equipment', fetchEquipment);
-  useEffect(() => {
-    fetchEquipment();
-    if (isAdmin) fetchSports();
-  }, [isAdmin]);
-
-  const handleRent = async (equipmentId, price) => {
-    const rentDate = new Date();
-    rentDate.setHours(rentDate.getHours() + 1); // Rent for next hour
-    try {
-      const res = await axios.post(`/equipment/${equipmentId}/rent`, {
-        quantity: 1,
-        rentalDate: rentDate.toISOString()
-      });
-      if (res.data.success) {
-        if (price > 0 && res.data.data.paymentId) {
-          setPaymentData({
-            paymentId: res.data.data.paymentId,
-            amount: price
-          });
-          setShowPayment(true);
-        } else {
-          toast.success('Rental request created.');
-          fetchEquipment();
-        }
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Rental failed');
-    }
-  };
-
-  const handlePaymentSuccess = () => {
-    setShowPayment(false);
-    fetchEquipment();
-  };
-
-  const handleViewRentals = async () => {
-    try {
-      const res = await axios.get('/equipment/rentals/all');
-      if (res.data.success) {
-        setRentals(res.data.data);
-        setShowAdminModal(true);
-      }
-    } catch (err) {
-      toast.error('Failed to load rentals');
-    }
-  };
-
-  const handleCreateEquipment = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post('/equipment', formData);
-      toast.success('Equipment created successfully');
-      setShowCreateModal(false);
-      fetchEquipment();
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to create equipment');
-    }
-  };
-
-  if (loading) return <div className="p-6 text-white text-center">Loading equipment...</div>;
-
-  return (
-    <div className="p-6 text-white h-full overflow-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-          Equipment Rental
-        </h1>
-        {isAdmin && (
-          <div className="flex gap-4">
-            <button 
-              onClick={handleViewRentals}
-              className="btn btn-secondary"
-            >
-              View Active Rentals
-            </button>
-            <button 
-              onClick={() => setShowCreateModal(true)}
-              className="btn btn-primary"
-            >
-              + Add Equipment
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {equipment.map(item => (
-          <div key={item.id} className="card flex-col">
-            <div className="h-40 bg-white/5 rounded-lg mb-4 flex items-center justify-center overflow-hidden border border-white/10">
-              {item.imageUrl ? (
-                <img src={item.imageUrl} alt={item.name} className="object-cover w-full h-full" />
-              ) : (
-                <span className="text-4xl">🏅</span>
-              )}
-            </div>
-            <h3 className="text-lg font-bold text-white mb-1">{item.name}</h3>
-            <p className="text-gray-400 text-sm mb-3 line-clamp-2">{item.description}</p>
-            
-            <div className="mt-auto pt-4 border-t border-white/10">
-              <div className="flex justify-between items-end mb-4">
-                <div>
-                  <div className="text-xs text-gray-400 mb-1">Price per slot</div>
-                  <div className="text-xl font-bold text-emerald-400">Rs. {item.pricePerSlot}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs text-gray-400 mb-1">Available</div>
-                  <div className="text-sm text-white font-medium">{item.quantity} units</div>
-                </div>
-              </div>
-
-              {!isAdmin && (
-                <button 
-                  onClick={() => handleRent(item.id, item.pricePerSlot)}
-                  className="btn btn-primary btn-full mt-4"
-                  disabled={!item.isActive || item.quantity < 1}
-                >
-                  {!item.isActive || item.quantity < 1 ? 'Unavailable' : 'Rent Now'}
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {showPayment && paymentData && (
-        <PaymentModal 
-          isOpen={showPayment}
-          onClose={() => setShowPayment(false)}
-          amount={paymentData.amount}
-          paymentId={paymentData.paymentId}
-          paymentIntentId={paymentData.paymentIntentId}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
-
-      {showAdminModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a2e] border border-white/10 rounded-xl p-6 w-full max-w-4xl shadow-2xl relative">
-            <div className="flex justify-between mb-6">
-              <h2 className="text-xl font-bold">All Equipment Rentals</h2>
-              <button onClick={() => setShowAdminModal(false)} className="text-gray-400 hover:text-white">&times;</button>
-            </div>
-            
-            <div className="overflow-auto max-h-[60vh]">
-              <table className="w-full text-left text-sm text-gray-300">
-                <thead className="text-xs uppercase bg-white/5 text-gray-400 border-b border-white/10 sticky top-0">
-                  <tr>
-                    <th className="px-4 py-3">Equipment</th>
-                    <th className="px-4 py-3">User</th>
-                    <th className="px-4 py-3">Quantity</th>
-                    <th className="px-4 py-3">Date</th>
-                    <th className="px-4 py-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {rentals.map(r => (
-                    <tr key={r.id}>
-                      <td className="px-4 py-3 font-medium text-white">{r.equipment?.name}</td>
-                      <td className="px-4 py-3">{r.user?.name}</td>
-                      <td className="px-4 py-3">{r.quantity}</td>
-                      <td className="px-4 py-3">{new Date(r.rentalDate).toLocaleDateString()}</td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded text-xs font-bold ${r.status === 'CONFIRMED' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gray-500/20 text-gray-400'}`}>
-                          {r.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                  {rentals.length === 0 && (
-                    <tr><td colSpan="5" className="text-center py-8 text-gray-500">No active rentals</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-[#1a1a2e] border border-white/10 rounded-xl p-6 w-full max-w-md shadow-2xl relative">
-            <div className="flex justify-between mb-6">
-              <h2 className="text-xl font-bold">Add New Equipment</h2>
-              <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-white">&times;</button>
-            </div>
-            <form onSubmit={handleCreateEquipment} className="space-y-4">
-              <div className="form-group">
-                <label className="form-label">Equipment Name</label>
-                <input type="text" required className="form-input w-full" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Sport</label>
-                <select required className="form-select w-full" value={formData.sportId} onChange={e => setFormData({...formData, sportId: e.target.value})}>
-                  <option value="" className="text-black">Select Sport</option>
-                  {sports.map(s => <option key={s.id} value={s.id} className="text-black">{s.name}</option>)}
-                </select>
-              </div>
-              <div className="grid-2">
-                <div className="form-group">
-                  <label className="form-label">Price Per Slot ($)</label>
-                  <input type="number" required min="0" step="0.01" className="form-input w-full" value={formData.pricePerSlot} onChange={e => setFormData({...formData, pricePerSlot: e.target.value})} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Quantity</label>
-                  <input type="number" required min="1" className="form-input w-full" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="form-label">Image URL</label>
-                <input type="url" className="form-input w-full" value={formData.imageUrl} onChange={e => setFormData({...formData, imageUrl: e.target.value})} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Description</label>
-                <textarea className="form-input w-full" rows="2" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
-              </div>
-              <div className="flex justify-end gap-3 mt-6">
-                <button type="button" onClick={() => setShowCreateModal(false)} className="btn btn-secondary">Cancel</button>
-                <button type="submit" className="btn btn-primary">Add Equipment</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default EquipmentPage;
+      const [equipment, history] = await Promise.all([api.get('/equipment', { params: { ...dates, ...(venueId ? { venueId } : {}) } }), api.get(isAdmin ? '/equipment/rentals/all' : '/equipment/my-rentals')]);
+      if (version !== loadVersion.current) return;
+      setItems(equipment.data.data); setRentals(history.data.data); setError('');
+    } catch (e) { if (version === loadVersion.current) setError(e.response?.data?.message || 'Could not load equipment. Please retry.'); }
+    finally { if (version === loadVersion.current) setLoading(false); }
+  }, [dates, venueId, isAdmin]);
+  useEffect(() => { load(); }, [load]);
+  useEffect(() => { Promise.all([api.get('/venues'), api.get('/sports')]).then(([v, s]) => { setVenues(v.data.data); setSports(s.data.data); }).catch(() => setError('Could not load venue filters. Please reload.')); }, []);
+  useLiveRefresh('equipment', load); useLiveRefresh('payments', load); useLiveRefresh('venues', load);
+  const act = async fn => { if (busy) return; setBusy(true); try { await fn(); await load(); } catch (e) { toast.error(e.response?.data?.message || 'Could not save this change'); } finally { setBusy(false); } };
+  const days = Math.max(1, Math.round((new Date(dates.returnDate) - new Date(dates.rentalDate)) / 86400000) + 1);
+  const rent = e => { e.preventDefault(); act(async () => {
+    const r = await api.post(`/equipment/${selection.id}/rent`, { ...dates, quantity: Number(quantity) });
+    setSelection(null); toast.success(r.data.data.totalPrice ? 'Reserved for 30 minutes pending payment' : 'Rental confirmed');
+    if (r.data.data.totalPrice) setPayment({ paymentId: r.data.data.paymentId, amount: r.data.data.totalPrice });
+  }); };
+  const save = e => { e.preventDefault(); act(async () => {
+    const data = { ...editor, sportId: Number(editor.sportId), venueId: editor.venueId ? Number(editor.venueId) : null, quantity: Number(editor.quantity), pricePerSlot: Number(editor.pricePerSlot) };
+    if (editor.id) await api.put(`/equipment/${editor.id}`, data); else await api.post('/equipment', data);
+    setEditor(null); toast.success('Inventory saved');
+  }); };
+  return <div>
+    <div className="page-header"><div><p className="page-subtitle">PLAY WITH THE RIGHT GEAR</p><h1 className="page-title">Equipment & rentals</h1><p className="page-subtitle">Explore venue inventory, compare specifications and reserve your equipment.</p></div>{isAdmin && <button className="btn btn-primary" onClick={() => setEditor({ ...blank })}>Add equipment</button>}</div>
+    <div className="card mb-24"><div className="grid-3">
+      <label className="form-group">Venue<select className="form-select" value={venueId} onChange={e => setVenueId(e.target.value)}><option value="">All venues & shared stock</option>{venues.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}</select></label>
+      <label className="form-group">Collection date<input className="form-input" type="date" min={today()} value={dates.rentalDate} onChange={e => setDates({ rentalDate: e.target.value, returnDate: e.target.value > dates.returnDate ? e.target.value : dates.returnDate })} /></label>
+      <label className="form-group">Return date<input className="form-input" type="date" min={dates.rentalDate} value={dates.returnDate} onChange={e => setDates({ ...dates, returnDate: e.target.value })} /></label>
+    </div><p className="text-muted">PKR per unit per day · Both dates included · Unpaid holds expire after 30 minutes. Cancel before collection day for a full refund; contact staff for same-day changes.</p></div>
+    {error && <div className="card" role="alert">{error} <button className="btn btn-secondary" onClick={load}>Retry</button></div>}
+    {loading ? <p role="status">Loading inventory…</p> : <div className="grid-3">{items.map(item => <article className="card" key={item.id}>
+      <span className="badge badge-info">{item.sport?.name} · {item.venue?.name || 'Shared inventory'}</span><h2 style={{ margin: '16px 0 8px' }}>{item.name}</h2><p className="text-muted">{item.description || 'Ask staff for further equipment details.'}</p>
+      <dl className="gear-specs">{[['Brand', item.brand], ['Model', item.model], ['Material / surface', item.material], ['Ball type', item.ballType], ['Condition', item.condition]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || 'Not specified'}</dd></div>)}</dl>
+      <p><strong>PKR {item.pricePerSlot.toLocaleString()}</strong> / unit / day</p><p className="text-muted">{item.isActive ? `${item.availableQuantity ?? item.quantity} available for these dates` : 'Currently unavailable'}</p>
+      <div className="flex gap-8">{isAdmin ? <button className="btn btn-secondary" onClick={() => setEditor({ ...blank, ...item })}>Edit inventory</button> : <button className="btn btn-primary" disabled={busy || !!error || !item.isActive || (item.availableQuantity ?? item.quantity) < 1} onClick={() => { setQuantity(1); setSelection(item); }}>Reserve equipment</button>}{item.venueId && <Link className="btn btn-secondary" to={`/venues/${item.venueId}`}>Venue details</Link>}</div>
+    </article>)}</div>}
+    {!loading && !items.length && !error && <div className="empty-state">No equipment listed for this venue. Try another venue or contact staff.</div>}
+    <h2 style={{ margin: '32px 0 16px' }}>{isAdmin ? 'Rental desk' : 'My rentals'}</h2>
+    <div className="card table-container"><table><thead><tr><th>Equipment</th><th>Dates & units</th><th>Rental / payment</th><th>Total</th><th>Actions</th></tr></thead><tbody>{rentals.map(r => <tr key={r.id}>
+      <td><strong>{r.equipment.name}</strong><div className="text-muted">#{r.id} {r.user?.name}</div>{r.damageNotes && <p>Damage: {r.damageNotes} ({r.damagedQuantity} units)</p>}</td>
+      <td>{r.rentalDate.slice(0, 10)} → {(r.returnDate || r.rentalDate).slice(0, 10)}<div>{r.quantity} units</div></td><td>{r.status.replaceAll('_', ' ')}<div className="text-muted">{r.payment?.status}{r.payment?.refunds?.some(f => f.status !== 'REFUNDED') && ' · Refund pending'}</div></td><td>PKR {r.totalPrice.toLocaleString()}</td>
+      <td><div className="flex gap-8">{r.status === 'PENDING_PAYMENT' && !isAdmin && <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => setPayment({ paymentId: r.payment.id, amount: r.totalPrice })}>Pay</button>}{['PENDING_PAYMENT', 'CONFIRMED'].includes(r.status) && <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => setCancelling(r)}>Cancel</button>}{isAdmin && r.status === 'CONFIRMED' && <button className="btn btn-primary btn-sm" onClick={() => { setReturning(r); setDamage({ damagedQuantity: 0, damageNotes: '' }); }}>Record return</button>}</div></td>
+    </tr>)}</tbody></table>{!rentals.length && <p className="empty-state">No rentals yet.</p>}</div>
+    {selection && <div className="modal-overlay"><form className="modal modal-form" onSubmit={rent} role="dialog" aria-modal="true" aria-label="Reserve equipment"><h2>{selection.name}</h2><p>{dates.rentalDate} → {dates.returnDate} · {days} days</p><label className="form-group">Units<input className="form-input" type="number" min="1" max={selection.availableQuantity} required value={quantity} onChange={e => setQuantity(e.target.value)} /></label><p className="stat-value">PKR {(selection.pricePerSlot * Number(quantity) * days).toLocaleString()}</p><p>Payment confirms the rental. Staff will record the return and inspect equipment for damage.</p><div className="modal-actions"><button className="btn btn-secondary" type="button" disabled={busy} onClick={() => setSelection(null)}>Back</button><button className="btn btn-primary" disabled={busy}>Reserve</button></div></form></div>}
+    {editor && <div className="modal-overlay"><form className="modal modal-form inventory-editor" onSubmit={save} role="dialog" aria-modal="true" aria-label="Edit inventory"><h2>{editor.id ? 'Edit equipment' : 'Add equipment'}</h2><div className="grid-2">{[['name', 'Equipment name'], ['brand', 'Brand'], ['model', 'Model / size'], ['material', 'Material / surface'], ['ballType', 'Ball type'], ['condition', 'Condition'], ['description', 'Description'], ['imageUrl', 'Image URL']].map(([key, label]) => <label className="form-group" key={key}>{label}<input className="form-input" required={key === 'name'} value={editor[key] || ''} maxLength={191} onChange={e => setEditor({ ...editor, [key]: e.target.value })} /></label>)}
+      <label className="form-group">Sport<select className="form-select" required value={editor.sportId} onChange={e => setEditor({ ...editor, sportId: e.target.value, venueId: '' })}><option value="">Choose sport</option>{sports.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+      <label className="form-group">Venue<select className="form-select" value={editor.venueId || ''} onChange={e => setEditor({ ...editor, venueId: e.target.value })}><option value="">Shared inventory</option>{venues.filter(v => Number(v.sportId) === Number(editor.sportId)).map(v => <option key={v.id} value={v.id}>{v.name}</option>)}</select></label>
+      {[['pricePerSlot', 'Daily rate (PKR)'], ['quantity', 'Rentable units']].map(([key, label]) => <label className="form-group" key={key}>{label}<input className="form-input" type="number" min="0" step={key === 'quantity' ? 1 : '0.01'} required value={editor[key]} onChange={e => setEditor({ ...editor, [key]: e.target.value })} /></label>)}</div><label><input type="checkbox" checked={editor.isActive} onChange={e => setEditor({ ...editor, isActive: e.target.checked })} /> Available for rental</label><div className="modal-actions"><button className="btn btn-secondary" type="button" disabled={busy} onClick={() => setEditor(null)}>Close</button><button className="btn btn-primary" disabled={busy}>Save inventory</button></div></form></div>}
+    {returning && <div className="modal-overlay"><form className="modal modal-form" role="dialog" aria-modal="true" aria-label="Record return" onSubmit={e => { e.preventDefault(); act(async () => { await api.post(`/equipment/rentals/${returning.id}/return`, damage); setReturning(null); toast.success('Return recorded'); }); }}><h2>Inspect & return · {returning.equipment.name}</h2><label>Damaged units<input type="number" className="form-input" min="0" max={returning.quantity} required value={damage.damagedQuantity} onChange={e => setDamage({ ...damage, damagedQuantity: Number(e.target.value) })} /></label><label>Inspection notes<textarea className="form-input" maxLength={4000} required={damage.damagedQuantity > 0} value={damage.damageNotes} onChange={e => setDamage({ ...damage, damageNotes: e.target.value })} /></label><p>Damaged units are removed from rentable inventory. No automatic damage charge is applied.</p><div className="modal-actions"><button type="button" className="btn btn-secondary" disabled={busy} onClick={() => setReturning(null)}>Back</button><button className="btn btn-primary" disabled={busy}>Record return</button></div></form></div>}
+    <ConfirmModal isOpen={!!cancelling} title="Cancel rental?" message="This releases your equipment. Paid amounts enter the refund queue; staff handles cash refunds." onConfirm={() => act(async () => { await api.post(`/equipment/rentals/${cancelling.id}/cancel`); setCancelling(null); toast.success('Rental cancelled'); })} onCancel={() => { if (!busy) setCancelling(null); }} confirmText="Cancel rental" />
+    <PaymentModal isOpen={!!payment} {...payment} onClose={() => { setPayment(null); load(); }} onSuccess={() => { setPayment(null); load(); }} />
+  </div>;
+}

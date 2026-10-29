@@ -1,0 +1,54 @@
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+POST /api/equipment 201 18.696 ms - 349
+GET /api/venues/31 200 9.192 ms - 1038
+POST /api/equipment 403 3.134 ms - 51
+POST /api/equipment/7/rent 400 2.332 ms - 65
+POST /api/equipment/7/rent 201 23.141 ms - 363
+POST /api/equipment/7/rent 409 30.533 ms - 75
+POST /api/equipment/rentals/9/cancel 403 12.622 ms - 44
+POST /api/equipment/7/rent 201 15.712 ms - 364
+POST /api/payments/confirm 200 21.883 ms - 452
+POST /api/equipment/rentals/10/cancel 200 15.232 ms - 82
+POST /api/equipment/7/rent 201 12.911 ms - 363
+POST /api/payments/confirm 200 16.705 ms - 451
+POST /api/equipment/rentals/11/return 403 1.834 ms - 51
+POST /api/equipment/rentals/11/return 400 9.541 ms - 75
+POST /api/equipment/rentals/11/return 200 21.893 ms - 1384
+POST /api/equipment/rentals/11/return 409 9.293 ms - 68
+PASS venue menu, authorization, duration pricing, capacity race, expiry, late settlement, cash refund, return and damage
+POST /api/promo 201 8.065 ms - 290
+GET /api/promo 200 5.847 ms - 641
+POST /api/promo 400 2.236 ms - 67
+POST /api/bookings 201 50.907 ms - 999
+Error: You have reached this promo code’s per-customer limit
+    at fail (D:\python\project\kt_ssh\backend\src\lib\arena-time.js:3:55)
+    at assertPromo (D:\python\project\kt_ssh\backend\src\lib\promo-policy.js:6:52)
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:219:10
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 400
+}
+POST /api/bookings 400 28.636 ms - 85
+PUT /api/bookings/79/cancel 200 31.551 ms - 129
+POST /api/bookings 201 40.084 ms - 999
+POST /api/bookings 201 39.290 ms - 999
+Error: You have reached this promo code’s per-customer limit
+    at fail (D:\python\project\kt_ssh\backend\src\lib\arena-time.js:3:55)
+    at assertPromo (D:\python\project\kt_ssh\backend\src\lib\promo-policy.js:6:52)
+    at D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:219:10
+    at async Proxy._transactionWithCallback (D:\python\project\kt_ssh\backend\node_modules\@prisma\client\runtime\library.js:130:8000)
+    at async module.exports (D:\python\project\kt_ssh\backend\src\lib\transaction.js:6:18)
+    at async createBooking (D:\python\project\kt_ssh\backend\src\controllers\bookings.controller.js:189:19) {
+  status: 400
+}
+POST /api/bookings 400 58.628 ms - 85
+PUT /api/bookings/82/cancel 200 28.895 ms - 129
+PATCH /api/promo/5 200 10.959 ms - 287
+POST /api/bookings 201 47.811 ms - 973
+PUT /api/bookings/84/cancel 200 26.756 ms - 129
+GET /api/recommendations/slots 200 25.058 ms - 2125
+GET /api/reports/revenue?from=2026-02-30 400 3.885 ms - 64
+GET /api/reports/revenue 200 11.535 ms - 145
+GET /api/reports/revenue 403 2.089 ms - 51
+PASS normalized promos, customer offer access, per-customer limit, cancellation and expiry reversal, recommendations and report totals

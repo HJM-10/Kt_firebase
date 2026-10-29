@@ -88,6 +88,7 @@ const deleteUser = async (req, res) => {
       });
 
       for (const b of activeBookings) {
+        await require('../lib/promo-policy').releasePromo(tx, b.id);
         await tx.booking.update({ where: { id: b.id }, data: { status: 'CANCELLED' } });
         await tx.bookingSlot.update({ where: { id: b.slotId }, data: { isBooked: false } });
         await tx.payment.updateMany({ where: { bookingId: b.id, status: 'PENDING' }, data: { status: 'FAILED' } });
