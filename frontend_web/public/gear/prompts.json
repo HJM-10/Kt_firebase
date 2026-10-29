@@ -1,0 +1,30 @@
+{
+  "generator": "built-in image_gen.imagegen",
+  "transparent_background": true,
+  "assets": [
+    {
+      "file": "padel-racket.png",
+      "prompt": "Use case: product-mockup. Project asset: padel-racket equipment rental catalogue image. Create a photorealistic studio product photograph of a professional black carbon-fibre padel racket with restrained yellow-green accents, perforated oval face, wrist strap, three-quarter view. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    },
+    {
+      "file": "padel-balls.png",
+      "prompt": "Use case: product-mockup. Project asset: padel-balls equipment rental catalogue image. Create a photorealistic studio product photograph of three yellow-green padel balls, one resting beside an unbranded dark canister with an open lid. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    },
+    {
+      "file": "cricket-bat.png",
+      "prompt": "Use case: product-mockup. Project asset: cricket-bat equipment rental catalogue image. Create a photorealistic studio product photograph of a pale willow cricket bat with a deep green rubber grip and one dark red leather cricket ball beside it. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    },
+    {
+      "file": "football.png",
+      "prompt": "Use case: product-mockup. Project asset: football equipment rental catalogue image. Create a photorealistic studio product photograph of a premium white and forest-green size-five football, three-quarter view. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    },
+    {
+      "file": "hockey-stick.png",
+      "prompt": "Use case: product-mockup. Project asset: hockey-stick equipment rental catalogue image. Create a photorealistic studio product photograph of a black and forest-green field hockey stick, curved hooked head fully visible, with one small white field hockey ball. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    },
+    {
+      "file": "table-tennis.png",
+      "prompt": "Use case: product-mockup. Project asset: table-tennis equipment rental catalogue image. Create a photorealistic studio product photograph of two table tennis paddles with natural wood handles, one red rubber face and one black rubber face, with two white table tennis balls. One coherent still-life composition only, centered and fully visible with generous clear margins. Isolated on a genuinely transparent background with natural soft contact shadow. Product fills about 80 percent of the canvas, diagonal arrangement where helpful. Refined sporting-goods editorial quality, crisp material texture, even bright studio lighting, realistic proportions. No people, hands, logos, lettering, labels, border or UI. Neutral color rendering, restrained green accents. This is illustrative demo rental equipment, not an advertisement for a specific manufacturer."
+    }
+  ]
+}

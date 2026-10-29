@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-10-29T11:33:35.373Z",
+  "status": "PASS",
+  "repeatSeedCountsUnchanged": true,
+  "sampleEquipmentTypes": 6,
+  "sampleRentalsWithMatchingPayments": 58,
+  "loadedAssets": [
+    "/gear/cricket-bat.png",
+    "/gear/hockey-stick.png",
+    "/gear/football.png",
+    "/gear/padel-balls.png",
+    "/gear/padel-racket.png",
+    "/gear/table-tennis.png"
+  ],
+  "revenueMonths": 6,
+  "checks": [
+    "seed idempotency",
+    "dated equipment availability and venue associations",
+    "padel and table-tennis ball specifications",
+    "six served product images",
+    "rental pricing and matching payment amounts",
+    "ledger venue/equipment metadata",
+    "gross minus completed refunds equals net",
+    "populated current-day schedule"
+  ],
+  "environment": "isolated local demo only; all sample payments are simulated"
+}

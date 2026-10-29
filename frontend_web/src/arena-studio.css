@@ -1,0 +1,268 @@
+/* Implemented against the selected Arena Desk, Matchday, Ledger and Gear boards. */
+:root, :root.light {
+  --primary: #0c5139; --primary-dark: #063d2a; --primary-light: #267956;
+  --bg: #f8f7ef; --bg-card: #fffef9; --bg-card-hover: #f3f5ec;
+  --soft-green: #ddf2df; --soft-brass: #fff0cc; --soft-red: #ffe4de;
+  --success: #20764e; --accent: #b48731; --warning: #91641e;
+  --text: #123c30; --text-muted: #69756c; --border: #e2e6d9;
+  --sidebar-w: 220px; --header-h: 76px; --shadow: 0 3px 16px #27472f05;
+}
+:root[data-theme='dark'] {
+  --primary: #a0ecc1; --primary-dark: #7bd8a4; --bg: #061e16; --bg-card: #0d2c21;
+  --bg-card-hover: #153b2b; --bg-input: #103025; --text: #edf8ee; --text-muted: #adc8b6;
+  --border: #244a37; --soft-green: #174b33; --soft-brass: #493b1b; --soft-red: #4b2928;
+  --success: #a0ecc1; --warning: #f0ca79; --accent: #ddbd70;
+  --sidebar-bg: #fffef9; --sidebar-text: #355346;
+}
+body { font-size: 18px; }
+.sidebar { background: #fffef9; border-right: 1px solid #e1e6d9; }
+.sidebar-logo { padding: 19px 17px; }
+.sidebar-logo-text { font-size: 17px; color: #153f30; }
+.sidebar-logo-sub { font-size: 14px; color: #697b6b; }
+.sidebar .brand-mark { color: #174c36; }
+.sidebar-nav { padding: 18px 12px; gap: 5px; }
+.sidebar-section-title { font-size: 13px; color: #819183; padding-bottom: 10px; }
+.sidebar .nav-item { font-size: 17px; min-height: 45px; color: #355346; padding: 10px 12px; gap: 12px; border-radius: 8px; }
+.sidebar .nav-item svg { width: 19px; height: 19px; }
+.sidebar .nav-item.active { background: #104d36; color: #fff; box-shadow: 0 3px 10px #0f4f3420; }
+.sidebar .nav-item:hover { background: #e9f3e8; color: #104d36; }
+.sidebar .nav-item.active:hover { background: #0b422e; color: #fff; }
+.club-disclosure { display: flex; align-items: center; gap: 8px; padding: 24px 12px 12px; background: none; border: 0; width: 100%; text-align: left; font-size: 15px; color: #54735f; font-weight: 650; cursor: pointer; }
+.club-disclosure span { flex: 1; }
+.club-disclosure small { background: #edf2e6; border-radius: 5px; padding: 2px 5px; }
+.club-disclosure[aria-expanded='true'] > svg { transform: rotate(180deg); }
+.club-management-links { display: grid; gap: 4px; padding-top: 4px; }
+.sidebar-help { margin: 24px 5px 8px; padding: 18px 15px; background: #f0f4e9; border: 1px solid #e4ebdb; border-radius: 12px; color: #28553e; }
+.sidebar-help > svg { margin-bottom: 10px; color: #5f8253; }
+.sidebar-help strong { display: block; font-size: 16px; }
+.sidebar-help p { font-size: 14px; line-height: 1.6; margin: 7px 0 12px; color: #6a7b68; }
+.sidebar-help a { display: flex; gap: 8px; align-items: center; font-size: 15px; font-weight: 700; }
+.sidebar-help a svg { transform: rotate(-90deg); }
+.sidebar-footer { border-top-color: #e4e9dd; background: #fffef9; }
+.sidebar-user-name { color: #234936; font-size: 15px; }
+.sidebar-user-role { color: #748674; font-size: 14px; }
+.sidebar-footer .sidebar-avatar { background: #e6f1df; color: #194d34; }
+.sidebar-footer .icon-button { color: #416750; }
+.page-content { padding: 28px; }
+.workspace-header { padding: 0 28px; }
+.workspace-search input { font-size: 16px; min-height: 43px; background: var(--bg-card); }
+.header-date { font-size: 15px; }
+.header-user strong { font-size: 16px; }.header-user small { font-size: 14px; }
+.page-title { font-size: clamp(32px, 2.5vw, 40px); font-weight: 750; }
+.page-subtitle { font-size: 17px; margin-top: 8px; }
+.eyebrow { font-size: 14px; letter-spacing: .11em; color: var(--primary); margin-bottom: 8px; }
+.page-header { margin-bottom: 24px; }
+.btn { font-size: 17px; min-height: 44px; padding: 10px 17px; border-radius: 8px; gap: 8px; }
+.btn-sm { font-size: 15px; min-height: 35px; padding: 7px 11px; }
+.icon-button { width: 38px; height: 38px; }
+.card { padding: 22px; border-radius: 12px; }
+.panel-heading { margin-bottom: 18px; }.panel-heading h2 { font-size: 20px; font-weight: 700; }.panel-heading a { font-size: 15px; }
+.stat-card { min-height: 108px; padding: 21px 22px; gap: 16px; border-radius: 12px; background: var(--bg-card); }
+.stat-icon { width: 48px; height: 48px; background: #edf3e2 !important; color: #286147 !important; border-radius: 10px; }
+.stat-card.brass .stat-icon { color: #a27420 !important; background: #fff1d2 !important; }
+.stat-card.rose .stat-icon { color: #bd564e !important; background: #ffebe5 !important; }
+.stat-card.mint .stat-icon { color: #2b7954 !important; background: #e4f1d7 !important; }
+.stat-card.brass .stat-value { color: var(--warning); }.stat-card.rose .stat-value { color: var(--danger); }
+.stat-value { font-size: clamp(31px, 2.4vw, 38px); font-weight: 700; }
+.stat-label { font-size: 16px; margin-top: 6px; }.stat-card small { font-size: 14px; }
+:root[data-theme='dark'] .stat-icon { background: #173e2b !important; color: #b0edbc !important; }
+:root[data-theme='dark'] .stat-card.brass .stat-icon { background: #473b1d !important; color: #f1cc79 !important; }
+:root[data-theme='dark'] .stat-card.rose .stat-icon { background: #4b2c2a !important; color: #f6a994 !important; }
+.status-badge, .badge { font-size: 14px; border-radius: 5px; padding: 5px 8px; font-weight: 600; }
+.status-dot { width: 6px; height: 6px; }
+.status-confirmed, .status-paid, .status-returned { color: #246d46; background: #ceedd9; }
+.status-pending, .status-pending_payment { color: #805616; background: #fae5b6; }
+.status-cancelled, .status-failed { color: #a23f42; background: #f8d5d0; }
+.status-scanned { color: #15543d; background: #bce4c8; }
+:root[data-theme='dark'] .status-confirmed, :root[data-theme='dark'] .status-paid, :root[data-theme='dark'] .status-returned { color: #b6f2c7; background: #20503a; }
+:root[data-theme='dark'] .status-pending, :root[data-theme='dark'] .status-pending_payment { color: #f4da9a; background: #58451e; }
+:root[data-theme='dark'] .status-cancelled, :root[data-theme='dark'] .status-failed { color: #f3b3a9; background: #58322d; }
+th { font-size: 15px; padding: 14px 13px; color: var(--text-muted); background: var(--bg-card); border-bottom: 1px solid var(--border); }
+td { font-size: 16px; padding: 17px 13px; } td .text-muted, td small { font-size: 14px; margin-top: 5px; }
+td small { display: block; color: var(--text-muted); }
+tbody tr:hover { background: var(--bg-card-hover); }
+.table-wrapper { border-radius: 10px; }.record-button { border: 0; background: none; padding: 0; color: var(--text); font: inherit; font-weight: 650; text-align: left; cursor: pointer; }
+.text-button { display: inline-flex; align-items: center; gap: 5px; border: 0; background: none; color: var(--primary); font: inherit; font-size: 15px; font-weight: 650; cursor: pointer; padding: 3px 0; }
+.text-button:hover { text-decoration: underline; }
+.toolbar { padding: 14px; gap: 10px; }.toolbar .form-input, .toolbar .form-select { min-width: 135px; }
+.page-content :is(.form-input,.form-select,.form-control), .form-input, .form-select { min-height: 44px; font-size: 17px; }
+.section-note { font-size: 15px; }.segmented-tabs button, .segmented-tabs a { font-size: 16px; min-height: 37px; }
+.segmented-tabs .active { background: var(--primary); color: #fff; }
+:root[data-theme='dark'] .segmented-tabs .active { color: #123c28; }
+.desk-layout { grid-template-columns: minmax(0,1fr) 290px; gap: 20px; }.desk-main,.desk-aside { gap: 20px; }.desk-aside .card { padding: 20px; }
+.arrival-row { padding: 16px 0; gap: 11px; }.arrival-row strong { font-size: 16px; }.arrival-row p { font-size: 15px; }
+.player-avatar { width: 39px; height: 39px; font-weight: 700; background: #f2dcbb; color: #77592c; border: 2px solid var(--bg-card); }
+.arrival-row:nth-child(3n) .player-avatar { background: #d7e8db; color: #2f6850; }.arrival-row:nth-child(4n) .player-avatar { background: #efd4ca; color: #894b3d; }
+.arrival-time { color: var(--primary); background: var(--soft-green); border-radius: 5px; padding: 4px 7px; font-size: 14px; }
+.timeline-navigation { display: flex; align-items: center; justify-content: space-between; margin: -4px 0 14px; font-size: 16px; font-weight: 650; }.timeline-navigation small { font-size: 14px; font-weight: 400; color: var(--text-muted); margin-left: 7px; }.timeline-navigation > div { display: flex; gap: 4px; }.timeline-navigation .icon-button { width: 29px; height: 29px; border: 1px solid var(--border); border-radius: 6px; }
+.court-timeline-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+.court-timeline { min-width: 730px; }.court-axis { display: grid; grid-template-columns: 154px repeat(4,minmax(0,1fr)); background: var(--bg-card-hover); border-bottom: 1px solid var(--border); }.court-axis > span { padding: 12px 9px; border-right: 1px solid var(--border); font-size: 15px; font-weight: 650; }
+.court-row { display: flex; border-bottom: 1px solid var(--border); min-height: 118px; }.court-row:last-child { border-bottom: 0; }
+.court-label { width: 154px; flex-shrink: 0; padding: 12px; display: grid; align-content: center; gap: 4px; border-right: 1px solid var(--border); background: var(--bg-card); }
+.court-label .sport-photo { height: 39px; width: 54px; border-radius: 5px; }.court-label strong { font-size: 15px; line-height: 1.35; }.court-label small { font-size: 13px; color: var(--text-muted); }
+.court-track { flex: 1; position: relative; background: repeating-linear-gradient(to right, transparent 0,transparent calc(25% - 1px),var(--border) calc(25% - 1px),var(--border) 25%); }
+.court-session { position: absolute; top: 7px; bottom: 7px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 12px 9px; gap: 6px; border-radius: 6px; border: 1px solid #9cdab1; background: #d7f1dc; color: #194b32; overflow: hidden; text-align: left; cursor: pointer; }
+.court-session strong { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }.court-session small { font-size: 14px; }.court-session .status-badge { font-size: 12px; padding: 3px 5px; }
+.court-session.state-pending_payment { background: #fff0cf; border-color: #e4c789; color: #765723; }.court-session.state-open { background: #fcfdf7; border: 1px dashed #bfcdb5; color: #4e7156; }.court-session.state-scanned { background: #bde8ce; border-color: #7cbd95; }.court-session.state-unavailable { background: var(--bg-card-hover); border-color: var(--border); color: var(--text-muted); }
+.court-session:hover { box-shadow: inset 0 0 0 1px var(--primary); filter: brightness(.98); }
+:root[data-theme='dark'] .court-session { background: #16452d; border-color: #3d6e4c; color: #dbf6df; }:root[data-theme='dark'] .court-session.state-pending_payment { background: #423819; border-color: #776333; color: #f9df9f; }:root[data-theme='dark'] .court-session.state-open { background: #0b2a1c; border-color: #52724d; color: #b1cda8; }
+.timeline-footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }.timeline-footer .schedule-legend { margin: 0; gap: 11px; }.timeline-footer .schedule-legend .status-badge { font-size: 13px; }
+.matchday-stats { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; }.matchday-stats .stat-card { flex-direction: row-reverse; justify-content: space-between; padding: 19px; gap: 9px; }.matchday-stats .stat-icon { width: 37px; height: 37px; background: transparent !important; }.matchday-stats .stat-value { font-size: 34px; }.matchday-stats .stat-label { font-size: 15px; }
+.date-stepper { display: flex; align-items: center; gap: 6px; }.date-stepper input { max-width: 164px; }
+.view-switch { display: flex; gap: 3px; margin-left: auto; padding: 3px; background: var(--bg); border-radius: 8px; }.view-switch button { display: inline-flex; gap: 7px; align-items: center; padding: 8px 12px; border: 0; border-radius: 6px; background: none; color: var(--text-muted); font-size: 15px; }.view-switch [aria-pressed='true'] { background: var(--bg-card); box-shadow: 0 1px 5px #123a3010; color: var(--primary); }
+.matchday-workspace { display: grid; grid-template-columns: 166px minmax(0,1fr) 262px; gap: 14px; align-items: start; }
+.day-agenda { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }.agenda-heading { display: flex; gap: 8px; align-items: center; padding: 17px 13px; font-size: 15px; border-bottom: 1px solid var(--border); }.agenda-heading span { margin-left: auto; color: var(--text-muted); }
+.agenda-item { display: flex; gap: 9px; padding: 16px 10px; width: 100%; border: 0; border-bottom: 1px solid var(--border); background: transparent; text-align: left; color: var(--text); cursor: pointer; }.agenda-item time { font-size: 14px; }.agenda-item span { flex: 1; min-width: 0; }.agenda-item strong { font-size: 14px; font-weight: 650; display: block; }.agenda-item small { font-size: 13px; color: var(--text-muted); display: block; margin-top: 5px; }.agenda-item:hover,.agenda-item.selected { background: var(--soft-green); box-shadow: inset 3px 0 var(--primary); }.agenda-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 5px; background: #52a274; }.agenda-dot.status-pending_payment { background: #c19635; }.agenda-dot.status-cancelled { background: #ce7168; }
+.matchday-table { min-width: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }.matchday-table .table-wrapper { border: 0; border-radius: 0; }.matchday-table td,.matchday-table th { padding: 15px 10px; font-size: 15px; }.matchday-table .status-badge { font-size: 13px; }.matchday-table table { min-width: 430px; }.matchday-table td:nth-child(3) { max-width: 120px; }.matchday-table tr.selected,.booking-table tr.selected { background: var(--soft-green); }.matchday-table td:last-child { white-space: nowrap; }
+.booking-filter-bar { padding: 12px; border-bottom: 1px solid var(--border); }.booking-filter-bar .segmented-tabs { gap: 2px; }.booking-filter-bar .segmented-tabs button { padding: 6px 8px; font-size: 13px; min-height: 30px; }
+.compact-search { display: flex; gap: 8px; align-items: center; padding-top: 12px; color: var(--text-muted); }.compact-search input { width: 100%; border: 0; padding: 5px 0; background: none; color: var(--text); font-size: 15px; outline: none; }
+.matchday-detail { padding: 17px; position: sticky; top: 94px; }.matchday-detail .panel-heading { align-items: flex-start; flex-wrap: wrap; gap: 8px; }.matchday-detail .panel-heading h2 { font-size: 18px; }.matchday-detail .sport-photo { height: 150px; margin-bottom: 18px; border-radius: 8px; }.matchday-detail h3 { font-size: 19px; }.booking-facts { margin: 18px 0; }.booking-facts div { margin: 14px 0; }.booking-facts dt { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }.booking-facts dd { font-size: 16px; margin: 0; }.booking-facts small { display: block; margin-top: 4px; color: var(--text-muted); font-size: 14px; }.booking-facts .detail-amount { font-size: 22px; font-weight: 700; }.booking-note { background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 7px; font-size: 15px; margin-bottom: 18px; }.booking-note p { margin-top: 5px; font-size: 14px; color: var(--text-muted); overflow-wrap: anywhere; }.matchday-detail .btn { font-size: 15px; }
+.ledger-date-filter { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 23px; flex-wrap: wrap; }.ledger-date-filter label { font-size: 14px; color: var(--text-muted); }.ledger-date-filter input { margin-top: 5px; min-width: 168px; }.ledger-date-filter .text-button { padding-bottom: 12px; }
+.financial-grid .stat-value { font-size: clamp(30px,2.4vw,38px); }.financial-grid .stat-label { font-size: 16px; }
+.refund-banner { display: flex; gap: 14px; align-items: center; background: var(--soft-brass); border: 1px solid color-mix(in srgb,var(--accent) 28%,var(--border)); border-radius: 10px; padding: 16px 20px; margin-bottom: 22px; color: var(--warning); }.refund-banner-icon { padding: 9px; border-radius: 8px; background: #c69b3f16; }.refund-banner strong { font-size: 15px; font-weight: 500; display: block; }.refund-banner b { font-size: 22px; display: block; }.refund-banner p { font-size: 15px; flex: 1; }.refund-banner a { color: inherit; }
+.ledger-workspace { display: grid; grid-template-columns: minmax(0,1fr) 295px; align-items: start; gap: 20px; }.ledger-main { min-width: 0; display: grid; gap: 20px; }.ledger-table-panel { border: 1px solid var(--border); border-radius: 11px; background: var(--bg-card); min-width: 0; overflow: hidden; }.ledger-table-title { display: flex; justify-content: space-between; align-items: center; padding: 18px; }.ledger-table-title h2 { font-size: 20px; }.ledger-table-title span { font-size: 14px; color: var(--text-muted); }.ledger-table-panel .toolbar { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; margin: 0; padding: 0 16px 14px; }.ledger-table-panel .table-wrapper { border: 0; border-radius: 0; }.ledger-table-panel table { min-width: 680px; }.ledger-table-panel th { font-size: 14px; }.ledger-table-panel td { font-size: 15px; }.ledger-table-panel .btn-sm { padding: 6px 8px; font-size: 13px; }.ledger-table-panel .status-badge { font-size: 13px; }.ledger-queue { padding: 18px; }.queue-count { border-radius: 50%; background: var(--soft-brass); padding: 3px 8px; font-size: 15px; color: var(--warning); }
+.queue-section-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 16px 0 8px; }.queue-section-title h3 { font-size: 16px; }.queue-section-title .text-button { font-size: 13px; }.ledger-queue-row { display: flex; width: 100%; align-items: flex-start; text-align: left; gap: 9px; padding: 14px 0; border: 0; border-bottom: 1px solid var(--border); background: none; color: var(--text); cursor: pointer; }.ledger-queue-row:hover { background: var(--bg-card-hover); }.ledger-queue-row .sport-photo { width: 43px; height: 50px; border-radius: 5px; flex-shrink: 0; }.ledger-queue-row > span { flex: 1; min-width: 0; }.ledger-queue-row strong { display: block; font-size: 15px; }.ledger-queue-row small { display: block; font-size: 13px; color: var(--text-muted); margin: 4px 0; }.ledger-queue-row > b { font-size: 14px; white-space: nowrap; }.ledger-queue-row .status-badge { font-size: 12px; padding: 3px 5px; }.refund-queue-row { display: flex; gap: 10px; padding: 13px 0; border-bottom: 1px solid var(--border); }.refund-avatar { background: var(--soft-red); color: var(--danger); padding: 9px; height: fit-content; border-radius: 8px; }.refund-queue-row strong { font-size: 15px; }.refund-queue-row p { font-size: 14px; margin: 5px 0; color: var(--text-muted); }.refund-queue-row .text-button { font-size: 14px; margin-top: 7px; }.queue-empty { font-size: 15px; color: var(--text-muted); padding: 12px 0; }
+.monthly-revenue { padding: 20px; }.monthly-revenue .panel-heading { flex-wrap: wrap; }.chart-key { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }.chart-key i { height: 7px; width: 7px; border-radius: 2px; background: #a6cabb; }.revenue-chart { display: flex; gap: 18px; padding-top: 12px; align-items: flex-end; min-height: 190px; }.revenue-column { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 13px; }.revenue-bar-track { height: 135px; display: flex; width: min(100%,48px); align-items: flex-end; border-bottom: 1px solid var(--border); }.revenue-bar { width: 100%; background: #a1c7b7; border-radius: 3px 3px 0 0; }.revenue-bar.latest { background: var(--primary); }.revenue-bar.negative { background: var(--danger); }.revenue-column > span:last-child { margin-top: 8px; }.revenue-column small { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; }.chart-value { white-space: nowrap; font-size: 12px; color: var(--text-muted); margin-bottom: 7px; }
+.studio-tabs { border: 1px solid var(--border); padding: 5px; background: var(--bg-card-hover); border-radius: 10px; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 4px; }.studio-tabs button,.studio-tabs a { justify-content: center; text-align: center; }.studio-tabs .active { box-shadow: 0 2px 6px #143b2320; }
+.studio-venue-bar { display: flex; gap: 22px; padding: 0 2px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; align-items: center; }.studio-date-controls { display: flex; gap: 12px; align-items: flex-end; flex: 1; min-width: 0; }.studio-date-controls > label { font-size: 13px; color: var(--text-muted); margin: 0; gap: 5px !important; }.studio-date-controls > label:first-child { flex: 1; min-width: 165px; }.studio-date-controls .form-input,.studio-date-controls .form-select { min-height: 39px; padding: 7px 9px; font-size: 15px; }.studio-venue-identity { display: flex; align-items: center; gap: 12px; max-width: 370px; }.studio-venue-identity .sport-photo { width: 77px; height: 56px; border-radius: 7px; flex-shrink: 0; }.studio-venue-identity strong { font-size: 16px; display: block; }.studio-venue-identity small { font-size: 13px; color: var(--text-muted); display: block; margin-top: 5px; max-width: 180px; }.studio-venue-identity > span { border-left: 1px solid var(--border); padding-left: 14px; font-size: 13px; color: var(--text-muted); }.studio-venue-identity > span strong { font-size: 26px; color: var(--text); }
+.studio-page .gear-summary { padding: 12px 17px; font-size: 15px; margin-bottom: 14px; box-shadow: none; }.studio-page .gear-summary strong { font-size: 23px; }.studio-search { padding: 12px 15px; }.gear-studio { grid-template-columns: minmax(0,1fr) 295px; gap: 20px; }.gear-inventory-panel { min-width: 0; border: 1px solid var(--border); background: var(--bg-card); border-radius: 12px; padding: 18px; }.inventory-count { font-size: 15px; color: var(--text-muted); }.gear-catalogue { gap: 14px; }.gear-card { display: grid; grid-template-columns: 95px minmax(0,1fr); gap: 6px 12px; padding: 15px; box-shadow: none; background: var(--bg-card); border: 1px solid var(--border); align-content: start; }
+.gear-card-header { display: contents; }.gear-card-header > div:last-child { grid-column: 2; }.gear-visual { grid-column: 1; grid-row: 1 / span 4; width: 100%; height: 188px; border-radius: 7px; background: transparent; align-self: start; }.gear-visual img { object-fit: contain; background: transparent; padding: 1px; }.gear-visual:has(img) > svg { visibility: hidden; }.gear-card h2 { font-size: 20px; margin: 8px 0 5px; line-height: 1.25; }.gear-card-header p { font-size: 13px; }.gear-card > p { grid-column: 2; font-size: 14px; }.gear-card > .gear-specs { grid-column: 2; margin: 8px 0; display: grid; gap: 7px; }.gear-card .gear-specs > div { display: grid; grid-template-columns: 64px minmax(0,1fr); gap: 5px; }.gear-card .gear-specs dt,.gear-card .gear-specs dd { font-size: 13px; line-height: 1.45; }.gear-card .gear-specs dd { margin: 0; color: var(--text); }.gear-card .gear-rate { font-size: 13px; margin: 3px 0; }.gear-rate strong { display: block; color: var(--text); font-size: 18px; margin-top: 4px; }.gear-card > .mt-8 { grid-column: 1/-1; padding-top: 8px; font-size: 14px; color: var(--text); }.gear-availability { grid-column: 1/-1; height: 6px; margin-top: 2px; }.gear-availability span { background: #2c8b64; }.gear-card-footer { grid-column: 1/-1; margin-top: 10px; padding-top: 12px; gap: 6px; }.gear-card-footer .btn-sm { font-size: 13px; padding: 6px 8px; min-height: 32px; }
+.rental-preview-head { display: flex; gap: 12px; align-items: center; }.rental-preview-head img { width: 42px; height: 58px; object-fit: contain; }.rental-preview-head > div { flex: 1; }.rental-preview-head strong { font-size: 16px; }.rental-preview-head b { font-size: 15px; }.rental-preview p { font-size: 14px; }.gear-desk .rental-preview { padding: 15px 0; }.inspection-preview { margin-top: 22px; border-top: 1px solid var(--border); padding-top: 18px; }.inspection-preview h3 { font-size: 16px; margin-bottom: 10px; }.inspection-preview h3 small { font-size: 14px; font-weight: 400; }.inspection-preview textarea { min-height: 100px; font-size: 15px !important; background: var(--bg); }.inspection-preview p { font-size: 13px; color: var(--text-muted); margin: 8px 0; }
+.studio-offers { margin-top: 22px; padding: 20px; }.studio-offer-row { display: flex; align-items: center; gap: 20px; padding: 14px 0; border-top: 1px solid var(--border); font-size: 15px; }.studio-offer-row > svg:first-child { color: var(--accent); }.studio-offer-row > strong { font-size: 17px; }.studio-offer-row > span { flex: 1; color: var(--text-muted); }.studio-offer-row > small { color: var(--text-muted); }.studio-offer-row:hover { color: var(--primary); }
+.venue-card-body h2 { font-size: 23px; }.venue-card-body > p { font-size: 16px; }.venue-card-meta { font-size: 15px; }.venue-details-link { font-size: 16px; }
+.arena-dashboard > .page-header .eyebrow { display: none; }
+.arena-dashboard > .page-header .page-title { font-size: 32px; }
+.arena-dashboard > .page-header .page-subtitle { font-size: 16px; }
+.arena-dashboard .overview-stats { margin-bottom: 20px; }
+.arena-dashboard .stat-card { min-height: 96px; padding: 18px 20px; }
+.arena-overview .desk-main > .card:first-child .toolbar { border: 0; background: none; padding: 0; margin: -2px 0 15px; gap: 6px; }
+.arena-overview .toolbar .form-input { min-width: 130px; min-height: 34px; font-size: 14px; padding: 6px 7px; }
+.arena-overview .toolbar .form-select { max-width: 175px; min-width: 120px; min-height: 34px; font-size: 14px; padding: 6px 7px; }
+.arena-overview .toolbar .icon-button { width: 28px; height: 30px; }.arena-overview .toolbar .btn { min-height: 30px; padding: 5px 8px; font-size: 13px; }
+.arena-overview .court-row { min-height: 110px; }
+.studio-page > .page-header .page-title,.ledger-page > .page-header .page-title { font-size: 34px; }
+.studio-page .gear-summary { display: none; }
+.gear-inventory-panel > .studio-search { padding: 0 0 16px; border: 0; border-radius: 0; margin: 0; background: transparent; }
+.gear-inventory-panel > .studio-search .form-input,.gear-inventory-panel > .studio-search .form-select { min-height: 38px; font-size: 15px; padding-top: 7px; padding-bottom: 7px; }
+.gear-inventory-panel > .studio-search .toolbar-search { min-width: 150px; }
+.gear-inventory-panel > .studio-search .form-select { max-width: 145px; min-width: 130px; }
+.studio-page > .studio-search { margin-bottom: 18px; }
+.ledger-pagination { display: flex; gap: 7px; align-items: center; }.ledger-pagination .icon-button { height: 30px; width: 30px; border: 1px solid var(--border); border-radius: 5px; font-size: 25px; }
+.ledger-page .page-header { margin-bottom: 18px; }.ledger-page .financial-grid { margin-bottom: 18px; }.ledger-page .refund-banner { padding-top: 12px; padding-bottom: 12px; margin-bottom: 18px; }
+.load-more { flex-wrap: wrap; }
+.gear-specs dd { overflow-wrap: anywhere; }
+.ledger-page .page-title,.ledger-page .ledger-table-title h2,.monthly-revenue .panel-heading h2 { font-family: Georgia, 'Times New Roman', serif; letter-spacing: -.025em; }
+.ledger-page .financial-grid .stat-value { font-family: Georgia, 'Times New Roman', serif; }
+.ledger-table-panel td { padding-top: 13px; padding-bottom: 13px; }.ledger-table-panel td:nth-child(4) { white-space: nowrap; }.ledger-table-panel .payment-actions { min-width: 78px; }
+.ledger-date-picker { position: relative; }.ledger-date-picker > summary { display: inline-flex; cursor: pointer; list-style: none; }.ledger-date-picker > summary::-webkit-details-marker { display: none; }.ledger-date-picker .ledger-date-filter { position: absolute; z-index: 95; top: calc(100% + 8px); right: 0; width: 310px; padding: 20px; background: var(--bg-card); box-shadow: var(--shadow-lg); border: 1px solid var(--border); border-radius: 12px; margin: 0; }.ledger-date-picker form > strong { flex-basis: 100%; font-size: 17px; }.ledger-date-picker form label { flex: 1; min-width: 110px; }.ledger-date-picker form input { width: 100%; min-width: 0; }.ledger-date-picker form .text-button { padding: 10px 0; }
+.gear-card .gear-specs > div { border: 0; padding: 0; grid-template-columns: 58px minmax(0,1fr); }
+.gear-card .gear-specs dd { max-width: none; text-align: left; }
+.gear-card .gear-specs dt,.gear-card .gear-specs dd { font-size: 14px; }
+.gear-card-footer .btn-sm { font-size: 14px; min-height: 34px; }
+.arena-overview table td:first-child,.arena-overview table td:nth-child(4) { white-space: nowrap; }
+@media(max-width:560px) { .ledger-date-picker { flex: 1; }.ledger-date-picker > summary { width: 100%; font-size: 15px; }.ledger-date-picker .ledger-date-filter { right: auto; left: 0; width: min(280px,calc(100vw - 44px)); } }
+@media(max-width:760px) { .matchday-controls .date-stepper .form-input { min-width: 0; width: 120px; }.gear-inventory-panel > .studio-search .form-select { max-width: none; } }
+@media(min-width:1550px) { .page-content { padding: 32px; }.desk-layout { grid-template-columns: minmax(0,1fr) 320px; }.matchday-workspace { grid-template-columns: 190px minmax(0,1fr) 290px; }.gear-studio { grid-template-columns: minmax(0,1fr) 320px; }.gear-card { grid-template-columns: 125px minmax(0,1fr); }.gear-visual { height: 200px; } }
+@media(max-width:1190px) { .matchday-workspace { grid-template-columns: minmax(0,1fr) 260px; }.day-agenda { display: none; }.desk-layout,.gear-studio,.ledger-workspace { grid-template-columns: minmax(0,1fr); }.desk-aside { grid-template-columns: repeat(2,minmax(0,1fr)); }.ledger-queue { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }.ledger-queue > .panel-heading,.ledger-queue > .btn { grid-column: 1/-1; }.matchday-stats .stat-card { padding: 15px; }.studio-venue-identity { max-width: none; }.studio-date-controls { width: 100%; flex-basis: 100%; }.gear-card { grid-template-columns: 115px minmax(0,1fr); } }
+@media(max-width:960px) { :root { --sidebar-w: 205px; }.page-content { padding: 24px 20px; }.workspace-header { padding: 0 20px; }.matchday-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }.matchday-workspace { grid-template-columns: minmax(0,1fr); }.matchday-detail { position: static; }.matchday-detail .sport-photo { height: 200px; }.matchday-detail .booking-facts { display: flex; flex-wrap: wrap; gap: 25px; }.gear-card { grid-template-columns: 100px minmax(0,1fr); }.view-switch { margin-left: 0; } }
+@media(max-width:760px) { .page-content { padding: 24px 16px; }.workspace-header { padding: 0 16px; }.sidebar .nav-item { font-size: 17px; }.page-title { font-size: 32px; }.page-subtitle { font-size: 16px; }.page-header { gap: 16px; }.desk-aside { grid-template-columns: minmax(0,1fr); }.stat-value,.financial-grid .stat-value { font-size: 33px; }.ledger-queue { display: block; }.refund-banner { padding: 14px; gap: 10px; flex-wrap: wrap; }.refund-banner p { flex-basis: 100%; order: 3; }.refund-banner > a { margin-left: auto; }.ledger-date-filter { gap: 9px; }.ledger-date-filter label { flex: 1; min-width: 135px; }.ledger-date-filter input { min-width: 0; width: 100%; }.studio-date-controls { gap: 9px; flex-wrap: wrap; }.studio-date-controls > label:first-child { flex-basis: 100%; }.studio-date-controls > label { flex: 1; min-width: 120px; }.studio-tabs { grid-template-columns: repeat(2,minmax(0,1fr)); }.studio-tabs button,.studio-tabs a { font-size: 15px; }.studio-venue-identity { width: 100%; }.studio-venue-identity > div { flex: 1; }.studio-offer-row { gap: 12px; flex-wrap: wrap; }.studio-offer-row > span { flex-basis: 100%; order: 3; }.studio-offer-row > small { margin-left: auto; }.studio-offer-row > svg:last-child { display: none; }.revenue-chart { gap: 8px; }.chart-value { display: none; }.timeline-navigation small { display: none; }.matchday-controls .date-stepper { width: 100%; }.date-stepper input { flex: 1; max-width: none; }.date-stepper .text-button { padding-left: 4px; } }
+@media(max-width:560px) { .gear-catalogue { grid-template-columns: minmax(0,1fr); }.gear-card { grid-template-columns: 105px minmax(0,1fr); }.gear-visual { height: 185px; }.gear-card h2 { font-size: 21px; }.gear-card .gear-specs dt,.gear-card .gear-specs dd { font-size: 14px; }.gear-rate strong { font-size: 20px; }.gear-card-footer .btn-sm { font-size: 14px; }.stat-card { min-height: 98px; padding: 17px; }.stat-label { font-size: 15px; }.overview-stats { grid-template-columns: minmax(0,1fr); }.studio-search .toolbar-search { flex-basis: 100%; }.studio-search .form-select { width: 100%; }.page-actions .btn { font-size: 15px; }.matchday-stats .stat-value { font-size: 31px; }.matchday-stats .stat-label { font-size: 14px; }.matchday-stats .stat-icon { width: 24px; }.booking-filter-bar .segmented-tabs { gap: 4px; }.view-switch { width: 100%; }.view-switch button { flex: 1; justify-content: center; }.studio-venue-identity small { max-width: 135px; } }
+
+/* Readability scale revision: larger type and controls at normal browser zoom. */
+:root, :root.light { --sidebar-w: 244px; --header-h: 84px; }
+body { font-size: 18px; line-height: 1.55; }
+h2 { font-size: 24px; } h3 { font-size: 21px; }
+.sidebar .nav-item { min-height: 51px; font-size: 17px; padding: 12px 14px; }
+.sidebar .nav-item svg { width: 22px; height: 22px; }
+.sidebar-logo-text { font-size: 17px; }.sidebar-logo-sub { font-size: 13px; }
+.workspace-search input { min-height: 50px; font-size: 16px; }
+.workspace-header { min-height: 84px; }
+.btn { min-height: 50px; font-size: 17px; padding: 12px 20px; }
+.btn-sm { min-height: 42px; font-size: 14px; padding: 9px 13px; }
+.icon-button { width: 44px; height: 44px; }.icon-button svg { width: 21px; height: 21px; }
+.page-content :is(.form-input,.form-select,.form-control), .form-input, .form-select { min-height: 50px; font-size: 17px; padding: 12px 14px; }
+.form-label,.form-group,.page-content .form-group > label,.page-content form label { font-size: 15px; }
+.modal p { font-size: 16px; }.modal-title { font-size: 26px; }
+.card { padding: 25px; }.desk-aside .card { padding: 24px; }
+.panel-heading { margin-bottom: 21px; }.panel-heading h2 { font-size: 21px; }
+.stat-card { min-height: 128px; padding: 24px; gap: 18px; }
+.stat-icon { width: 54px; height: 54px; }.stat-icon svg { width: 27px; height: 27px; }
+.stat-label { font-size: 16px; }.stat-card small { font-size: 14px; }
+.status-badge,.badge { font-size: 13px; padding: 6px 9px; }
+th { font-size: 15px; padding: 17px 15px; } td { font-size: 16px; padding: 20px 15px; }
+td .text-muted,td small { font-size: 14px; }
+.load-more,.section-note,.workspace-footer { font-size: 14px; }
+.segmented-tabs button,.segmented-tabs a { min-height: 44px; font-size: 16px; padding: 10px 15px; }
+.arena-dashboard .stat-card { min-height: 120px; padding: 22px; }
+.arena-overview .toolbar .form-input,.arena-overview .toolbar .form-select { min-height: 43px; font-size: 14px; padding: 8px 10px; }
+.arena-overview .toolbar .form-select { max-width: 220px; }
+.arena-overview .toolbar .icon-button { width: 38px; height: 38px; }
+.arena-overview .toolbar .btn { min-height: 38px; font-size: 14px; padding: 8px 12px; }
+.court-row,.arena-overview .court-row { min-height: 132px; }
+.court-label { width: 170px; }.court-axis { grid-template-columns: 170px repeat(4,minmax(0,1fr)); }
+.court-label .sport-photo { width: 64px; height: 48px; }
+.court-session { padding: 12px; }.court-session strong { font-size: 15px; }.court-session small { font-size: 13px; }.court-session .status-badge { font-size: 12px; padding: 4px 6px; }
+.timeline-footer .schedule-legend .status-badge { font-size: 13px; }
+.matchday-stats .stat-card { min-height: 120px; padding: 22px; }
+.matchday-stats .stat-label { font-size: 15px; }
+.matchday-table td,.matchday-table th { font-size: 15px; padding: 18px 13px; }
+.matchday-table .status-badge { font-size: 12px; }.matchday-table table { min-width: 630px; }
+.booking-filter-bar .segmented-tabs button { font-size: 13px; min-height: 38px; padding: 8px 10px; }
+.compact-search input { font-size: 15px; padding: 9px 0; }
+.agenda-item { padding: 18px 12px; }.agenda-item strong,.agenda-item time { font-size: 14px; }.agenda-item small { font-size: 13px; }
+.matchday-detail .sport-photo { height: 180px; }.matchday-detail .btn { font-size: 15px; }
+.booking-detail dt { font-size: 14px; }.booking-detail dd { font-size: 16px; }
+.ledger-table-panel td { font-size: 15px; padding-top: 17px; padding-bottom: 17px; }.ledger-table-panel th { font-size: 14px; }
+.ledger-table-panel .btn-sm,.ledger-table-panel .status-badge { font-size: 13px; }
+.ledger-table-panel table { min-width: 790px; }.ledger-queue { padding: 24px; }
+.ledger-queue-row strong,.ledger-queue-row > b { font-size: 15px; }.ledger-queue-row small { font-size: 13px; }.ledger-queue-row .status-badge { font-size: 12px; }
+.ledger-queue-row .sport-photo { width: 55px; height: 66px; }
+.chart-value,.chart-key,.revenue-column small { font-size: 13px; }
+.revenue-bar-track { height: 160px; }.revenue-chart { min-height: 225px; }
+.studio-date-controls .form-input,.studio-date-controls .form-select { min-height: 48px; font-size: 15px; padding: 10px 12px; }
+.studio-date-controls > label { font-size: 14px; }
+.gear-inventory-panel { padding: 22px; }.gear-inventory-panel > .studio-search .form-input,.gear-inventory-panel > .studio-search .form-select { font-size: 15px; min-height: 46px; }
+.gear-inventory-panel > .studio-search .form-select { max-width: 185px; min-width: 165px; }
+.gear-card { padding: 20px; grid-template-columns: 115px minmax(0,1fr); gap: 9px 15px; }
+.gear-visual { height: 220px; }.gear-card h2 { font-size: 22px; }
+.gear-card-header p { font-size: 14px; }.gear-card > p { font-size: 14px; }
+.gear-card .gear-specs > div { display: block; }
+.gear-card .gear-specs dt,.gear-card .gear-specs dd { font-size: 14px; }
+.gear-card .gear-specs dd { margin-top: 3px; }.gear-rate strong { font-size: 22px; }
+.gear-card-footer .btn-sm { font-size: 14px; min-height: 42px; }
+.rental-preview-head img { width: 55px; height: 73px; }.rental-preview-head strong { font-size: 17px; }.rental-preview-head b { font-size: 16px; }.rental-preview p { font-size: 14px; }
+.inspection-preview h3 { font-size: 17px; }.inspection-preview textarea { font-size: 15px !important; min-height: 125px; }.inspection-preview p { font-size: 13px; }
+.venue-card > .sport-photo { height: 210px; }.venue-card-body h2 { font-size: 23px; }
+@media(min-width:1550px) { .matchday-workspace { grid-template-columns: 200px minmax(0,1fr) 320px; }.gear-card { grid-template-columns: 135px minmax(0,1fr); } }
+@media(min-width:1381px) and (max-width:1550px) {
+  .ledger-workspace { grid-template-columns: minmax(0,1fr); }
+  .ledger-queue { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+  .ledger-queue > .panel-heading,.ledger-queue > .btn { grid-column: 1/-1; }
+}
+@media(max-width:1380px) {
+  .desk-layout,.gear-studio,.ledger-workspace { grid-template-columns: minmax(0,1fr); }
+  .desk-aside { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .matchday-workspace { grid-template-columns: minmax(0,1fr) 290px; }
+  .day-agenda { display: flex; grid-column: 1/-1; overflow-x: auto; max-width: 100%; }
+  .agenda-heading { flex-shrink: 0; width: 165px; }
+  .agenda-item { width: 185px; flex-shrink: 0; border-bottom: 0; border-right: 1px solid var(--border); }
+  .studio-venue-identity { max-width: none; }.studio-date-controls { flex-basis: 100%; }
+}
+@media(max-width:960px) { .matchday-workspace { grid-template-columns: minmax(0,1fr); }.matchday-detail { position: static; }.workspace-header .header-user { display: none; } }
+@media(max-width:760px) {
+  .desk-aside { grid-template-columns: minmax(0,1fr); }.workspace-header { min-height: 74px; padding: 0 12px; }.workspace-search input { font-size: 15px; }
+  .page-title { font-size: 34px; }.page-subtitle { font-size: 16px; }.page-content { padding: 25px 16px; }
+  .ledger-table-panel table,.matchday-table table { min-width: 660px; }
+  .studio-date-controls { flex-wrap: wrap; }.studio-date-controls > label:first-child { flex-basis: 100%; }
+  .studio-offer-row { font-size: 15px; }.workspace-footer { font-size: 12px; }
+  .gear-inventory-panel > .studio-search .form-select { max-width: none; }
+}
+@media(max-width:560px) {
+  .card { padding: 20px; }.gear-catalogue { grid-template-columns: minmax(0,1fr); }
+  .gear-card { grid-template-columns: 90px minmax(0,1fr); padding: 17px; gap: 8px 12px; }.gear-visual { height: 200px; }
+  .gear-card h2 { font-size: 21px; }.gear-card .gear-specs dt,.gear-card .gear-specs dd { font-size: 14px; }
+  .stat-card { min-height: 112px; }.matchday-stats .stat-value { font-size: 32px; }.matchday-stats .stat-label { font-size: 14px; }
+  .page-actions .btn { font-size: 15px; }.studio-tabs button,.studio-tabs a { font-size: 15px; }
+  .studio-venue-identity > span { display: none; }.studio-venue-identity small { max-width: none; }
+  .date-stepper .icon-button { width: 34px; }.matchday-controls .date-stepper .form-input { min-width: 0; width: 90px; font-size: 15px; }
+}

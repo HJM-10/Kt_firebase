@@ -1,0 +1,6 @@
+import { money } from '../utils/arena';
+export default function MonthRevenueChart({ values = {} }) {
+  const entries = Object.entries(values).sort(([a], [b]) => a.localeCompare(b)).slice(-8);
+  const max = Math.max(1, ...entries.map(([, value]) => Math.abs(value)));
+  return <section className="card monthly-revenue"><div className="panel-heading"><h2>Monthly net revenue <span className="text-muted">(PKR)</span></h2><span className="chart-key"><i />Receipts less completed refunds</span></div>{entries.length ? <div className="revenue-chart" role="img" aria-label={entries.map(([month, value]) => `${month}: ${money(value)}`).join('; ')}>{entries.map(([month, value], i) => <div className="revenue-column" key={month}><span className="chart-value">{money(value)}</span><div className="revenue-bar-track"><div className={`revenue-bar ${i === entries.length - 1 ? 'latest' : ''} ${value < 0 ? 'negative' : ''}`} style={{ height: `${Math.max(2, Math.abs(value) / max * 100)}%` }} /></div><span>{new Date(`${month}-02T12:00:00Z`).toLocaleDateString('en-GB', { month: 'short' })}<small>{month.slice(0, 4)}</small></span></div>)}</div> : <p className="empty-state">Recorded receipts and completed refunds will build this chart.</p>}</section>;
+}

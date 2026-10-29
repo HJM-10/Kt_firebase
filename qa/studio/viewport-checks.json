@@ -1,0 +1,42 @@
+[
+  {
+    "route": "/",
+    "viewport": 390,
+    "width": 385
+  },
+  {
+    "route": "/reserve",
+    "viewport": 390,
+    "width": 385
+  },
+  {
+    "route": "/equipment",
+    "viewport": 390,
+    "width": 385
+  },
+  {
+    "route": "/payments",
+    "viewport": 390,
+    "width": 385
+  },
+  {
+    "route": "/",
+    "viewport": 320,
+    "width": 314
+  },
+  {
+    "route": "/reserve",
+    "viewport": 320,
+    "width": 314
+  },
+  {
+    "route": "/equipment",
+    "viewport": 320,
+    "width": 314
+  },
+  {
+    "route": "/payments",
+    "viewport": 320,
+    "width": 314
+  }
+]

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import './arena.css'
+import './arena-studio.css'
 import './store/themeStore.js'
 import useAuthStore from './store/authStore.js'
 

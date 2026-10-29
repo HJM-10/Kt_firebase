@@ -1,0 +1,93 @@
+
+> backend@1.0.0 test
+> cross-env JWT_SECRET=testsecret jest --runInBand
+
+POST /api/auth/firebase 503 2.197 ms - 100
+POST /api/auth/firebase 403 0.595 ms - 78
+POST /api/auth/firebase 401 1.062 ms - 104
+POST /api/auth/firebase 503 0.319 ms - 164
+POST /api/auth/firebase 409 2.623 ms - 124
+POST /api/auth/firebase 200 86.168 ms - 345
+GET /api/auth/me 401 1.153 ms - 99
+POST /api/auth/firebase 200 3.419 ms - 296
+GET /api/auth/me 401 0.697 ms - 104
+GET /api/bookings/42/qr 200 149.610 ms - 1748
+GET /api/bookings/42/qr 200 1.043 ms - 727
+GET /api/bookings/42/qr 200 0.816 ms - 661
+GET /api/bookings/42/qr 200 0.724 ms - 661
+GET /api/bookings/42/qr 200 0.716 ms - 723
+POST /api/bookings/scan 400 1.867 ms - 95
+POST /api/bookings/scan 200 0.973 ms - 490
+POST /api/bookings/scan 400 1.486 ms - 68
+POST /api/bookings/scan 400 1.012 ms - 73
+POST /api/bookings/scan 200 0.715 ms - 490
+GET /api/bookings/42/qr 403 0.894 ms - 44
+POST /api/bookings/scan 403 0.430 ms - 51
+GET /api/bookings/42/qr 200 207.626 ms - 2437
+GET /api/bookings/42/qr 200 191.765 ms - 2437
+POST /api/auth/register 400 4.988 ms - 128
+GET /api/users 403 1.223 ms - 51
+POST /api/payments/confirm 403 1.328 ms - 51
+POST /api/payments/confirm 403 0.613 ms - 51
+POST /api/payments/checkout 403 0.757 ms - 44
+POST /api/payments/checkout 503 0.415 ms - 112
+POST /api/bookings/scan 400 0.871 ms - 85
+POST /api/bookings/slots 400 0.420 ms - 64
+POST /api/bookings/slots 400 2.953 ms - 104
+POST /api/bookings/slots 400 1.168 ms - 170
+POST /api/bookings/slots 400 0.865 ms - 120
+GET /api/users 401 0.361 ms - 70
+GET /api/users 401 0.721 ms - 79
+GET /api/users 401 0.830 ms - 79
+GET /api/auth/me 503 5.907 ms - 109
+GET /api/auth/me 200 0.726 ms - 66
+GET /api/auth/me 503 1.639 ms - 109
+GET /api/auth/me 200 0.529 ms - 66
+GET /api/auth/me 503 1.694 ms - 109
+GET /api/auth/me 200 0.619 ms - 66
+GET /api/auth/me 503 2.172 ms - 109
+GET /api/auth/me 200 0.575 ms - 66
+GET /api/users 403 0.803 ms - 51
+GET /api/sports 200 0.978 ms - 26
+GET /api/users 401 0.540 ms - 89
+PUT /api/auth/password 400 4.408 ms - 84
+GET /api/auth/me 200 0.640 ms - 140
+POST /api/auth/login 503 6.311 ms - 109
+GET /api/sports 503 3.536 ms - 109
+GET /api/sports 200 0.842 ms - 26
+GET /api/users 403 0.719 ms - 51
+GET /api/reports/revenue 403 0.786 ms - 51
+GET /api/payments 403 0.844 ms - 51
+GET /api/bookings 403 0.819 ms - 51
+POST /api/sports 403 0.598 ms - 51
+PUT /api/users/2/role 403 0.896 ms - 51
+DELETE /api/venues/1 403 0.575 ms - 51
+GET /api/users 200 0.817 ms - 26
+GET /api/users 403 0.446 ms - 51
+GET /api/tournaments 200 1.065 ms - 77
+GET /api/events 200 0.693 ms - 77
+POST /api/auth/register 201 87.874 ms - 347
+POST /api/auth/register 400 0.516 ms - 258
+POST /api/auth/login 401 0.460 ms - 49
+GET /api/reports/arena-desk 401 0.305 ms - 70
+GET /api/reports/arena-desk?date=2026-10-25 403 0.741 ms - 51
+GET /api/reports/arena-desk?date=2026-02-30 400 1.178 ms - 65
+GET /api/reports/arena-desk?date=2026-13-01 400 0.693 ms - 65
+GET /api/reports/arena-desk?date=today 400 0.606 ms - 65
+GET /api/reports/arena-desk?date=2026-1-01 400 0.788 ms - 65
+GET /api/reports/arena-desk?date=2026-10-25 200 14.683 ms - 1124
+GET /api/reports/arena-desk?date=2026-10-25 200 1.002 ms - 226
+POST /api/venues 201 1.666 ms - 136
+PUT /api/venues/1 400 7.462 ms - 113
+PUT /api/venues/1 403 0.568 ms - 51
+GET /api/ready 503 0.419 ms - 40
+GET /api/ready 200 0.318 ms - 33
+GET /api/health 200 0.514 ms - 114
+POST /api/bookings/slots 409 6.262 ms - 70
+POST /api/bookings/slots 201 0.647 ms - 32
+
+Test Suites: 14 passed, 14 total
+Tests:       108 passed, 108 total
+Snapshots:   0 total
+Time:        4.877 s, estimated 6 s
+Ran all test suites.

@@ -3,9 +3,13 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { Users, Mail, Phone, Calendar, DollarSign, Activity } from 'lucide-react';
 import ConfirmModal from '../components/ConfirmModal';
+import { PageHeading, StatCard } from '../components/ArenaUI';
+import { money } from '../utils/arena';
+import { Search, ShieldCheck, UserCheck, RefreshCw } from 'lucide-react';
 
 const UsersPage = () => {
   const [users, setUsers] = useState([]);
+  const [query, setQuery] = useState(''), [role, setRole] = useState('ALL'), [accountStatus, setAccountStatus] = useState('ALL');
   const [loading, setLoading] = useState(true);
   const [deactivateConfirm, setDeactivateConfirm] = useState({ isOpen: false, id: null });
 
@@ -49,12 +53,12 @@ const UsersPage = () => {
     }
   };
 
+  const visible = users.filter(u => (role === 'ALL' || u.role === role) && (accountStatus === 'ALL' || u.isActive === (accountStatus === 'ACTIVE')) && [u.name, u.email, u.phone].some(value => String(value || '').toLowerCase().includes(query.trim().toLowerCase())));
   return (
     <div>
-      <div className="page-header">
-        <h1 className="page-title">User Management</h1>
-        <div className="page-subtitle">View and manage all registered accounts</div>
-      </div>
+      <PageHeading eyebrow="Club management / People" title="The people behind every game." description="Find your members, look after your players and manage the team that makes it happen." actions={<button className="btn btn-secondary" onClick={fetchUsers} disabled={loading}><RefreshCw size={16} />Refresh directory</button>} />
+      <div className="stats-grid overview-stats"><StatCard icon={Users} value={users.filter(u => u.role === 'CUSTOMER').length} label="Registered members" /><StatCard icon={ShieldCheck} value={users.filter(u => u.role === 'ADMIN').length} label="Club staff" tone="brass" /><StatCard icon={UserCheck} value={users.filter(u => u.isActive).length} label="Active accounts" tone="mint" /></div>
+      <div className="toolbar"><label className="toolbar-search"><Search size={17} /><input aria-label="Search club members" className="form-input" placeholder="Search name, email or phone…" value={query} onChange={e => setQuery(e.target.value)} /></label><select className="form-select" aria-label="Filter account role" value={role} onChange={e => setRole(e.target.value)}><option value="ALL">All roles</option><option value="CUSTOMER">Members</option><option value="ADMIN">Club staff</option></select><select className="form-select" aria-label="Filter account status" value={accountStatus} onChange={e => setAccountStatus(e.target.value)}><option value="ALL">All accounts</option><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option></select><span className="text-muted">{visible.length} people</span></div>
 
       {loading ? (
         <div className="loader-wrap"><div className="spinner"></div></div>
@@ -74,13 +78,13 @@ const UsersPage = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map(u => (
+              {visible.map(u => (
                 <tr key={u.id}>
                   <td>
                     <div style={{fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px'}}>
                       <div style={{
                         width: '32px', height: '32px', borderRadius: '50%', 
-                        background: 'rgba(99,102,241,0.15)', color: '#6366F1',
+                        background: u.role === 'ADMIN' ? 'var(--soft-brass)' : 'var(--soft-green)', color: u.role === 'ADMIN' ? 'var(--warning)' : 'var(--primary)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontWeight: 'bold'
                       }}>
@@ -100,26 +104,26 @@ const UsersPage = () => {
                     </span>
                   </td>
                   <td>
-                    <div style={{fontSize: 13, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
+                    <div style={{fontSize: 16, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px'}}>
                       <Mail size={14} className="text-muted"/> {u.email}
                     </div>
                     {u.phone && (
-                      <div style={{fontSize: 13, display: 'flex', alignItems: 'center', gap: '6px'}}>
+                      <div style={{fontSize: 16, display: 'flex', alignItems: 'center', gap: '6px'}}>
                         <Phone size={14} className="text-muted"/> {u.phone}
                       </div>
                     )}
                   </td>
                   <td>
-                    <div style={{fontSize: 13, display: 'flex', gap: '12px'}}>
+                    <div style={{fontSize: 16, display: 'flex', gap: '12px'}}>
                       <div title="Total Bookings"><Activity size={14} className="text-muted"/> {u._count.bookings}</div>
                       <div title="Total Payments"><DollarSign size={14} className="text-muted"/> {u._count.payments}</div>
                     </div>
                   </td>
                   <td style={{fontWeight: 700, color: 'var(--success)'}}>
-                    ${u.totalSpent?.toFixed(2)}
+                    {money(u.totalSpent)}
                   </td>
                   <td>
-                    <div style={{fontSize: 13, display: 'flex', alignItems: 'center', gap: '6px'}}>
+                    <div style={{fontSize: 16, display: 'flex', alignItems: 'center', gap: '6px'}}>
                       <Calendar size={14} className="text-muted"/>
                       {new Date(u.createdAt).toLocaleDateString()}
                     </div>
@@ -128,7 +132,7 @@ const UsersPage = () => {
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <select 
                         className="form-input" 
-                        style={{ padding: '4px 8px', fontSize: 13, width: 'auto' }}
+                        style={{ padding: '4px 8px', fontSize: 16, width: 'auto' }}
                         value={u.role}
                         onChange={(e) => handleUpdateRole(u.id, e.target.value)}
                         disabled={!u.isActive}

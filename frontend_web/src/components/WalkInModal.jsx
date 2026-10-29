@@ -5,8 +5,8 @@ import FormField from './FormField';
 import { ErrorPanel } from './ArenaUI';
 import { arenaDay, sessionStart } from '../utils/arena';
 import useDialogFocus from '../services/useDialogFocus';
-export default function WalkInModal({ initialDate, onClose, onCreated }) {
-  const [form, setForm] = useState({ sportId: '', venueId: '', date: initialDate >= arenaDay() ? initialDate : arenaDay(), slotId: '', walkInName: '', walkInPhone: '' });
+export default function WalkInModal({ initialDate, initialVenue, initialSlotId, onClose, onCreated }) {
+  const [form, setForm] = useState({ sportId: initialVenue?.sportId ? String(initialVenue.sportId) : '', venueId: initialVenue?.id ? String(initialVenue.id) : '', date: initialDate >= arenaDay() ? initialDate : arenaDay(), slotId: initialSlotId ? String(initialSlotId) : '', walkInName: '', walkInPhone: '' });
   const [sports, setSports] = useState([]), [venues, setVenues] = useState([]), [slots, setSlots] = useState([]);
   const [error, setError] = useState(''), [busy, setBusy] = useState(false), [loading, setLoading] = useState(true);
   const locked = useRef(false);

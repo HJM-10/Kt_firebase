@@ -9,8 +9,9 @@ import PaymentModal from '../components/PaymentModal';
 import { socket } from '../services/socket';
 import useAuthStore from '../store/authStore';
 import FormField from '../components/FormField';
+import AdminSchedule from './AdminSchedule';
 
-export default function ReservePage() {
+function ReservationForm() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const isAdmin = useAuthStore(s => s.user?.role === 'ADMIN');
@@ -79,4 +80,9 @@ export default function ReservePage() {
     })}</div>}
     <PaymentModal isOpen={!!payment} {...payment} onClose={() => { setPayment(null); navigate('/my-bookings'); }} />
   </div>;
+}
+export default function ReservePage() {
+  const isAdmin = useAuthStore(s => s.user?.role === 'ADMIN');
+  const [params] = useSearchParams();
+  return isAdmin && !params.get('reschedule') ? <AdminSchedule /> : <ReservationForm />;
 }

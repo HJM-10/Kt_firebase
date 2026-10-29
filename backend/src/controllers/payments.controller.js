@@ -82,7 +82,10 @@ const getMyPayments = async (req, res) => {
 const getAllPayments = async (req, res) => {
   try {
     const payments = await prisma.payment.findMany({
-      include: { user: { select: { id: true, name: true, email: true } }, refunds: true },
+      include: { user: { select: { id: true, name: true, email: true } }, refunds: true,
+        booking: { select: { id: true, status: true, slot: { select: { date: true, startTime: true, endTime: true, venue: { select: { id: true, name: true, imageUrl: true, sport: { select: { name: true } } } } } } } },
+        rental: { select: { id: true, equipment: { select: { name: true, imageUrl: true, venue: { select: { name: true } } } } } }
+      },
       orderBy: { createdAt: 'desc' }
     });
     res.json({ success: true, data: payments });

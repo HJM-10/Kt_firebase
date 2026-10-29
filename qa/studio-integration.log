@@ -1,0 +1,33 @@
+◇ injected env (0) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+POST /api/auth/login 200 147.686 ms - 476
+GET /api/equipment?rentalDate=2026-10-29&returnDate=2026-10-29 200 23.043 ms - 6355
+GET /api/payments 200 32.340 ms - 103038
+GET /api/reports/revenue 200 18.500 ms - 227
+GET /api/reports/arena-desk?date=2026-10-29 200 36.536 ms - 30130
+{
+  "checkedAt": "2026-10-29T11:33:35.373Z",
+  "status": "PASS",
+  "repeatSeedCountsUnchanged": true,
+  "sampleEquipmentTypes": 6,
+  "sampleRentalsWithMatchingPayments": 58,
+  "loadedAssets": [
+    "/gear/cricket-bat.png",
+    "/gear/hockey-stick.png",
+    "/gear/football.png",
+    "/gear/padel-balls.png",
+    "/gear/padel-racket.png",
+    "/gear/table-tennis.png"
+  ],
+  "revenueMonths": 6,
+  "checks": [
+    "seed idempotency",
+    "dated equipment availability and venue associations",
+    "padel and table-tennis ball specifications",
+    "six served product images",
+    "rental pricing and matching payment amounts",
+    "ledger venue/equipment metadata",
+    "gross minus completed refunds equals net",
+    "populated current-day schedule"
+  ],
+  "environment": "isolated local demo only; all sample payments are simulated"
+}
